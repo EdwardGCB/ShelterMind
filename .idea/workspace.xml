@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="NONE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="86ce1e8a-656b-48b8-8adc-7d768ad7c78e" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/aplicacion/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/aplicacion/app/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/aplicacion/app/build.gradle.kts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/aplicacion/app/proguard-rules.pro" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/aplicacion/app/src/androidTest/java/com/ud/sheltermind/ExampleInstrumentedTest.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/aplicacion/app/src/main/AndroidManifest.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/aplicacion/app/src/main/java/com/ud/sheltermind/MainActivity.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/aplicacion/app/src/main/java/com/ud/sheltermind/ui/theme/Color.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/aplicacion/app/src/main/java/com/ud/sheltermind/ui/theme/Theme.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/aplicacion/app/src/main/java/com/ud/sheltermind/ui/theme/Type.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/aplicacion/app/src/main/res/drawable/ic_launcher_background.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/aplicacion/app/src/main/res/drawable/ic_launcher_foreground.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/aplicacion/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/aplicacion/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/aplicacion/app/src/main/res/mipmap-hdpi/ic_launcher.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/aplicacion/app/src/main/res/mipmap-hdpi/ic_launcher_round.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/aplicacion/app/src/main/res/mipmap-mdpi/ic_launcher.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/aplicacion/app/src/main/res/mipmap-mdpi/ic_launcher_round.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/aplicacion/app/src/main/res/mipmap-xhdpi/ic_launcher.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/aplicacion/app/src/main/res/mipmap-xhdpi/ic_launcher_round.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/aplicacion/app/src/main/res/mipmap-xxhdpi/ic_launcher.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/aplicacion/app/src/main/res/mipmap-xxhdpi/ic_launcher_round.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/aplicacion/app/src/main/res/mipmap-xxxhdpi/ic_launcher.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/aplicacion/app/src/main/res/mipmap-xxxhdpi/ic_launcher_round.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/aplicacion/app/src/main/res/values/colors.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/aplicacion/app/src/main/res/values/strings.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/aplicacion/app/src/main/res/values/themes.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/aplicacion/app/src/main/res/xml/backup_rules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/aplicacion/app/src/main/res/xml/data_extraction_rules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/aplicacion/app/src/test/java/com/ud/sheltermind/ExampleUnitTest.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/aplicacion/build.gradle.kts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/aplicacion/gradle.properties" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/aplicacion/gradle/libs.versions.toml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/aplicacion/gradle/wrapper/gradle-wrapper.jar" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/aplicacion/gradle/wrapper/gradle-wrapper.properties" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/aplicacion/gradlew" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/aplicacion/gradlew.bat" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/aplicacion/settings.gradle.kts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/aplication/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/aplication/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/aplication/.idea/.name" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/aplication/.idea/appInsightsSettings.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/aplication/.idea/compiler.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/aplication/.idea/deploymentTargetSelector.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/aplication/.idea/gradle.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/aplication/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/aplication/.idea/kotlinc.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/aplication/.idea/migrations.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/aplication/.idea/misc.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/aplication/.idea/other.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/aplication/.idea/vcs.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/aplication/app/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/aplication/app/build.gradle.kts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/aplication/app/proguard-rules.pro" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/aplication/app/src/androidTest/java/com/ud/sheltermind/ExampleInstrumentedTest.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/aplication/app/src/main/AndroidManifest.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/aplication/app/src/main/java/com/ud/sheltermind/MainActivity.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/aplication/app/src/main/java/com/ud/sheltermind/composable/Login.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/aplication/app/src/main/java/com/ud/sheltermind/composable/home.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/aplication/app/src/main/java/com/ud/sheltermind/ui/theme/Color.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/aplication/app/src/main/java/com/ud/sheltermind/ui/theme/Theme.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/aplication/app/src/main/java/com/ud/sheltermind/ui/theme/Type.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/aplication/app/src/main/res/drawable/ic_launcher_background.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/aplication/app/src/main/res/drawable/ic_launcher_foreground.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/aplication/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/aplication/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/aplication/app/src/main/res/mipmap-hdpi/ic_launcher.webp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/aplication/app/src/main/res/mipmap-hdpi/ic_launcher_round.webp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/aplication/app/src/main/res/mipmap-mdpi/ic_launcher.webp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/aplication/app/src/main/res/mipmap-mdpi/ic_launcher_round.webp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/aplication/app/src/main/res/mipmap-xhdpi/ic_launcher.webp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/aplication/app/src/main/res/mipmap-xhdpi/ic_launcher_round.webp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/aplication/app/src/main/res/mipmap-xxhdpi/ic_launcher.webp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/aplication/app/src/main/res/mipmap-xxhdpi/ic_launcher_round.webp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/aplication/app/src/main/res/mipmap-xxxhdpi/ic_launcher.webp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/aplication/app/src/main/res/mipmap-xxxhdpi/ic_launcher_round.webp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/aplication/app/src/main/res/values/colors.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/aplication/app/src/main/res/values/strings.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/aplication/app/src/main/res/values/themes.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/aplication/app/src/main/res/xml/backup_rules.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/aplication/app/src/main/res/xml/data_extraction_rules.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/aplication/app/src/test/java/com/ud/sheltermind/ExampleUnitTest.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/aplication/build.gradle.kts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/aplication/gradle.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/aplication/gradle/libs.versions.toml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/aplication/gradle/wrapper/gradle-wrapper.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/aplication/gradle/wrapper/gradle-wrapper.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/aplication/gradlew" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/aplication/gradlew.bat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/aplication/settings.gradle.kts" beforeDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ClangdSettings">
+    <option name="formatViaClangd" value="false" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
+  "lastFilter": {
+    "state": "OPEN",
+    "assignee": "EdwardGCB"
+  }
+}]]></component>
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/EdwardGCB/ShelterMind.git",
+    "accountId": "ecfac4db-6af8-490f-b816-f88492351e2f"
+  }
+}]]></component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "customColor": "",
+  "associatedIndex": 3
+}]]></component>
+  <component name="ProjectId" id="2nnMGIdw0jAXFSZXuSpCmLcIFWK" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.cidr.known.project.marker": "true",
+    "RunOnceActivity.readMode.enableVisualFormatting": "true",
+    "cf.first.check.clang-format": "false",
+    "cidr.known.project.marker": "true",
+    "git-widget-placeholder": "main",
+    "kotlin-language-version-configured": "true",
+    "settings.editor.selected.configurable": "AndroidSdkUpdater"
+  }
+}]]></component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="86ce1e8a-656b-48b8-8adc-7d768ad7c78e" name="Changes" comment="" />
+      <created>1729604289874</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1729604289874</updated>
+    </task>
+    <servers />
+  </component>
+</project>

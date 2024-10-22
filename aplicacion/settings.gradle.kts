@@ -19,6 +19,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Shelter Mind"
+rootProject.name = "ShelterMind"
 include(":app")
  

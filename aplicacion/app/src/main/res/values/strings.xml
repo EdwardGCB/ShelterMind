@@ -1,6 +1,19 @@
 <resources>
     <string name="app_name" translatable="false">ShelterMind</string>
+
     <string name="login_title" translatable="false">Bienvenido</string>
-    <string name="login_subtitle" translatable="false">O inicia sesion con el correo</string>
-    <string name="social_network" translatable="false">Inicia sesion con una red social</string>
+    <string name="login_subtitle" translatable="false">O con el correo electronico</string>
+    <string name="login_button" translatable="false">Iniciar Sesion</string>
+    <string name="login_footer" translatable="false">¿No tienes una cuenta?</string>
+    <string name="href_crear_cuenta" translatable="false">Crear cuenta</string>
+    <string name="social_network" translatable="false">Inicia sesion con </string>
+    <string name="password" translatable="false">Contraseña</string>
+    <string name="email" translatable="false">Correo</string>
+    <string name="user" translatable="false">Usuario</string>
+    <string name="number" translatable="false">Numero</string>
+
+    <string name="sing_up_button" translatable="false">Crear Cuenta</string>
+    <string name="sing_up_footer" translatable="false">Acepto las</string>
+    <string name="href_politics" translatable="false">Politicas de privacidad</string>
+    <string name="user_type">Seleccionar tipo de usuario</string>
 </resources>

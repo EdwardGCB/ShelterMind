@@ -50,10 +50,12 @@ android {
 }
 
 dependencies {
+    implementation(libs.androidx.constraintlayout.compose)
     val nav_version = "2.8.0"
-
+    implementation ("androidx.compose.material:material-icons-extended:1.0.5")
     implementation("androidx.navigation:navigation-compose:$nav_version")
     implementation ("io.coil-kt:coil-compose:1.3.2")
+    implementation ("com.google.accompanist:accompanist-coil:0.15.0")
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)

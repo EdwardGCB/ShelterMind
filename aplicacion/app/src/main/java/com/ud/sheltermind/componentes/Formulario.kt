@@ -5,12 +5,17 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
@@ -25,6 +30,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
@@ -33,6 +39,7 @@ import androidx.compose.ui.unit.sp
 import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
 import com.ud.sheltermind.R
+import com.ud.sheltermind.enums.EnumNavigation
 
 @Preview
 @Composable
@@ -54,14 +61,14 @@ fun SocialNetwork() {
 }
 
 @Composable
-fun PassFlied(password: MutableState<String>){
+fun PassFlied(password: MutableState<String>, label: String) {
     val flag = remember {
         mutableStateOf(false)
     }
     OutlinedTextField(
         value = password.value,
         onValueChange = { password.value = it },
-        label = { Text(stringResource(R.string.password)) },
+        label = { Text(label) },
         visualTransformation = if (flag.value) VisualTransformation.None else PasswordVisualTransformation(),
         trailingIcon = {
             val image = if (flag.value)
@@ -69,7 +76,10 @@ fun PassFlied(password: MutableState<String>){
             else Icons.Filled.Visibility
 
             IconButton(onClick = { flag.value = !flag.value }) {
-                Icon(imageVector = image, contentDescription = if (flag.value) "Hide password" else "Show password")
+                Icon(
+                    imageVector = image,
+                    contentDescription = if (flag.value) "Hide password" else "Show password"
+                )
             }
         }
     )
@@ -92,4 +102,48 @@ fun GoogleButton(onClick: () -> Unit) {
         )
         Text(text = "Google")
     }
+}
+
+@Composable
+fun ButtonForm(onClick: () -> Unit, text: String) {
+    ElevatedButton(
+        onClick = onClick,
+        modifier = Modifier
+            .width(280.dp),
+        shape = RoundedCornerShape(10.dp)
+    ) {
+        Text(
+            text,
+            style = TextStyle(
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold,
+                //color = Color.Blue
+            )
+        )
+
+    }
+}
+
+@Composable
+fun FieldFormString(variable: MutableState<String>, label: String) {
+    OutlinedTextField(
+        value = variable.value,
+        onValueChange = { variable.value = it },
+        label = { Text(label) }
+    )
+}
+
+@Composable
+fun NumberField(number: MutableState<String>, label: String){
+    OutlinedTextField(
+        value = number.value,
+        onValueChange = {
+            // Actualiza el valor solo si es un número válido
+            if (it.all { char -> char.isDigit() }) {
+                number.value = it
+            }
+        },
+        label = { Text(label) },
+        keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number)
+    )
 }

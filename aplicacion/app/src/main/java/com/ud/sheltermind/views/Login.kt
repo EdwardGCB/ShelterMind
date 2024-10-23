@@ -9,14 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -39,15 +32,18 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.ud.sheltermind.R
+import com.ud.sheltermind.componentes.ButtonForm
+import com.ud.sheltermind.componentes.FieldFormString
 import com.ud.sheltermind.componentes.PassFlied
 import com.ud.sheltermind.componentes.SocialNetwork
+import com.ud.sheltermind.enums.EnumNavigation
 
 @Preview
 @Composable
 fun ViewLogin() {
     val navController = rememberNavController()
-    NavHost(navController = navController, startDestination = "login") {
-        composable("login") {
+    NavHost(navController = navController, startDestination = EnumNavigation.Login.toString()) {
+        composable(EnumNavigation.Login.toString()) {
             LoginCompose(navController)
         }
     }// Coloca tu configuración de navegación aquí
@@ -62,16 +58,16 @@ fun LoginCompose(navController: NavController) {
         topBar = {
             TopAppBar(
                 title = {
-                Text(
-                    stringResource(R.string.login_button),
-                    style = TextStyle(
-                        fontSize = 25.sp,
-                        fontWeight = FontWeight.ExtraBold,
-                        //Modificador de color para el texto
-                        //color = Color.Blue
+                    Text(
+                        stringResource(R.string.login_button),
+                        style = TextStyle(
+                            fontSize = 25.sp,
+                            fontWeight = FontWeight.ExtraBold,
+                            //Modificador de color para el texto
+                            //color = Color.Blue
+                        )
                     )
-                )
-            })
+                })
         }
     ) { innerPadding ->
         Box(
@@ -124,30 +120,13 @@ private fun Formulario(
     navController: NavController
 ) {
 
-    OutlinedTextField(
-        value = email.value,
-        onValueChange = { email.value = it },
-        label = { Text(stringResource(R.string.email)) }
-    )
+    //Email
+    FieldFormString(email, stringResource(R.string.email))
     Spacer(modifier = Modifier.height(16.dp))
-    PassFlied(password)
+    //Contraseña
+    PassFlied(password, stringResource(R.string.password))
     Spacer(modifier = Modifier.height(16.dp))
-    ElevatedButton(
-        onClick = {
-        },
-        modifier = Modifier
-            .width(280.dp),
-        shape = RoundedCornerShape(10.dp)
-    ) {
-        Text(
-            stringResource(R.string.login_button),
-            style = TextStyle(
-                fontSize = 20.sp,
-                fontWeight = FontWeight.Bold,
-                //color = Color.Blue
-            )
-        )
-    }
+    ButtonForm(onClick = { navController.navigate(EnumNavigation.Questions.toString()) }, stringResource(R.string.login_button))
 }
 
 @Composable
@@ -158,7 +137,7 @@ private fun FooterFormulario(navController: NavController) {
         Text(stringResource(R.string.login_footer))
         //Boton para la navegacion hacia SingUp
         TextButton(onClick = {
-            navController.navigate("singUp")
+            navController.navigate(EnumNavigation.SingUp.toString())
         }) {
             Text(
                 stringResource(R.string.href_crear_cuenta),

@@ -46,8 +46,12 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.ud.sheltermind.R
+import com.ud.sheltermind.componentes.ButtonForm
+import com.ud.sheltermind.componentes.FieldFormString
+import com.ud.sheltermind.componentes.NumberField
 import com.ud.sheltermind.componentes.PassFlied
 import com.ud.sheltermind.componentes.SocialNetwork
+import com.ud.sheltermind.enums.EnumNavigation
 
 @Preview
 @Composable
@@ -86,7 +90,7 @@ fun SingUpCompose(navController: NavController) {
             },
                 navigationIcon = {
                     IconButton(onClick = {
-                        navController.navigate("login")
+                        navController.navigate(EnumNavigation.Login.toString())
                     }) {
                         Icon(imageVector = Icons.Filled.ArrowBackIosNew, contentDescription = "Arrow Back Icon")
                     }
@@ -141,56 +145,24 @@ private fun FormSingUp(
     number: MutableState<String>
 ) {
     //User
-    OutlinedTextField(
-        value = user.value,
-        onValueChange = { user.value = it },
-        label = { Text(stringResource(R.string.user)) }
-    )
+    FieldFormString(user, stringResource(R.string.user))
     Spacer(modifier = Modifier.height(16.dp))
     //TypeUser
     OptionSelect(typeuser)
     Spacer(modifier = Modifier.height(16.dp))
     //Email
-    OutlinedTextField(
-        value = email.value,
-        onValueChange = { email.value = it },
-        label = { Text(stringResource(R.string.email)) }
-    )
+    FieldFormString(email, stringResource(R.string.email))
     Spacer(modifier = Modifier.height(16.dp))
     //password
-    PassFlied(password)
+    PassFlied(password, stringResource(R.string.password))
     Spacer(modifier = Modifier.height(16.dp))
     //verify password
-    PassFlied(passwordverify)
+    PassFlied(passwordverify, stringResource(R.string.password_verify))
     Spacer(modifier = Modifier.height(16.dp))
     //number
-    OutlinedTextField(
-        value = number.value,
-        onValueChange = {
-            // Actualiza el valor solo si es un número válido
-            if (it.all { char -> char.isDigit() }) {
-                number.value = it
-            }
-        },
-        label = { Text(stringResource(R.string.number)) },
-        keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number)
-    )
+    NumberField(number, stringResource(R.string.number))
     Spacer(modifier = Modifier.height(16.dp))
-    ElevatedButton(
-        onClick = { /*TODO*/ },
-        modifier = Modifier
-            .width(280.dp),
-        shape = RoundedCornerShape(10.dp)
-    ) {
-        Text(
-            stringResource(R.string.sing_up_button),
-            style = TextStyle(
-                fontSize = 20.sp,
-                fontWeight = FontWeight.Bold,
-                //color = Color.Blue
-            )
-        )
-    }
+    ButtonForm(onClick = { /*TODO*/ }, text = stringResource(R.string.sing_up_button))
 }
 
 @Composable

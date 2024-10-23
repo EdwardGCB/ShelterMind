@@ -8,9 +8,12 @@
     <string name="href_crear_cuenta" translatable="false">Crear cuenta</string>
     <string name="social_network" translatable="false">Inicia sesion con </string>
     <string name="password" translatable="false">Contraseña</string>
+    <string name="password_verify" translatable="false">Verificar Contraseña</string>
     <string name="email" translatable="false">Correo</string>
     <string name="user" translatable="false">Usuario</string>
     <string name="number" translatable="false">Numero</string>
+    <string name="next" translatable="false">Siguiente</string>
+    <string name="back" translatable="false">Volver</string>
 
     <string name="sing_up_button" translatable="false">Crear Cuenta</string>
     <string name="sing_up_footer" translatable="false">Acepto las</string>

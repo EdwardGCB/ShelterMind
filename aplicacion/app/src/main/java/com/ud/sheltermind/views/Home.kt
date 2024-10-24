@@ -57,6 +57,7 @@ fun ViewHome() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeCompose(navController: NavController) {
+    //persistencia de datos en la vida util del compose
     val dateNow = remember { mutableStateOf(Operations().obtenerFechaActual()) }
     Scaffold(
         topBar = {
@@ -72,6 +73,7 @@ fun HomeCompose(navController: NavController) {
                         )
                     )
                 },
+                //Botones a la derecha de TopAppBar
                 actions = {
                     IconButton(onClick = {
                         navController.navigate(EnumNavigation.Calendar.toString())

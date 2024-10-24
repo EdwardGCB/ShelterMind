@@ -1,5 +1,6 @@
 package com.ud.sheltermind.navigation
 
+import NotificationsCompose
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
@@ -10,6 +11,7 @@ import com.ud.sheltermind.enums.EnumNavigation
 import com.ud.sheltermind.views.HomeCompose
 import com.ud.sheltermind.views.LoginCompose
 import com.ud.sheltermind.views.QuestionsCompose
+import com.ud.sheltermind.views.SearchCompose
 import com.ud.sheltermind.views.SingUpCompose
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -35,11 +37,11 @@ fun AppNavigation(){
         }
         // Search
         composable (EnumNavigation.Search.toString()) {
-            //SearchCompose(navController)
+            SearchCompose(navController)
         }
         // Notifications
         composable (EnumNavigation.Notifications.toString()) {
-            //NotificationsCompose(navController)
+            NotificationsCompose(navController)
         }
         // Perfil
         composable (EnumNavigation.Perfil.toString()) {

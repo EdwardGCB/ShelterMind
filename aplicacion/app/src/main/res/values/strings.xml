@@ -14,9 +14,14 @@
     <string name="number" translatable="false">Numero</string>
     <string name="next" translatable="false">Siguiente</string>
     <string name="back" translatable="false">Volver</string>
+    <string name="search" translatable="false">Buscar</string>
 
     <string name="sing_up_button" translatable="false">Crear Cuenta</string>
     <string name="sing_up_footer" translatable="false">Acepto las</string>
     <string name="href_politics" translatable="false">Politicas de privacidad</string>
     <string name="user_type">Seleccionar tipo de usuario</string>
+    <string name="syntom">Registrar nuevo \n sintoma</string>
+    <string name="card1">Notas del dia</string>
+    <string name="see_more">ver más</string>
+    <string name="card2">Actividades recomendadas</string>
 </resources>

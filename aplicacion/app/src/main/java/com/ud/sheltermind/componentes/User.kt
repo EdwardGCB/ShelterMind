@@ -3,10 +3,12 @@ package com.ud.sheltermind.componentes
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
@@ -14,8 +16,17 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material.icons.filled.Circle
+import androidx.compose.material.icons.filled.SentimentDissatisfied
+import androidx.compose.material.icons.filled.SentimentNeutral
+import androidx.compose.material.icons.filled.SentimentSatisfiedAlt
+import androidx.compose.material.icons.filled.SentimentVeryDissatisfied
+import androidx.compose.material.icons.filled.SentimentVerySatisfied
+import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.filled.StarBorder
+import androidx.compose.material.icons.filled.StarHalf
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -55,22 +66,32 @@ fun ViewCardsImage() {
 
 @Preview
 @Composable
-fun ViewActivityCard(){
+fun ViewActivityCard() {
     val title = "Titulo"
     val target = "Tarjeta"
     ActivityCard(onClick = { /*TODO*/ }, title, target)
 }
 
+@Preview
+@Composable
+fun ViewProfesionalCard() {
+    val firstname = "FirstName"
+    val lastname = "LastName"
+    val profession = "Profession"
+    val score = 5.0F
+    ProfesionalCard(Icons.Filled.AccountCircle, firstname, lastname, profession, score)
+}
+
 
 @Composable
-fun AddCard(onClick: () -> Unit){
-    Card (
+fun AddCard(onClick: () -> Unit) {
+    Card(
         shape = RoundedCornerShape(16.dp),
         elevation = CardDefaults.cardElevation(8.dp)
-    ){
+    ) {
         Row {
             Spacer(Modifier.width(10.dp))
-            Column(horizontalAlignment = Alignment.CenterHorizontally){
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Spacer(Modifier.height(10.dp))
                 Text(
                     text = stringResource(R.string.syntom),
@@ -81,7 +102,7 @@ fun AddCard(onClick: () -> Unit){
                     )
                 )
                 Spacer(Modifier.height(25.dp))
-                IconButtonForm(onClick = onClick, Icons.Filled.AddCircle, 50.dp )
+                IconButtonForm(onClick = onClick, Icons.Filled.AddCircle, 50.dp)
                 Spacer(Modifier.height(10.dp))
             }
             Spacer(Modifier.width(10.dp))
@@ -92,20 +113,24 @@ fun AddCard(onClick: () -> Unit){
 
 @Composable
 fun SyntomCard(title: String, target: String, icon: ImageVector, hour: String) {
-    Card (
+    Card(
         shape = RoundedCornerShape(16.dp),
         elevation = CardDefaults.cardElevation(8.dp)
-    ){
+    ) {
         Row {
             Spacer(Modifier.width(10.dp))
-            Column(horizontalAlignment = Alignment.CenterHorizontally){
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Spacer(Modifier.height(10.dp))
-                Icon(imageVector = icon, contentDescription = "Icon Description", Modifier.size(50.dp))
+                Icon(
+                    imageVector = icon,
+                    contentDescription = "Icon Description",
+                    Modifier.size(50.dp)
+                )
                 Spacer(Modifier.height(10.dp))
                 Text(
                     text = title,
                     style = TextStyle(
-                        fontSize = 10.sp,
+                        fontSize = 12.sp,
                         fontWeight = FontWeight.ExtraBold,
                         //color = Color.Blue
                     )
@@ -114,7 +139,7 @@ fun SyntomCard(title: String, target: String, icon: ImageVector, hour: String) {
                 Text(
                     text = target,
                     style = TextStyle(
-                        fontSize = 10.sp,
+                        fontSize = 9.sp,
                         fontWeight = FontWeight.Normal,
                         //color = Color.Blue
                     )
@@ -123,7 +148,7 @@ fun SyntomCard(title: String, target: String, icon: ImageVector, hour: String) {
                 Text(
                     text = hour,
                     style = TextStyle(
-                        fontSize = 5.sp,
+                        fontSize = 9.sp,
                         fontWeight = FontWeight.Light,
                         //color = Color.Blue
                     )
@@ -137,19 +162,28 @@ fun SyntomCard(title: String, target: String, icon: ImageVector, hour: String) {
 }
 
 @Composable
-fun ActivityCard(onClick: () -> Unit, title: String, target: String){
-    Card (
+fun ActivityCard(onClick: () -> Unit, title: String, target: String) {
+    Card(
+        modifier = Modifier
+            .height(125.dp)
+            .width(125.dp),
         shape = RoundedCornerShape(16.dp),
         elevation = CardDefaults.cardElevation(8.dp)
-    ){
-        Row {
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .fillMaxHeight(),
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
             Spacer(Modifier.width(10.dp))
-            Column(horizontalAlignment = Alignment.CenterHorizontally){
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Spacer(Modifier.height(10.dp))
                 Text(
                     text = title,
                     style = TextStyle(
-                        fontSize = 15.sp,
+                        fontSize = 12.sp,
                         fontWeight = FontWeight.ExtraBold,
                         //color = Color.Blue
                     )
@@ -158,16 +192,78 @@ fun ActivityCard(onClick: () -> Unit, title: String, target: String){
                 Text(
                     text = target,
                     style = TextStyle(
-                        fontSize = 15.sp,
+                        fontSize = 9.sp,
                         fontWeight = FontWeight.Normal,
                         //color = Color.Blue
                     )
                 )
                 Spacer(Modifier.height(7.dp))
                 TextButtonForm(onClick, stringResource(R.string.see_more))
-                Spacer(Modifier.height(10.dp))
             }
             Spacer(Modifier.width(10.dp))
+        }
+    }
+}
+
+@Composable
+fun ProfesionalCard(
+    icon: ImageVector,
+    firstname: String,
+    lastname: String,
+    profession: String,
+    score: Float
+) {
+    Card(
+        shape = RoundedCornerShape(16.dp),
+        elevation = CardDefaults.cardElevation(8.dp)
+    ) {
+        Box(
+            contentAlignment = Alignment.Center
+        ) {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                Spacer(modifier = Modifier.height(10.dp))
+                Icon(
+                    imageVector = icon,
+                    contentDescription = "Profesional perfil image",
+                    modifier = Modifier.size(90.dp)
+                )
+                Spacer(modifier = Modifier.height(5.dp))
+                Text(
+                    text = firstname,
+                    style = TextStyle(
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.ExtraBold,
+                        //color = Color.Blue
+                    )
+                )
+                Spacer(modifier = Modifier.height(3.dp))
+                Text(
+                    text = lastname,
+                    style = TextStyle(
+                        fontSize = 9.sp,
+                        fontWeight = FontWeight.Normal,
+                        //color = Color.Blue
+                    )
+                )
+                Spacer(modifier = Modifier.height(4.dp))
+                Text(
+                    text = profession,
+                    style = TextStyle(
+                        fontSize = 9.sp,
+                        fontWeight = FontWeight.Normal,
+                        //color = Color.Blue
+                    )
+                )
+                Spacer(modifier = Modifier.height(5.dp))
+                StarScore(score)
+                Spacer(modifier = Modifier.height(5.dp))
+                TextButtonForm(onClick = { /*TODO*/ }, stringResource(R.string.see_more))
+                Spacer(modifier = Modifier.height(5.dp))
+
+            }
         }
     }
 }
@@ -214,3 +310,66 @@ fun WeekCompose(dateNow: LocalDate) {
         }
     }
 }
+
+@Composable
+fun StarScore(score: Float) {
+    Row {
+        for (i in 1..5) {
+            val starIcon = when {
+                i <= score -> Icons.Filled.Star
+                i - 0.5 <= score -> Icons.Filled.StarHalf
+                else -> Icons.Filled.StarBorder
+            }
+            Icon(
+                imageVector = starIcon,
+                contentDescription = if (i <= score) "Filled Star" else "Empty Star",
+                tint = Color.Yellow,
+                modifier = Modifier.size(14.dp)
+            )
+        }
+    }
+}
+
+@Preview
+@Composable
+fun Feel() {
+    Box(
+        modifier = Modifier.fillMaxWidth(),
+        contentAlignment = Alignment.Center
+    ) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            Spacer(modifier = Modifier.height(10.dp))
+            Text(
+                text = stringResource(R.string.feel),
+                style = TextStyle(
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.ExtraBold,
+                    // color = Color.Blue
+                )
+            )
+            Spacer(modifier = Modifier.height(10.dp))
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Spacer(modifier = Modifier.width(10.dp))
+                IconButtonForm(onClick = { /*TODO*/ }, icon = Icons.Filled.SentimentVeryDissatisfied, sizeval = 50.dp)
+                Spacer(modifier = Modifier.width(10.dp))
+                IconButtonForm(onClick = { /*TODO*/ }, icon = Icons.Filled.SentimentDissatisfied, sizeval = 50.dp)
+                Spacer(modifier = Modifier.width(10.dp))
+                IconButtonForm(onClick = { /*TODO*/ }, icon = Icons.Filled.SentimentNeutral, sizeval = 50.dp)
+                Spacer(modifier = Modifier.width(10.dp))
+                IconButtonForm(onClick = { /*TODO*/ }, icon = Icons.Filled.SentimentSatisfiedAlt, sizeval = 50.dp)
+                Spacer(modifier = Modifier.width(10.dp))
+                IconButtonForm(onClick = { /*TODO*/ }, icon = Icons.Filled.SentimentVerySatisfied, sizeval = 50.dp)
+                Spacer(modifier = Modifier.width(10.dp))
+            }
+            Spacer(modifier = Modifier.height(10.dp))
+        }
+    }
+}
+

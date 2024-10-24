@@ -13,6 +13,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.Circle
 import androidx.compose.material3.Card
@@ -28,7 +29,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -43,6 +43,7 @@ import com.ud.sheltermind.R
 import com.ud.sheltermind.componentes.ActivityCard
 import com.ud.sheltermind.componentes.AddCard
 import com.ud.sheltermind.componentes.CustomBottomBar
+import com.ud.sheltermind.componentes.ProfesionalCard
 import com.ud.sheltermind.componentes.SyntomCard
 import com.ud.sheltermind.componentes.WeekCompose
 import com.ud.sheltermind.enums.EnumNavigation
@@ -57,7 +58,7 @@ fun ViewHome() {
         composable(EnumNavigation.Home.toString()) {
             HomeCompose(navController)
         }
-    }// Coloca tu configuración de navegación aquí
+    }
 }
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -113,18 +114,21 @@ fun HomeCompose(navController: NavController) {
             item {
                 ActivitiesCard(navController)
             }
+            item {
+                ProfesionalsCard(navController)
+            }
         }
     }
 }
 
 @Composable
-private fun NotesCard (navController: NavController){
-    Box (Modifier.padding(20.dp)){
+private fun NotesCard(navController: NavController) {
+    Box(Modifier.padding(20.dp)) {
         Card(
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(16.dp),
             elevation = CardDefaults.cardElevation(8.dp)
-        ){
+        ) {
             Spacer(modifier = Modifier.height(20.dp))
             Row {
                 Spacer(modifier = Modifier.width(20.dp))
@@ -141,11 +145,16 @@ private fun NotesCard (navController: NavController){
             LazyRow {
                 item {
                     Spacer(modifier = Modifier.width(20.dp))
-                    AddCard(onClick = {})
+                    AddCard(onClick = {navController.navigate(EnumNavigation.Syntom.toString())})
                     Spacer(modifier = Modifier.width(20.dp))
                 }
                 items(7) {
-                    SyntomCard(title = "Titulo", target = "Tarjeta", icon = Icons.Filled.Circle, "HH:MM")
+                    SyntomCard(
+                        title = "Titulo",
+                        target = "Tarjeta",
+                        icon = Icons.Filled.Circle,
+                        "HH:MM"
+                    )
                     Spacer(modifier = Modifier.width(20.dp))
                 }
             }
@@ -156,13 +165,13 @@ private fun NotesCard (navController: NavController){
 }
 
 @Composable
-private fun ActivitiesCard(navController: NavController){
-    Box (Modifier.padding(20.dp)){
+private fun ActivitiesCard(navController: NavController) {
+    Box(Modifier.padding(20.dp)) {
         Card(
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(16.dp),
             elevation = CardDefaults.cardElevation(8.dp)
-        ){
+        ) {
             Spacer(modifier = Modifier.height(20.dp))
             Row {
                 Spacer(modifier = Modifier.width(20.dp))
@@ -182,6 +191,48 @@ private fun ActivitiesCard(navController: NavController){
                 }
                 items(7) {
                     ActivityCard(onClick = { /*TODO*/ }, "Actividad", "Descripcion")
+                    Spacer(modifier = Modifier.width(20.dp))
+                }
+            }
+            Spacer(modifier = Modifier.height(20.dp))
+        }
+    }
+    Spacer(modifier = Modifier.height(16.dp))
+}
+
+@Composable
+private fun ProfesionalsCard(navController: NavController) {
+    Box(Modifier.padding(20.dp)) {
+        Card(
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(16.dp),
+            elevation = CardDefaults.cardElevation(8.dp)
+        ) {
+            Spacer(modifier = Modifier.height(20.dp))
+            Row {
+                Spacer(modifier = Modifier.width(20.dp))
+                Text(
+                    stringResource(R.string.card3),
+                    style = TextStyle(
+                        fontSize = 15.sp,
+                        fontWeight = FontWeight.ExtraBold,
+                        //color = Color.Blue
+                    )
+                )
+            }
+            Spacer(modifier = Modifier.height(10.dp))
+            LazyRow {
+                item {
+                    Spacer(modifier = Modifier.width(20.dp))
+                }
+                items(7) {
+                    ProfesionalCard(
+                        icon = Icons.Filled.AccountCircle,
+                        firstname = "FirstName",
+                        lastname = "LastName",
+                        profession = "Profession",
+                        score = 5.0F
+                    )
                     Spacer(modifier = Modifier.width(20.dp))
                 }
             }

@@ -1,9 +1,15 @@
 package com.ud.sheltermind.componentes
 
+import android.annotation.SuppressLint
+import android.app.DatePickerDialog
+import android.app.TimePickerDialog
+import android.widget.DatePicker
+import android.widget.TimePicker
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -11,6 +17,8 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccessTime
+import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Button
@@ -29,6 +37,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -42,6 +51,9 @@ import androidx.compose.ui.unit.sp
 import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
 import com.ud.sheltermind.R
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Locale
 
 @Preview
 @Composable
@@ -170,6 +182,68 @@ fun TextButtonForm(onClick: () -> Unit, text: String) {
                 fontWeight = FontWeight.Normal,
                 //color = Color.Blue
             )
+        )
+    }
+}
+
+@Composable
+fun FieldDateForm(selectedDate: MutableState<String>) {
+    val context = LocalContext.current
+    val calendar = Calendar.getInstance()
+    val year = calendar.get(Calendar.YEAR)
+    val month = calendar.get(Calendar.MONTH)
+    val day = calendar.get(Calendar.DAY_OF_MONTH)
+
+    val datePickerDialog = DatePickerDialog(
+        context,
+        { _: DatePicker, selectedYear: Int, selectedMonth: Int, selectedDay: Int ->
+            selectedDate.value = "$selectedDay/${selectedMonth + 1}/$selectedYear"
+        }, year, month, day
+    )
+
+    Column {
+        OutlinedTextField(
+            value = selectedDate.value,
+            onValueChange = { selectedDate.value = it },
+            label = { Text("Seleccionar fecha") },
+            readOnly = true,
+            trailingIcon = {
+                IconButtonForm(
+                    onClick = { datePickerDialog.show() },
+                    icon = Icons.Filled.CalendarMonth,
+                    sizeval = 20.dp
+                )
+            },
+        )
+    }
+}
+
+@SuppressLint("DefaultLocale")
+@Composable
+fun FieldHourForm(selectedTime: MutableState<String>) {
+    val context = LocalContext.current
+    val calendar = Calendar.getInstance()
+    val hour = calendar.get(Calendar.HOUR_OF_DAY)
+    val minute = calendar.get(Calendar.MINUTE)
+
+    val timePickerDialog = TimePickerDialog(
+        context,
+        { _: TimePicker, selectedHour: Int, selectedMinute: Int ->
+            selectedTime.value = String.format("%02d:%02d", selectedHour, selectedMinute)
+        }, hour, minute, true
+    )
+
+    Column {
+        OutlinedTextField(
+            value = selectedTime.value,
+            onValueChange = { selectedTime.value = it },
+            label = { Text("Seleccionar hora") },
+            readOnly = true,
+            trailingIcon = {
+                IconButton(onClick = { timePickerDialog.show() }) {
+                    Icon(Icons.Filled.AccessTime, contentDescription = "Seleccionar hora")
+                }
+            }
         )
     }
 }

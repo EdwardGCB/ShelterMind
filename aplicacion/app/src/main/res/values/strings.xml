@@ -24,4 +24,11 @@
     <string name="card1">Notas del dia</string>
     <string name="see_more">ver más</string>
     <string name="card2">Actividades recomendadas</string>
+    <string name="card3">Profesionales recomendados</string>
+    <string name="syntom_title">Sintoma</string>
+    <string name="description_syntom">¿Que piensas acerca de eso?</string>
+    <string name="send">Guardar</string>
+    <string name="feel">¿Como te sientes en este momento?</string>
+    <string name="calendary_title">Calendario</string>
+    <string name="perfil_title">Perfil</string>
 </resources>

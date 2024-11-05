@@ -22,4 +22,6 @@ open class Operations {
         val formatter = DateTimeFormatter.ofPattern("MMMM dd")
         return fechaActual.format(formatter)
     }
+
+
 }

@@ -2,9 +2,12 @@ package com.ud.sheltermind.views
 
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -40,11 +43,11 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.ud.sheltermind.R
-import com.ud.sheltermind.componentes.ActivityCard
 import com.ud.sheltermind.componentes.AddCard
 import com.ud.sheltermind.componentes.CustomBottomBar
 import com.ud.sheltermind.componentes.ProfesionalCard
 import com.ud.sheltermind.componentes.SyntomCard
+import com.ud.sheltermind.componentes.TextButtonForm
 import com.ud.sheltermind.componentes.WeekCompose
 import com.ud.sheltermind.enums.EnumNavigation
 import com.ud.sheltermind.logic.Operations
@@ -240,4 +243,48 @@ private fun ProfesionalsCard(navController: NavController) {
         }
     }
     Spacer(modifier = Modifier.height(16.dp))
+}
+
+@Composable
+private fun ActivityCard(onClick: () -> Unit, title: String, target: String) {
+    Card(
+        modifier = Modifier
+            .height(125.dp)
+            .width(125.dp),
+        shape = RoundedCornerShape(16.dp),
+        elevation = CardDefaults.cardElevation(8.dp)
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .fillMaxHeight(),
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Spacer(Modifier.width(10.dp))
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                Spacer(Modifier.height(10.dp))
+                Text(
+                    text = title,
+                    style = TextStyle(
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.ExtraBold,
+                        //color = Color.Blue
+                    )
+                )
+                Spacer(Modifier.height(7.dp))
+                Text(
+                    text = target,
+                    style = TextStyle(
+                        fontSize = 9.sp,
+                        fontWeight = FontWeight.Normal,
+                        //color = Color.Blue
+                    )
+                )
+                Spacer(Modifier.height(7.dp))
+                TextButtonForm(onClick, stringResource(R.string.see_more))
+            }
+            Spacer(Modifier.width(10.dp))
+        }
+    }
 }

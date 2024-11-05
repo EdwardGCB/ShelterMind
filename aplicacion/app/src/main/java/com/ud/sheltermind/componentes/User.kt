@@ -2,15 +2,17 @@ package com.ud.sheltermind.componentes
 
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
@@ -40,12 +42,14 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ud.sheltermind.R
 import com.ud.sheltermind.logic.Operations
 import java.time.LocalDate
+import java.time.temporal.TemporalAdjusters
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Preview
@@ -66,20 +70,25 @@ fun ViewCardsImage() {
 
 @Preview
 @Composable
-fun ViewActivityCard() {
-    val title = "Titulo"
-    val target = "Tarjeta"
-    ActivityCard(onClick = { /*TODO*/ }, title, target)
-}
-
-@Preview
-@Composable
 fun ViewProfesionalCard() {
     val firstname = "FirstName"
     val lastname = "LastName"
     val profession = "Profession"
     val score = 5.0F
     ProfesionalCard(Icons.Filled.AccountCircle, firstname, lastname, profession, score)
+}
+
+@RequiresApi(Build.VERSION_CODES.O)
+@Preview
+@Composable
+fun PreviewMonthCard() {
+    MonthCard(LocalDate.of(2024, 9, 1)) // Septiembre 2024
+}
+
+@Preview
+@Composable
+fun ViewPerfilImage(){
+    PerfilImage()
 }
 
 
@@ -157,50 +166,6 @@ fun SyntomCard(title: String, target: String, icon: ImageVector, hour: String) {
             }
             Spacer(Modifier.width(10.dp))
 
-        }
-    }
-}
-
-@Composable
-fun ActivityCard(onClick: () -> Unit, title: String, target: String) {
-    Card(
-        modifier = Modifier
-            .height(125.dp)
-            .width(125.dp),
-        shape = RoundedCornerShape(16.dp),
-        elevation = CardDefaults.cardElevation(8.dp)
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .fillMaxHeight(),
-            horizontalArrangement = Arrangement.Center,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Spacer(Modifier.width(10.dp))
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                Spacer(Modifier.height(10.dp))
-                Text(
-                    text = title,
-                    style = TextStyle(
-                        fontSize = 12.sp,
-                        fontWeight = FontWeight.ExtraBold,
-                        //color = Color.Blue
-                    )
-                )
-                Spacer(Modifier.height(7.dp))
-                Text(
-                    text = target,
-                    style = TextStyle(
-                        fontSize = 9.sp,
-                        fontWeight = FontWeight.Normal,
-                        //color = Color.Blue
-                    )
-                )
-                Spacer(Modifier.height(7.dp))
-                TextButtonForm(onClick, stringResource(R.string.see_more))
-            }
-            Spacer(Modifier.width(10.dp))
         }
     }
 }
@@ -357,15 +322,35 @@ fun Feel() {
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Spacer(modifier = Modifier.width(10.dp))
-                IconButtonForm(onClick = { /*TODO*/ }, icon = Icons.Filled.SentimentVeryDissatisfied, sizeval = 50.dp)
+                IconButtonForm(
+                    onClick = { /*TODO*/ },
+                    icon = Icons.Filled.SentimentVeryDissatisfied,
+                    sizeval = 50.dp
+                )
                 Spacer(modifier = Modifier.width(10.dp))
-                IconButtonForm(onClick = { /*TODO*/ }, icon = Icons.Filled.SentimentDissatisfied, sizeval = 50.dp)
+                IconButtonForm(
+                    onClick = { /*TODO*/ },
+                    icon = Icons.Filled.SentimentDissatisfied,
+                    sizeval = 50.dp
+                )
                 Spacer(modifier = Modifier.width(10.dp))
-                IconButtonForm(onClick = { /*TODO*/ }, icon = Icons.Filled.SentimentNeutral, sizeval = 50.dp)
+                IconButtonForm(
+                    onClick = { /*TODO*/ },
+                    icon = Icons.Filled.SentimentNeutral,
+                    sizeval = 50.dp
+                )
                 Spacer(modifier = Modifier.width(10.dp))
-                IconButtonForm(onClick = { /*TODO*/ }, icon = Icons.Filled.SentimentSatisfiedAlt, sizeval = 50.dp)
+                IconButtonForm(
+                    onClick = { /*TODO*/ },
+                    icon = Icons.Filled.SentimentSatisfiedAlt,
+                    sizeval = 50.dp
+                )
                 Spacer(modifier = Modifier.width(10.dp))
-                IconButtonForm(onClick = { /*TODO*/ }, icon = Icons.Filled.SentimentVerySatisfied, sizeval = 50.dp)
+                IconButtonForm(
+                    onClick = { /*TODO*/ },
+                    icon = Icons.Filled.SentimentVerySatisfied,
+                    sizeval = 50.dp
+                )
                 Spacer(modifier = Modifier.width(10.dp))
             }
             Spacer(modifier = Modifier.height(10.dp))
@@ -373,3 +358,103 @@ fun Feel() {
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
+@Composable
+fun MonthCard(dateNow: LocalDate) {
+    val daysOfWeek = listOf("L", "M", "X", "J", "V", "S", "D")
+
+    // Obtiene el primer y último día del mes y el total de días
+    val primerDiaMes = dateNow.withDayOfMonth(1)
+    val ultimoDiaMes = dateNow.with(TemporalAdjusters.lastDayOfMonth())
+    var primerDiaSemana = primerDiaMes.dayOfWeek.value % 7
+    primerDiaSemana = if(primerDiaSemana==0) 7 else primerDiaSemana
+    val totalDiasMes = dateNow.lengthOfMonth()
+    // Calcular el número de semanas que ocupa el mes
+    val diasEnMesConOffset = primerDiaSemana + totalDiasMes
+    val totalSemanas = if (diasEnMesConOffset % 7 == 0) diasEnMesConOffset / 7 else (diasEnMesConOffset / 7) + 1
+
+    // Diseño de la tarjeta del mes
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp),
+        shape = RoundedCornerShape(16.dp),
+        elevation = CardDefaults.cardElevation(8.dp)
+    ) {
+        Column(Modifier.padding(16.dp)) {
+            // Título del mes
+            Box(
+                modifier = Modifier
+                    .height(30.dp)
+                    .fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = dateNow.month.toString(),
+                    textAlign = TextAlign.Center,
+                    style = TextStyle(fontSize = 18.sp, fontWeight = FontWeight.ExtraBold)
+                )
+            }
+
+            // Mostrar nombres de los días de la semana
+            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
+                daysOfWeek.forEach { day ->
+                    Box(
+                        modifier = Modifier
+                            .weight(1f)
+                            .height(30.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = day,
+                            textAlign = TextAlign.Center,
+                            style = TextStyle(fontWeight = FontWeight.Bold)
+                        )
+                    }
+                }
+            }
+
+            // Mostrar las semanas y los días del mes
+            var diaActual = 1
+            for (semana in 1..totalSemanas) {
+                Row(
+                    Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    for (diaSemana in 0..6) {
+                        // Para manejar el primer día y último día del me
+                        if ((semana == 1 && diaSemana < primerDiaSemana-1) || diaActual > totalDiasMes) {
+                            // Espacios vacíos para días fuera del mes
+                            Spacer(
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .height(30.dp)
+                            )
+                        } else {
+                            // Días del mes
+                            Box(
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .height(30.dp),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Text(
+                                    text = diaActual.toString(),
+                                    textAlign = TextAlign.Center
+                                )
+                            }
+                            diaActual++
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun PerfilImage(){
+    Box(modifier = Modifier.fillMaxWidth()){
+
+    }
+}

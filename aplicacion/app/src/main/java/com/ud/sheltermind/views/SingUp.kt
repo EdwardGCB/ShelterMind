@@ -107,12 +107,13 @@ fun SingUpCompose(navController: NavController) {
             LazyColumn(horizontalAlignment = Alignment.CenterHorizontally) {
                 //Imagen del logo horizontal
                 item {
+                    Spacer(modifier = Modifier.height(16.dp))
                     Image(
-                        painter = painterResource(R.drawable.logo),
+                        painter = painterResource(R.drawable.logo2),
                         contentDescription = "Logo",
                         modifier = Modifier
-                            .width(200.dp)
-                            .height(100.dp)
+                            .width(300.dp)
+                            .height(200.dp)
                     )
                     Spacer(modifier = Modifier.height(16.dp))
                     SocialNetwork()

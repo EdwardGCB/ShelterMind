@@ -90,10 +90,10 @@ fun LoginCompose(navController: NavController) {
                 Spacer(modifier = Modifier.height(16.dp))
                 //Imagen del logo vertical
                 Image(
-                    painter = painterResource(R.drawable.logo),
+                    painter = painterResource(R.drawable.logo1),
                     contentDescription = "Logo",
                     modifier = Modifier
-                        .size(200.dp)
+                        .size(250.dp)
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 SocialNetwork()

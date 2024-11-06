@@ -2,8 +2,9 @@ package com.ud.sheltermind.componentes
 
 import android.os.Build
 import androidx.annotation.RequiresApi
-import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -44,12 +45,20 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import coil.annotation.ExperimentalCoilApi
+import coil.compose.rememberImagePainter
 import com.ud.sheltermind.R
+import com.ud.sheltermind.enums.EnumNavigation
 import com.ud.sheltermind.logic.Operations
+import com.ud.sheltermind.views.HomeCompose
 import java.time.LocalDate
-import java.time.temporal.TemporalAdjusters
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Preview
@@ -75,20 +84,26 @@ fun ViewProfesionalCard() {
     val lastname = "LastName"
     val profession = "Profession"
     val score = 5.0F
-    ProfesionalCard(Icons.Filled.AccountCircle, firstname, lastname, profession, score)
+    val navController = rememberNavController()
+    NavHost(navController = navController, startDestination = EnumNavigation.Perfil.toString()) {
+        composable(EnumNavigation.Perfil.toString()) {
+            ProfesionalCard(Icons.Filled.AccountCircle, firstname, lastname, profession, score,navController)
+        }
+    }
+
 }
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Preview
 @Composable
 fun PreviewMonthCard() {
-    MonthCard(LocalDate.of(2024, 9, 1)) // Septiembre 2024
+    MonthCard(LocalDate.of(2024, 11, 5)) // Septiembre 2024
 }
 
 @Preview
 @Composable
-fun ViewPerfilImage(){
-    PerfilImage()
+fun ViewPerfilImage() {
+    PerfilImage(name = "John Doe", imageUrl = "https://via.placeholder.com/250")
 }
 
 
@@ -176,7 +191,8 @@ fun ProfesionalCard(
     firstname: String,
     lastname: String,
     profession: String,
-    score: Float
+    score: Float,
+    navController: NavController
 ) {
     Card(
         shape = RoundedCornerShape(16.dp),
@@ -223,9 +239,9 @@ fun ProfesionalCard(
                     )
                 )
                 Spacer(modifier = Modifier.height(5.dp))
-                StarScore(score)
+                StarScore(score, 15.dp)
                 Spacer(modifier = Modifier.height(5.dp))
-                TextButtonForm(onClick = { /*TODO*/ }, stringResource(R.string.see_more))
+                TextButtonForm(onClick = { navController.navigate(EnumNavigation.Perfil.toString()) }, stringResource(R.string.see_more))
                 Spacer(modifier = Modifier.height(5.dp))
 
             }
@@ -240,14 +256,16 @@ fun WeekCompose(dateNow: LocalDate) {
     val daysOfWeek = listOf("L", "M", "X", "J", "V", "S", "D")
     val startOfWeek = (dateNow.dayOfWeek.value - 1) % 7 // Ajusta para que el lunes sea 0
     Row(
-        Modifier.fillMaxWidth()
+        Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp) // Añadir padding horizontal
     ) {
-        Spacer(Modifier.width(35.dp))
         for (i in 0 until 7) {
             val dayIndex = (startOfWeek + i) % 7
             val currentDate = dateNow.plusDays(i.toLong())
             Column(
-                horizontalAlignment = Alignment.CenterHorizontally
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.weight(1f) // Distribuir el espacio igual entre las columnas
             ) {
                 Spacer(Modifier.height(10.dp))
                 Text(daysOfWeek[dayIndex])
@@ -269,15 +287,14 @@ fun WeekCompose(dateNow: LocalDate) {
                     Spacer(Modifier.height(4.dp))
                     Text(currentDate.dayOfMonth.toString())
                 }
-
             }
-            Spacer(Modifier.width(35.dp))
         }
     }
 }
 
+
 @Composable
-fun StarScore(score: Float) {
+fun StarScore(score: Float, size: Dp) {
     Row {
         for (i in 1..5) {
             val starIcon = when {
@@ -288,8 +305,8 @@ fun StarScore(score: Float) {
             Icon(
                 imageVector = starIcon,
                 contentDescription = if (i <= score) "Filled Star" else "Empty Star",
-                tint = Color.Yellow,
-                modifier = Modifier.size(14.dp)
+                tint = Color.Gray,
+                modifier = Modifier.size(size)
             )
         }
     }
@@ -360,18 +377,18 @@ fun Feel() {
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun MonthCard(dateNow: LocalDate) {
+fun MonthCard(date: LocalDate) {
     val daysOfWeek = listOf("L", "M", "X", "J", "V", "S", "D")
 
     // Obtiene el primer y último día del mes y el total de días
-    val primerDiaMes = dateNow.withDayOfMonth(1)
-    val ultimoDiaMes = dateNow.with(TemporalAdjusters.lastDayOfMonth())
+    val primerDiaMes = date.withDayOfMonth(1)
     var primerDiaSemana = primerDiaMes.dayOfWeek.value % 7
-    primerDiaSemana = if(primerDiaSemana==0) 7 else primerDiaSemana
-    val totalDiasMes = dateNow.lengthOfMonth()
+    primerDiaSemana = if (primerDiaSemana == 0) 7 else primerDiaSemana
+    val totalDiasMes = date.lengthOfMonth()
     // Calcular el número de semanas que ocupa el mes
     val diasEnMesConOffset = primerDiaSemana + totalDiasMes
-    val totalSemanas = if (diasEnMesConOffset % 7 == 0) diasEnMesConOffset / 7 else (diasEnMesConOffset / 7) + 1
+    val totalSemanas =
+        if (diasEnMesConOffset % 7 == 0) diasEnMesConOffset / 7 else (diasEnMesConOffset / 7) + 1
 
     // Diseño de la tarjeta del mes
     Card(
@@ -390,7 +407,7 @@ fun MonthCard(dateNow: LocalDate) {
                 contentAlignment = Alignment.Center
             ) {
                 Text(
-                    text = dateNow.month.toString(),
+                    text = Operations().obtenerMes(date),
                     textAlign = TextAlign.Center,
                     style = TextStyle(fontSize = 18.sp, fontWeight = FontWeight.ExtraBold)
                 )
@@ -423,7 +440,7 @@ fun MonthCard(dateNow: LocalDate) {
                 ) {
                     for (diaSemana in 0..6) {
                         // Para manejar el primer día y último día del me
-                        if ((semana == 1 && diaSemana < primerDiaSemana-1) || diaActual > totalDiasMes) {
+                        if ((semana == 1 && diaSemana < primerDiaSemana - 1) || diaActual > totalDiasMes) {
                             // Espacios vacíos para días fuera del mes
                             Spacer(
                                 modifier = Modifier
@@ -432,16 +449,30 @@ fun MonthCard(dateNow: LocalDate) {
                             )
                         } else {
                             // Días del mes
-                            Box(
-                                modifier = Modifier
-                                    .weight(1f)
-                                    .height(30.dp),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Text(
-                                    text = diaActual.toString(),
-                                    textAlign = TextAlign.Center
-                                )
+                            if (diaActual <= LocalDate.now().dayOfMonth || date.month < LocalDate.now().month) {
+                                Box(
+                                    modifier = Modifier
+                                        .weight(1f)
+                                        .height(30.dp),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    TextButtonForm(
+                                        onClick = { /*TODO*/ },
+                                        text = diaActual.toString()
+                                    )
+                                }
+                            } else {
+                                Box(
+                                    modifier = Modifier
+                                        .weight(1f)
+                                        .height(30.dp),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    Text(
+                                        text = diaActual.toString(),
+                                        textAlign = TextAlign.Center
+                                    )
+                                }
                             }
                             diaActual++
                         }
@@ -452,9 +483,38 @@ fun MonthCard(dateNow: LocalDate) {
     }
 }
 
+@OptIn(ExperimentalCoilApi::class)
 @Composable
-fun PerfilImage(){
-    Box(modifier = Modifier.fillMaxWidth()){
-
+fun PerfilImage(name: String, imageUrl: String) {
+    Box(
+        modifier = Modifier
+            .padding(16.dp)
+            .fillMaxWidth(),
+        contentAlignment = Alignment.Center
+    ) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            // Imagen circular
+            Image(
+                painter = rememberImagePainter(data = imageUrl),
+                contentDescription = null,
+                modifier = Modifier
+                    .size(150.dp)
+                    .clip(CircleShape)
+                    .border(2.dp, Color.Transparent, CircleShape)
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            // Nombre
+            Text(
+                text = name,
+                style = TextStyle(
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold
+                ),
+                textAlign = TextAlign.Center
+            )
+        }
     }
 }

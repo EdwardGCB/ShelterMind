@@ -104,6 +104,7 @@ fun LoginCompose(navController: NavController) {
                         //color = Color.Blue
                     )
                 )
+
                 Spacer(modifier = Modifier.height(16.dp))
                 Formulario(email, password, navController)
                 Spacer(modifier = Modifier.height(16.dp))
@@ -126,7 +127,7 @@ private fun Formulario(
     //Contraseña
     PassFlied(password, stringResource(R.string.password))
     Spacer(modifier = Modifier.height(16.dp))
-    ButtonForm(onClick = { navController.navigate(EnumNavigation.Questions.toString()) }, stringResource(R.string.login_button))
+    ButtonForm(onClick = { navController.navigate(EnumNavigation.Home.toString()) }, stringResource(R.string.login_button))
 }
 
 @Composable

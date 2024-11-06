@@ -31,4 +31,8 @@
     <string name="feel">¿Como te sientes en este momento?</string>
     <string name="calendary_title">Calendario</string>
     <string name="perfil_title">Perfil</string>
+    <string name="perfil_subtitle">Descripcion</string>
+    <string name="quantifier">Calificaciones</string>
+    <string name="add">Agregar</string>
+    <string name="see_less">ver menos</string>
 </resources>

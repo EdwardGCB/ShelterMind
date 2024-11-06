@@ -124,7 +124,7 @@ fun SingUpCompose(navController: NavController) {
                         )
                     )
                     Spacer(modifier = Modifier.height(16.dp))
-                    FormSingUp(user, typeuser, email, password, passwordverify, number)
+                    FormSingUp(user, typeuser, email, password, passwordverify, number, navController)
                     Spacer(modifier = Modifier.height(16.dp))
                     FooterSingUp(checked)
                 }
@@ -140,7 +140,8 @@ private fun FormSingUp(
     email: MutableState<String>,
     password: MutableState<String>,
     passwordverify: MutableState<String>,
-    number: MutableState<String>
+    number: MutableState<String>,
+    navController: NavController
 ) {
     //User
     FieldFormString(user, stringResource(R.string.user))
@@ -160,7 +161,7 @@ private fun FormSingUp(
     //number
     NumberField(number, stringResource(R.string.number))
     Spacer(modifier = Modifier.height(16.dp))
-    ButtonForm(onClick = { /*TODO*/ }, text = stringResource(R.string.sing_up_button))
+    ButtonForm(onClick = { navController.navigate(EnumNavigation.Questions.toString()) }, text = stringResource(R.string.sing_up_button))
 }
 
 @Composable

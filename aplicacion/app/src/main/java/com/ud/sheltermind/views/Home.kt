@@ -234,7 +234,8 @@ private fun ProfesionalsCard(navController: NavController) {
                         firstname = "FirstName",
                         lastname = "LastName",
                         profession = "Profession",
-                        score = 5.0F
+                        score = 5.0F,
+                        navController
                     )
                     Spacer(modifier = Modifier.width(20.dp))
                 }

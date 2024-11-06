@@ -10,6 +10,7 @@ import androidx.navigation.compose.rememberNavController
 import com.ud.sheltermind.enums.EnumNavigation
 import com.ud.sheltermind.views.HomeCompose
 import com.ud.sheltermind.views.LoginCompose
+import com.ud.sheltermind.views.PerfilCompose
 import com.ud.sheltermind.views.QuestionsCompose
 import com.ud.sheltermind.views.SearchCompose
 import com.ud.sheltermind.views.SingUpCompose
@@ -45,7 +46,7 @@ fun AppNavigation(){
         }
         // Perfil
         composable (EnumNavigation.Perfil.toString()) {
-            //PerfilCompose(navController)
+            PerfilCompose(navController)
         }
         // Calendar
         composable (EnumNavigation.Calendar.toString()) {

@@ -32,6 +32,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -80,7 +81,7 @@ fun HomeCompose(navController: NavController) {
                             fontSize = 25.sp,
                             fontWeight = FontWeight.ExtraBold,
                             // Modificador de color para el texto
-                            // color = Color.Blue
+                            color = Color(0xFF002366)
                         )
                     )
                 },
@@ -91,7 +92,8 @@ fun HomeCompose(navController: NavController) {
                     }) {
                         Icon(
                             imageVector = Icons.Filled.CalendarMonth,
-                            contentDescription = "Calendar Month Icon"
+                            contentDescription = "Calendar Month Icon",
+                            tint = Color(0xFF002366)
                         )
                     }
                 }
@@ -142,7 +144,7 @@ private fun NotesCard(navController: NavController) {
                     style = TextStyle(
                         fontSize = 15.sp,
                         fontWeight = FontWeight.ExtraBold,
-                        //color = Color.Blue
+                        color = Color(0xFF002366)
                     )
                 )
             }
@@ -185,7 +187,7 @@ private fun ActivitiesCard(navController: NavController) {
                     style = TextStyle(
                         fontSize = 15.sp,
                         fontWeight = FontWeight.ExtraBold,
-                        //color = Color.Blue
+                        color = Color(0xFF002366)
                     )
                 )
             }
@@ -221,7 +223,7 @@ private fun ProfesionalsCard(navController: NavController) {
                     style = TextStyle(
                         fontSize = 15.sp,
                         fontWeight = FontWeight.ExtraBold,
-                        //color = Color.Blue
+                        color = Color(0xFF002366)
                     )
                 )
             }
@@ -270,18 +272,17 @@ private fun ActivityCard(onClick: () -> Unit, title: String, target: String) {
                 Text(
                     text = title,
                     style = TextStyle(
-                        fontSize = 12.sp,
+                        fontSize = 14.sp,
                         fontWeight = FontWeight.ExtraBold,
-                        //color = Color.Blue
+
                     )
                 )
                 Spacer(Modifier.height(7.dp))
                 Text(
                     text = target,
                     style = TextStyle(
-                        fontSize = 9.sp,
+                        fontSize = 10.sp,
                         fontWeight = FontWeight.Normal,
-                        //color = Color.Blue
                     )
                 )
                 Spacer(Modifier.height(7.dp))

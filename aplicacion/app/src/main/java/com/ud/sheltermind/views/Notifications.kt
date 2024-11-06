@@ -53,7 +53,7 @@ fun NotificationsCompose(navController: NavController) {
                         style = TextStyle(
                             fontSize = 25.sp,
                             fontWeight = FontWeight.ExtraBold,
-                            color = Color.Blue
+                            color = Color(0xFF002366)
                         )
                     )
                 })
@@ -97,8 +97,8 @@ fun NotificationCard() {
                         style = TextStyle(
                             fontSize = 15.sp,
                             fontWeight = FontWeight.Normal,
-                            textAlign = TextAlign.Center
-                            //color = Color.Blue
+                            textAlign = TextAlign.Center ,
+                            color = Color(0xFF002366)
                         )
                     )
                     Spacer(modifier = Modifier.height(8.dp))

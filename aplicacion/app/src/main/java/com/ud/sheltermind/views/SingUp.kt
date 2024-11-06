@@ -29,6 +29,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -46,6 +47,7 @@ import com.ud.sheltermind.componentes.FieldFormString
 import com.ud.sheltermind.componentes.NumberField
 import com.ud.sheltermind.componentes.PassFlied
 import com.ud.sheltermind.componentes.SocialNetwork
+import com.ud.sheltermind.componentes.TextButtonForm
 import com.ud.sheltermind.enums.EnumNavigation
 
 @Preview
@@ -79,7 +81,7 @@ fun SingUpCompose(navController: NavController) {
                             fontSize = 25.sp,
                             fontWeight = FontWeight.ExtraBold,
                             //Modificador de color para el texto
-                            //color = Color.Blue
+                            color = Color(0xFF002366)
                         )
                     )
                 },
@@ -176,16 +178,7 @@ private fun FooterSingUp(checked: MutableState<Boolean>) {
             })
         Text(stringResource(R.string.sing_up_footer))
         //Boton para la navegacion hacia SingUp
-        TextButton(onClick = { /*TODO*/ }) {
-            Text(
-                stringResource(R.string.href_politics),
-                style = TextStyle(
-                    fontSize = 15.sp,
-                    fontWeight = FontWeight.Normal,
-                    //color = Color.Blue
-                )
-            )
-        }
+        TextButtonForm(onClick = { /*TODO*/ }, text = stringResource(R.string.href_politics))
     }
 }
 

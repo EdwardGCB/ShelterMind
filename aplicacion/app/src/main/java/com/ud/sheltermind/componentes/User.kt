@@ -57,7 +57,6 @@ import coil.compose.rememberImagePainter
 import com.ud.sheltermind.R
 import com.ud.sheltermind.enums.EnumNavigation
 import com.ud.sheltermind.logic.Operations
-import com.ud.sheltermind.views.HomeCompose
 import java.time.LocalDate
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -87,7 +86,14 @@ fun ViewProfesionalCard() {
     val navController = rememberNavController()
     NavHost(navController = navController, startDestination = EnumNavigation.Perfil.toString()) {
         composable(EnumNavigation.Perfil.toString()) {
-            ProfesionalCard(Icons.Filled.AccountCircle, firstname, lastname, profession, score,navController)
+            ProfesionalCard(
+                Icons.Filled.AccountCircle,
+                firstname,
+                lastname,
+                profession,
+                score,
+                navController
+            )
         }
     }
 
@@ -156,7 +162,7 @@ fun SyntomCard(title: String, target: String, icon: ImageVector, hour: String) {
                     style = TextStyle(
                         fontSize = 12.sp,
                         fontWeight = FontWeight.ExtraBold,
-                        //color = Color.Blue
+                        color = Color(0xFF002366)
                     )
                 )
                 Spacer(Modifier.height(7.dp))
@@ -217,7 +223,7 @@ fun ProfesionalCard(
                     style = TextStyle(
                         fontSize = 12.sp,
                         fontWeight = FontWeight.ExtraBold,
-                        //color = Color.Blue
+                        color = Color(0xFF002366)
                     )
                 )
                 Spacer(modifier = Modifier.height(3.dp))
@@ -241,7 +247,10 @@ fun ProfesionalCard(
                 Spacer(modifier = Modifier.height(5.dp))
                 StarScore(score, 15.dp)
                 Spacer(modifier = Modifier.height(5.dp))
-                TextButtonForm(onClick = { navController.navigate(EnumNavigation.Perfil.toString()) }, stringResource(R.string.see_more))
+                TextButtonForm(
+                    onClick = { navController.navigate(EnumNavigation.Perfil.toString()) },
+                    stringResource(R.string.see_more)
+                )
                 Spacer(modifier = Modifier.height(5.dp))
 
             }
@@ -268,7 +277,14 @@ fun WeekCompose(dateNow: LocalDate) {
                 modifier = Modifier.weight(1f) // Distribuir el espacio igual entre las columnas
             ) {
                 Spacer(Modifier.height(10.dp))
-                Text(daysOfWeek[dayIndex])
+                Text(
+                    daysOfWeek[dayIndex],
+                    style = TextStyle(
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.ExtraBold,
+                        color = Color(0xFF002366)
+                    )
+                )
                 Spacer(Modifier.height(5.dp))
                 if (i == 0) {
                     Box(
@@ -276,7 +292,7 @@ fun WeekCompose(dateNow: LocalDate) {
                         modifier = Modifier
                             .size(25.dp)
                             .clip(CircleShape)
-                            .background(Color.Black)
+                            .background(Color(0xFF002366))
                     ) {
                         Text(
                             currentDate.dayOfMonth.toString(),
@@ -409,7 +425,11 @@ fun MonthCard(date: LocalDate) {
                 Text(
                     text = Operations().obtenerMes(date),
                     textAlign = TextAlign.Center,
-                    style = TextStyle(fontSize = 18.sp, fontWeight = FontWeight.ExtraBold)
+                    style = TextStyle(
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.ExtraBold,
+                        color = Color(0xFF002366)
+                    )
                 )
             }
 
@@ -425,7 +445,10 @@ fun MonthCard(date: LocalDate) {
                         Text(
                             text = day,
                             textAlign = TextAlign.Center,
-                            style = TextStyle(fontWeight = FontWeight.Bold)
+                            style = TextStyle(
+                                fontWeight = FontWeight.Bold,
+                                color = Color(0xFF002366)
+                            )
                         )
                     }
                 }

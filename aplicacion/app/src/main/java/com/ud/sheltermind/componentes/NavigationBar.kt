@@ -3,7 +3,9 @@ package com.ud.sheltermind.componentes
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.height
+//noinspection UsingMaterialAndMaterial3Libraries
 import androidx.compose.material.BottomNavigation
+//noinspection UsingMaterialAndMaterial3Libraries
 import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -64,7 +66,8 @@ fun CustomBottomBar(navController: NavController) {
                     icon = {
                         Icon(
                             painterResource(id = item.icon),
-                            contentDescription = item.title
+                            contentDescription = item.title,
+                            tint = Color(0xFF002366)
                         )
                     },
                     label = {
@@ -74,7 +77,7 @@ fun CustomBottomBar(navController: NavController) {
                                 fontSize = 12.sp,
                                 fontWeight = FontWeight.Normal,
                                 // Modificador de color para el texto
-                                // color = Color.Blue
+                                color = Color(0xFF002366)
                             )
                         )
                     },

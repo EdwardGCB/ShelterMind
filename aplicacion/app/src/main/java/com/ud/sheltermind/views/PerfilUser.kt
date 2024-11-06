@@ -16,8 +16,8 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material3.Button
+import androidx.compose.material.icons.filled.ArrowBackIosNew
+import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -28,7 +28,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
@@ -51,21 +50,23 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.ud.sheltermind.R
+import com.ud.sheltermind.componentes.ButtonForm
+import com.ud.sheltermind.enums.EnumNavigation
 
 @Preview
 @Composable
-fun ViewPerfil() {
+fun ViewPerfilUser() {
     val navController = rememberNavController()
     NavHost(navController = navController, startDestination = "perfil") {
         composable("perfil") {
-            PerfilCompose(navController)
+            PerfilUserCompose(navController)
         }
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3Api::class)
 @Composable
-fun PerfilCompose(navController: NavController) {
+fun PerfilUserCompose(navController: NavController) {
     val user = remember { mutableStateOf("") }
     val description = remember { mutableStateOf("") }
     val email = remember { mutableStateOf("") }
@@ -76,24 +77,25 @@ fun PerfilCompose(navController: NavController) {
 
     Scaffold (
         topBar = {
-            TopAppBar(
+            CenterAlignedTopAppBar(
                 title = {
                     Text(
-                        "Settings",
+                        "Perfil",
                         style = TextStyle(
                             fontSize = 25.sp,
                             fontWeight = FontWeight.ExtraBold,
-                            color = Color.Blue
+                            color = Color(0xFF002366)
                         )
                     )
                 },
                 navigationIcon = {
-                    IconButton(onClick = { navController.navigateUp() }) {
-                        Icon(Icons.Filled.ArrowBack, contentDescription = "Back")
+                    IconButton(onClick = { navController.navigate(EnumNavigation.Home.toString()) }) {
+                        Icon(Icons.Filled.ArrowBackIosNew, contentDescription = "Back")
                     }
                 }
             )
-        }
+        },
+        bottomBar = {}
     ) { innerPadding ->
         Box(
             modifier = Modifier
@@ -111,13 +113,8 @@ fun PerfilCompose(navController: NavController) {
                     FormSettings(user, description, email, password, number, notificationsEnabled, userType)
                     Spacer(modifier = Modifier.height(16.dp))
 
-                    //                    // Update button
-                    Button(
-                        onClick = { /* Handle Update */ },
-                        modifier = Modifier.fillMaxSize(0.8f)
-                    ) {
-                        Text("Update")
-                    }
+                    // Update button
+                    ButtonForm(onClick = { /*TODO*/ }, text = "Update")
                 }
             }
         }
@@ -143,7 +140,7 @@ fun ProfileImage() {
             onClick = { /* Open image picker */ },
             modifier = Modifier
                 .size(36.dp)
-                .background(Color.Blue, CircleShape)
+                .background(Color(0xFF002366), CircleShape)
                 .align(Alignment.BottomEnd)
         ) {
             Icon(Icons.Default.Add, contentDescription = "Upload Image", tint = Color.White)

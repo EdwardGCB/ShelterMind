@@ -84,7 +84,7 @@ fun CalendarCompose(navController: NavController) {
                             fontSize = 25.sp,
                             fontWeight = FontWeight.ExtraBold,
                             // Modificador de color para el texto
-                            // color = Color.Blue
+                            color = Color(0xFF002366)
                         )
                     )
                 },

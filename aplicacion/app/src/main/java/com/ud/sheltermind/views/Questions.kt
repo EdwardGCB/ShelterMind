@@ -1,14 +1,13 @@
 package com.ud.sheltermind.views
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CenterAlignedTopAppBar
-import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Scaffold
@@ -20,6 +19,7 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -47,15 +47,15 @@ fun ViewQuestions() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
- fun QuestionsCompose(navController: NavController) {
+fun QuestionsCompose(navController: NavController) {
     val total = remember { mutableIntStateOf(10) }
     val progress = remember { mutableFloatStateOf(4.0F) }
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(title = {
-                Column (
+                Column(
                     horizontalAlignment = Alignment.CenterHorizontally
-                ){
+                ) {
                     ProgressBar(progress, total)
                 }
             })
@@ -65,10 +65,16 @@ fun ViewQuestions() {
                 Modifier.fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                ButtonForm(onClick = { navController.navigate(EnumNavigation.Home.toString()) }, stringResource(
-                    R.string.next
-                ))
-                ButtonForm(onClick = { navController.navigate(EnumNavigation.Login.toString()) }, stringResource(R.string.back))
+                ButtonForm(
+                    onClick = { navController.navigate(EnumNavigation.Home.toString()) },
+                    stringResource(
+                        R.string.next
+                    )
+                )
+                ButtonForm(
+                    onClick = { navController.navigate(EnumNavigation.Login.toString()) },
+                    stringResource(R.string.back)
+                )
                 Spacer(modifier = Modifier.height(16.dp))
             }
         }
@@ -80,7 +86,14 @@ fun ViewQuestions() {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Spacer(modifier = Modifier.height(16.dp))
-            Text(text = "# Question")
+            Text(
+                text = "# Question",
+                style = TextStyle(
+                    fontSize = 17.sp,
+                    fontWeight = FontWeight.ExtraBold,
+                    color = Color(0xFF002366)
+                )
+            )
             Spacer(modifier = Modifier.height(16.dp))
             Question()
             Spacer(modifier = Modifier.height(16.dp))
@@ -91,9 +104,12 @@ fun ViewQuestions() {
 
 @Composable
 private fun ProgressBar(progress: MutableState<Float>, total: MutableState<Int>) {
-    LinearProgressIndicator(progress = (progress.value / total.value), modifier = Modifier
-        .width(300.dp)
-        .height(15.dp))
+    LinearProgressIndicator(
+        progress = (progress.value / total.value), modifier = Modifier
+            .width(300.dp)
+            .height(15.dp)
+            .background(color = Color(0xFF002366))
+    )
     Text(text = "${progress.value.toInt()} / ${total.value}")
 }
 

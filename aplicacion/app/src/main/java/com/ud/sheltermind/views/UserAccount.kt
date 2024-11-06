@@ -25,6 +25,7 @@ import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.StarBorder
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -43,11 +44,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -60,7 +58,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import coil.compose.rememberImagePainter
 import com.ud.sheltermind.R
-import com.ud.sheltermind.componentes.CustomBottomBar
 import com.ud.sheltermind.componentes.FieldFormString
 import com.ud.sheltermind.componentes.PerfilImage
 import com.ud.sheltermind.componentes.StarScore
@@ -84,14 +81,14 @@ fun ViewPerfilComposable() {
 fun PerfilCompose(navController: NavHostController) {
     val showDialog = remember { mutableStateOf(false) }
     val seeMore = remember { mutableStateOf(false) }
-    var n =2
-    if(seeMore.value){
+    var n = 2
+    if (seeMore.value) {
         n = 9
     }
 
-    if (showDialog.value){
-        FormAlertDialog (
-            onDismiss = {showDialog.value = !showDialog.value}
+    if (showDialog.value) {
+        FormAlertDialog(
+            onDismiss = { showDialog.value = !showDialog.value }
         )
     }
     Scaffold(
@@ -104,13 +101,13 @@ fun PerfilCompose(navController: NavHostController) {
                             fontSize = 25.sp,
                             fontWeight = FontWeight.ExtraBold,
                             // Modificador de color para el texto
-                            // color = Color.Blue
+                            color = Color(0xFF002366)
                         )
                     )
                 },
                 navigationIcon = {
                     IconButton(onClick = {
-                        navController.navigate(EnumNavigation.Home.toString())
+                        navController.navigate(EnumNavigation.Search.toString())
                     }) {
                         Icon(
                             imageVector = Icons.Filled.ArrowBackIosNew,
@@ -179,7 +176,7 @@ fun PerfilCompose(navController: NavHostController) {
                                     fontSize = 16.sp,
                                     fontWeight = FontWeight.ExtraBold,
                                     // Modificador de color para el texto
-                                    // color = Color.Blue
+                                    color = Color(0xFF002366)
                                 )
                             )
                             Spacer(modifier = Modifier.width(173.dp))
@@ -187,7 +184,7 @@ fun PerfilCompose(navController: NavHostController) {
                                 modifier = Modifier
                                     .size(40.dp) // Tamaño del Box
                                     .background(
-                                        Color.Gray,
+                                        color = Color(0xFF002366),
                                         shape = CircleShape
                                     ), // Fondo gris y forma circular
                                 contentAlignment = Alignment.Center // Centrar el contenido dentro del Box
@@ -215,7 +212,9 @@ fun PerfilCompose(navController: NavHostController) {
                         Spacer(modifier = Modifier.height(16.dp))
                         TextButtonForm(
                             onClick = { seeMore.value = !seeMore.value },
-                            text = if (seeMore.value) stringResource(R.string.see_more) else stringResource(R.string.see_less)
+                            text = if (seeMore.value) stringResource(R.string.see_more) else stringResource(
+                                R.string.see_less
+                            )
                         )
                         Spacer(modifier = Modifier.height(16.dp))
                     }
@@ -237,7 +236,7 @@ private fun CardDescription(title: String, profesion: String, description: Strin
                     fontSize = 16.sp,
                     fontWeight = FontWeight.ExtraBold,
                     // Modificador de color para el texto
-                    // color = Color.Blue
+                    color = Color(0xFF002366)
                 )
             )
             Spacer(modifier = Modifier.height(10.dp))
@@ -305,8 +304,8 @@ private fun CardQualification(imageUrl: String, name: String, description: Strin
 
 @Preview
 @Composable
-fun ViewAlertDialog(){
-    FormAlertDialog (onDismiss = {})
+fun ViewAlertDialog() {
+    FormAlertDialog(onDismiss = {})
 }
 
 @Composable
@@ -319,11 +318,18 @@ private fun FormAlertDialog(onDismiss: () -> Unit) {
             onDismiss()
         },
         title = {
-            Text(text = "Agregar un comentario")
+            Text(
+                text = "Agregar un comentario",
+                style = TextStyle(
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Normal,
+                    color = Color(0xFF002366)
+                )
+            )
         },
         text = {
             Column {
-                StarRating(score, onRatingChange = { score.floatValue = it} )
+                StarRating(score, onRatingChange = { score.floatValue = it })
                 Spacer(modifier = Modifier.height(16.dp))
                 Text(text = "Score ${String.format("%.1f", score.floatValue)}")
                 Spacer(modifier = Modifier.width(16.dp))
@@ -332,12 +338,22 @@ private fun FormAlertDialog(onDismiss: () -> Unit) {
             }
         },
         dismissButton = {
-            Button(onClick = { onDismiss() }) {
+            Button(
+                onClick = { onDismiss() },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color.Gray
+                )
+            ) {
                 Text("Cancelar")
             }
         },
         confirmButton = {
-            Button(onClick = {  }) {
+            Button(
+                onClick = { },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color(0xFF002366)
+                )
+            ) {
                 Text("Aceptar")
             }
         },
@@ -351,13 +367,13 @@ private fun FormAlertDialog(onDismiss: () -> Unit) {
 }
 
 @Composable
-fun StarRating(score: MutableState<Float>, onRatingChange: (Float)-> Unit){
+fun StarRating(score: MutableState<Float>, onRatingChange: (Float) -> Unit) {
     val starSize = 45.dp
-    val starCount =5
-    val spacing =8.dp
+    val starCount = 5
+    val spacing = 8.dp
 
     Row(
-        modifier = Modifier.pointerInput (Unit){
+        modifier = Modifier.pointerInput(Unit) {
             detectTapGestures { offset ->
                 val starWidth = starSize.toPx() + spacing.toPx()
                 val newRating = (offset.x / starWidth).coerceIn(0F, starCount.toFloat())
@@ -365,14 +381,14 @@ fun StarRating(score: MutableState<Float>, onRatingChange: (Float)-> Unit){
             }
         },
         horizontalArrangement = Arrangement.Center
-    ){
-        for (i in 1..starCount){
-            val icon = if(i<= score.value) Icons.Filled.Star else Icons.Filled.StarBorder
+    ) {
+        for (i in 1..starCount) {
+            val icon = if (i <= score.value) Icons.Filled.Star else Icons.Filled.StarBorder
             Icon(
                 imageVector = icon,
                 contentDescription = null,
                 modifier = Modifier.size(starSize)
-                )
+            )
             Spacer(modifier = Modifier.width(spacing))
         }
     }

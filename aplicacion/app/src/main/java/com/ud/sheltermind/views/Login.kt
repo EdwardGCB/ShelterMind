@@ -20,6 +20,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -36,6 +37,7 @@ import com.ud.sheltermind.componentes.ButtonForm
 import com.ud.sheltermind.componentes.FieldFormString
 import com.ud.sheltermind.componentes.PassFlied
 import com.ud.sheltermind.componentes.SocialNetwork
+import com.ud.sheltermind.componentes.TextButtonForm
 import com.ud.sheltermind.enums.EnumNavigation
 
 @Preview
@@ -64,7 +66,7 @@ fun LoginCompose(navController: NavController) {
                             fontSize = 25.sp,
                             fontWeight = FontWeight.ExtraBold,
                             //Modificador de color para el texto
-                            //color = Color.Blue
+                            color = Color(0xFF002366)
                         )
                     )
                 })
@@ -82,7 +84,7 @@ fun LoginCompose(navController: NavController) {
                     style = TextStyle(
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Bold,
-                        //color = Color.Blue
+                        color = Color(0xFF002366)
                     )
                 )
                 Spacer(modifier = Modifier.height(16.dp))
@@ -137,17 +139,6 @@ private fun FooterFormulario(navController: NavController) {
     ) {
         Text(stringResource(R.string.login_footer))
         //Boton para la navegacion hacia SingUp
-        TextButton(onClick = {
-            navController.navigate(EnumNavigation.SingUp.toString())
-        }) {
-            Text(
-                stringResource(R.string.href_crear_cuenta),
-                style = TextStyle(
-                    fontSize = 15.sp,
-                    fontWeight = FontWeight.Normal,
-                    //color = Color.Blue
-                )
-            )
-        }
+        TextButtonForm(onClick = { navController.navigate(EnumNavigation.SingUp.toString()) }, text = stringResource(R.string.href_crear_cuenta))
     }
 }

@@ -131,7 +131,7 @@ fun ButtonForm(onClick: () -> Unit, text: String) {
             style = TextStyle(
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
-                //color = Color.Blue
+                color = Color(0xFF002366)
             )
         )
 
@@ -180,7 +180,7 @@ fun TextButtonForm(onClick: () -> Unit, text: String) {
             style = TextStyle(
                 fontSize = 15.sp,
                 fontWeight = FontWeight.Normal,
-                //color = Color.Blue
+                color = Color(0xFF002366)
             )
         )
     }

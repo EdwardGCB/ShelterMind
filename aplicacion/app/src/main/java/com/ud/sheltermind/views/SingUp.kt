@@ -9,13 +9,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
@@ -32,12 +29,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -78,21 +73,24 @@ fun SingUpCompose(navController: NavController) {
         topBar = {
             TopAppBar(
                 title = {
-                Text(
-                    stringResource(R.string.sing_up_button),
-                    style = TextStyle(
-                        fontSize = 25.sp,
-                        fontWeight = FontWeight.ExtraBold,
-                        //Modificador de color para el texto
-                        //color = Color.Blue
+                    Text(
+                        stringResource(R.string.sing_up_button),
+                        style = TextStyle(
+                            fontSize = 25.sp,
+                            fontWeight = FontWeight.ExtraBold,
+                            //Modificador de color para el texto
+                            //color = Color.Blue
+                        )
                     )
-                )
-            },
+                },
                 navigationIcon = {
                     IconButton(onClick = {
                         navController.navigate(EnumNavigation.Login.toString())
                     }) {
-                        Icon(imageVector = Icons.Filled.ArrowBackIosNew, contentDescription = "Arrow Back Icon")
+                        Icon(
+                            imageVector = Icons.Filled.ArrowBackIosNew,
+                            contentDescription = "Arrow Back Icon"
+                        )
                     }
                 }
             )
@@ -126,7 +124,7 @@ fun SingUpCompose(navController: NavController) {
                         )
                     )
                     Spacer(modifier = Modifier.height(16.dp))
-                    FormSingUp(user, typeuser, email, password, passwordverify, number)
+                    FormSingUp(user, typeuser, email, password, passwordverify, number, navController)
                     Spacer(modifier = Modifier.height(16.dp))
                     FooterSingUp(checked)
                 }
@@ -142,7 +140,8 @@ private fun FormSingUp(
     email: MutableState<String>,
     password: MutableState<String>,
     passwordverify: MutableState<String>,
-    number: MutableState<String>
+    number: MutableState<String>,
+    navController: NavController
 ) {
     //User
     FieldFormString(user, stringResource(R.string.user))
@@ -162,7 +161,7 @@ private fun FormSingUp(
     //number
     NumberField(number, stringResource(R.string.number))
     Spacer(modifier = Modifier.height(16.dp))
-    ButtonForm(onClick = { /*TODO*/ }, text = stringResource(R.string.sing_up_button))
+    ButtonForm(onClick = { navController.navigate(EnumNavigation.Questions.toString()) }, text = stringResource(R.string.sing_up_button))
 }
 
 @Composable
@@ -205,7 +204,7 @@ fun OptionSelect(typeuser: MutableState<String>) {
         OutlinedTextField(
             value = typeuser.value,
             onValueChange = {},
-            label = { Text(stringResource(R.string.user_type))},
+            label = { Text(stringResource(R.string.user_type)) },
             readOnly = true,
             trailingIcon = {
                 ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded.value)

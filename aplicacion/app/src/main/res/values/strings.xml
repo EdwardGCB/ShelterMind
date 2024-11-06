@@ -24,9 +24,23 @@
     <string name="description_notification" translatable="false">Descripcion</string>
 
 
-
     <string name="sing_up_button" translatable="false">Crear Cuenta</string>
     <string name="sing_up_footer" translatable="false">Acepto las</string>
     <string name="href_politics" translatable="false">Politicas de privacidad</string>
     <string name="user_type">Seleccionar tipo de usuario</string>
+    <string name="syntom">Registrar nuevo \n sintoma</string>
+    <string name="card1">Notas del dia</string>
+    <string name="see_more">ver más</string>
+    <string name="card2">Actividades recomendadas</string>
+    <string name="card3">Profesionales recomendados</string>
+    <string name="syntom_title">Sintoma</string>
+    <string name="description_syntom">¿Que piensas acerca de eso?</string>
+    <string name="send">Guardar</string>
+    <string name="feel">¿Como te sientes en este momento?</string>
+    <string name="calendary_title">Calendario</string>
+    <string name="perfil_title">Perfil</string>
+    <string name="perfil_subtitle">Descripcion</string>
+    <string name="quantifier">Calificaciones</string>
+    <string name="add">Agregar</string>
+    <string name="see_less">ver menos</string>
 </resources>

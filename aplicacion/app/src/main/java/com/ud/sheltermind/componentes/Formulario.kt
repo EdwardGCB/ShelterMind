@@ -1,8 +1,15 @@
 package com.ud.sheltermind.componentes
 
+import android.annotation.SuppressLint
+import android.app.DatePickerDialog
+import android.app.TimePickerDialog
+import android.widget.DatePicker
+import android.widget.TimePicker
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -10,7 +17,8 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBackIosNew
+import androidx.compose.material.icons.filled.AccessTime
+import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Button
@@ -20,6 +28,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
@@ -27,6 +36,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -34,12 +45,15 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
 import com.ud.sheltermind.R
-import com.ud.sheltermind.enums.EnumNavigation
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Locale
 
 @Preview
 @Composable
@@ -134,7 +148,7 @@ fun FieldFormString(variable: MutableState<String>, label: String) {
 }
 
 @Composable
-fun NumberField(number: MutableState<String>, label: String){
+fun NumberField(number: MutableState<String>, label: String) {
     OutlinedTextField(
         value = number.value,
         onValueChange = {
@@ -146,4 +160,90 @@ fun NumberField(number: MutableState<String>, label: String){
         label = { Text(label) },
         keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number)
     )
+}
+
+@Composable
+fun IconButtonForm(onClick: () -> Unit, icon: ImageVector, sizeval: Dp) {
+    IconButton(
+        onClick = onClick,
+        Modifier.size(sizeval)
+    ) {
+        Icon(icon, contentDescription = null, Modifier.fillMaxSize())
+    }
+}
+
+@Composable
+fun TextButtonForm(onClick: () -> Unit, text: String) {
+    TextButton(onClick = onClick) {
+        Text(
+            text,
+            style = TextStyle(
+                fontSize = 15.sp,
+                fontWeight = FontWeight.Normal,
+                //color = Color.Blue
+            )
+        )
+    }
+}
+
+@Composable
+fun FieldDateForm(selectedDate: MutableState<String>) {
+    val context = LocalContext.current
+    val calendar = Calendar.getInstance()
+    val year = calendar.get(Calendar.YEAR)
+    val month = calendar.get(Calendar.MONTH)
+    val day = calendar.get(Calendar.DAY_OF_MONTH)
+
+    val datePickerDialog = DatePickerDialog(
+        context,
+        { _: DatePicker, selectedYear: Int, selectedMonth: Int, selectedDay: Int ->
+            selectedDate.value = "$selectedDay/${selectedMonth + 1}/$selectedYear"
+        }, year, month, day
+    )
+
+    Column {
+        OutlinedTextField(
+            value = selectedDate.value,
+            onValueChange = { selectedDate.value = it },
+            label = { Text("Seleccionar fecha") },
+            readOnly = true,
+            trailingIcon = {
+                IconButtonForm(
+                    onClick = { datePickerDialog.show() },
+                    icon = Icons.Filled.CalendarMonth,
+                    sizeval = 20.dp
+                )
+            },
+        )
+    }
+}
+
+@SuppressLint("DefaultLocale")
+@Composable
+fun FieldHourForm(selectedTime: MutableState<String>) {
+    val context = LocalContext.current
+    val calendar = Calendar.getInstance()
+    val hour = calendar.get(Calendar.HOUR_OF_DAY)
+    val minute = calendar.get(Calendar.MINUTE)
+
+    val timePickerDialog = TimePickerDialog(
+        context,
+        { _: TimePicker, selectedHour: Int, selectedMinute: Int ->
+            selectedTime.value = String.format("%02d:%02d", selectedHour, selectedMinute)
+        }, hour, minute, true
+    )
+
+    Column {
+        OutlinedTextField(
+            value = selectedTime.value,
+            onValueChange = { selectedTime.value = it },
+            label = { Text("Seleccionar hora") },
+            readOnly = true,
+            trailingIcon = {
+                IconButton(onClick = { timePickerDialog.show() }) {
+                    Icon(Icons.Filled.AccessTime, contentDescription = "Seleccionar hora")
+                }
+            }
+        )
+    }
 }

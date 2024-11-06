@@ -2,16 +2,25 @@ package com.ud.sheltermind.views
 
 import android.os.Build
 import androidx.annotation.RequiresApi
-import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.CalendarMonth
+import androidx.compose.material.icons.filled.Circle
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -23,7 +32,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -35,8 +43,11 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.ud.sheltermind.R
+import com.ud.sheltermind.componentes.AddCard
 import com.ud.sheltermind.componentes.CustomBottomBar
-import com.ud.sheltermind.componentes.SocialNetwork
+import com.ud.sheltermind.componentes.ProfesionalCard
+import com.ud.sheltermind.componentes.SyntomCard
+import com.ud.sheltermind.componentes.TextButtonForm
 import com.ud.sheltermind.componentes.WeekCompose
 import com.ud.sheltermind.enums.EnumNavigation
 import com.ud.sheltermind.logic.Operations
@@ -50,7 +61,7 @@ fun ViewHome() {
         composable(EnumNavigation.Home.toString()) {
             HomeCompose(navController)
         }
-    }// Coloca tu configuración de navegación aquí
+    }
 }
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -98,34 +109,185 @@ fun HomeCompose(navController: NavController) {
             //Calendar
             item {
                 Spacer(modifier = Modifier.height(16.dp))
-                WeekCompose()
+                WeekCompose(dateNow.value)
                 Spacer(modifier = Modifier.height(16.dp))
             }
             //Imagen del logo horizontal
             item {
-                Spacer(modifier = Modifier.height(16.dp))
-                Image(
-                    painter = painterResource(R.drawable.logo),
-                    contentDescription = "Logo",
-                    modifier = Modifier
-                        .width(200.dp)
-                        .height(100.dp)
-                )
-                Spacer(modifier = Modifier.height(16.dp))
-                SocialNetwork()
-                Spacer(modifier = Modifier.height(16.dp))
+                NotesCard(navController)
+            }
+            item {
+                ActivitiesCard(navController)
+            }
+            item {
+                ProfesionalsCard(navController)
+            }
+        }
+    }
+}
+
+@Composable
+private fun NotesCard(navController: NavController) {
+    Box(Modifier.padding(20.dp)) {
+        Card(
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(16.dp),
+            elevation = CardDefaults.cardElevation(8.dp)
+        ) {
+            Spacer(modifier = Modifier.height(20.dp))
+            Row {
+                Spacer(modifier = Modifier.width(20.dp))
                 Text(
-                    text = stringResource(R.string.login_subtitle),
+                    stringResource(R.string.card1),
                     style = TextStyle(
                         fontSize = 15.sp,
+                        fontWeight = FontWeight.ExtraBold,
+                        //color = Color.Blue
+                    )
+                )
+            }
+            Spacer(modifier = Modifier.height(10.dp))
+            LazyRow {
+                item {
+                    Spacer(modifier = Modifier.width(20.dp))
+                    AddCard(onClick = {navController.navigate(EnumNavigation.Syntom.toString())})
+                    Spacer(modifier = Modifier.width(20.dp))
+                }
+                items(7) {
+                    SyntomCard(
+                        title = "Titulo",
+                        target = "Tarjeta",
+                        icon = Icons.Filled.Circle,
+                        "HH:MM"
+                    )
+                    Spacer(modifier = Modifier.width(20.dp))
+                }
+            }
+            Spacer(modifier = Modifier.height(20.dp))
+        }
+    }
+    Spacer(modifier = Modifier.height(16.dp))
+}
+
+@Composable
+private fun ActivitiesCard(navController: NavController) {
+    Box(Modifier.padding(20.dp)) {
+        Card(
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(16.dp),
+            elevation = CardDefaults.cardElevation(8.dp)
+        ) {
+            Spacer(modifier = Modifier.height(20.dp))
+            Row {
+                Spacer(modifier = Modifier.width(20.dp))
+                Text(
+                    stringResource(R.string.card2),
+                    style = TextStyle(
+                        fontSize = 15.sp,
+                        fontWeight = FontWeight.ExtraBold,
+                        //color = Color.Blue
+                    )
+                )
+            }
+            Spacer(modifier = Modifier.height(10.dp))
+            LazyRow {
+                item {
+                    Spacer(modifier = Modifier.width(20.dp))
+                }
+                items(7) {
+                    ActivityCard(onClick = { /*TODO*/ }, "Actividad", "Descripcion")
+                    Spacer(modifier = Modifier.width(20.dp))
+                }
+            }
+            Spacer(modifier = Modifier.height(20.dp))
+        }
+    }
+    Spacer(modifier = Modifier.height(16.dp))
+}
+
+@Composable
+private fun ProfesionalsCard(navController: NavController) {
+    Box(Modifier.padding(20.dp)) {
+        Card(
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(16.dp),
+            elevation = CardDefaults.cardElevation(8.dp)
+        ) {
+            Spacer(modifier = Modifier.height(20.dp))
+            Row {
+                Spacer(modifier = Modifier.width(20.dp))
+                Text(
+                    stringResource(R.string.card3),
+                    style = TextStyle(
+                        fontSize = 15.sp,
+                        fontWeight = FontWeight.ExtraBold,
+                        //color = Color.Blue
+                    )
+                )
+            }
+            Spacer(modifier = Modifier.height(10.dp))
+            LazyRow {
+                item {
+                    Spacer(modifier = Modifier.width(20.dp))
+                }
+                items(7) {
+                    ProfesionalCard(
+                        icon = Icons.Filled.AccountCircle,
+                        firstname = "FirstName",
+                        lastname = "LastName",
+                        profession = "Profession",
+                        score = 5.0F,
+                        navController
+                    )
+                    Spacer(modifier = Modifier.width(20.dp))
+                }
+            }
+            Spacer(modifier = Modifier.height(20.dp))
+        }
+    }
+    Spacer(modifier = Modifier.height(16.dp))
+}
+
+@Composable
+private fun ActivityCard(onClick: () -> Unit, title: String, target: String) {
+    Card(
+        modifier = Modifier
+            .height(125.dp)
+            .width(125.dp),
+        shape = RoundedCornerShape(16.dp),
+        elevation = CardDefaults.cardElevation(8.dp)
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .fillMaxHeight(),
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Spacer(Modifier.width(10.dp))
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                Spacer(Modifier.height(10.dp))
+                Text(
+                    text = title,
+                    style = TextStyle(
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.ExtraBold,
+                        //color = Color.Blue
+                    )
+                )
+                Spacer(Modifier.height(7.dp))
+                Text(
+                    text = target,
+                    style = TextStyle(
+                        fontSize = 9.sp,
                         fontWeight = FontWeight.Normal,
                         //color = Color.Blue
                     )
                 )
-                Spacer(modifier = Modifier.height(16.dp))
-
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(Modifier.height(7.dp))
+                TextButtonForm(onClick, stringResource(R.string.see_more))
             }
+            Spacer(Modifier.width(10.dp))
         }
     }
 }

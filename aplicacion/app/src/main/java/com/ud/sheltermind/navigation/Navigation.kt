@@ -8,12 +8,14 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.ud.sheltermind.enums.EnumNavigation
+import com.ud.sheltermind.views.CalendarCompose
 import com.ud.sheltermind.views.HomeCompose
 import com.ud.sheltermind.views.LoginCompose
 import com.ud.sheltermind.views.PerfilCompose
 import com.ud.sheltermind.views.QuestionsCompose
 import com.ud.sheltermind.views.SearchCompose
 import com.ud.sheltermind.views.SingUpCompose
+import com.ud.sheltermind.views.SyntomCompose
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -50,12 +52,12 @@ fun AppNavigation(){
         }
         // Calendar
         composable (EnumNavigation.Calendar.toString()) {
-            //CalendarCompose(navController)
+            CalendarCompose(navController)
         }
 
         //Syntom
         composable (EnumNavigation.Syntom.toString()) {
-            //SyntomCompose(navController)
+            SyntomCompose(navController)
         }
         //Senttings
         composable (EnumNavigation.Settings.toString()) {

@@ -213,7 +213,7 @@ fun PerfilCompose(navController: NavHostController) {
                         Spacer(modifier = Modifier.height(16.dp))
                         TextButtonForm(
                             onClick = { seeMore.value = !seeMore.value },
-                            text = if (seeMore.value) stringResource(R.string.see_more) else stringResource(
+                            text = if (!seeMore.value) stringResource(R.string.see_more) else stringResource(
                                 R.string.see_less
                             )
                         )
@@ -377,7 +377,7 @@ fun StarRating(score: MutableState<Float>, onRatingChange: (Float) -> Unit) {
         modifier = Modifier.pointerInput(Unit) {
             detectTapGestures { offset ->
                 val starWidth = starSize.toPx() + spacing.toPx()
-                val newRating = (offset.x / starWidth).coerceIn(0F, starCount.toFloat())
+                val newRating = (offset.x / starWidth).coerceIn(0F, starCount.toFloat()+0.2f)
                 onRatingChange(newRating)
             }
         },

@@ -45,6 +45,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -383,10 +384,15 @@ fun StarRating(score: MutableState<Float>, onRatingChange: (Float) -> Unit) {
         horizontalArrangement = Arrangement.Center
     ) {
         for (i in 1..starCount) {
-            val icon = if (i <= score.value) Icons.Filled.Star else Icons.Filled.StarBorder
+            val starIcon = when {
+                i <= score.value -> painterResource(R.drawable.star)
+                i - 0.5 <= score.value -> painterResource(R.drawable.star_midle)
+                else -> painterResource(R.drawable.star_border)
+            }
             Icon(
-                imageVector = icon,
+                painter = starIcon,
                 contentDescription = null,
+                tint = Color(0xFFF1BB21),
                 modifier = Modifier.size(starSize)
             )
             Spacer(modifier = Modifier.width(spacing))

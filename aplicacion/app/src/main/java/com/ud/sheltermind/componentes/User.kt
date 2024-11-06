@@ -40,6 +40,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -314,79 +315,16 @@ fun StarScore(score: Float, size: Dp) {
     Row {
         for (i in 1..5) {
             val starIcon = when {
-                i <= score -> Icons.Filled.Star
-                i - 0.5 <= score -> Icons.Filled.StarHalf
-                else -> Icons.Filled.StarBorder
+                i <= score -> painterResource(R.drawable.star)
+                i - 0.5 <= score -> painterResource(R.drawable.star_midle)
+                else -> painterResource(R.drawable.star_border)
             }
             Icon(
-                imageVector = starIcon,
+                painter = starIcon,
                 contentDescription = if (i <= score) "Filled Star" else "Empty Star",
-                tint = Color.Gray,
+                tint = Color(0xFFF1BB21),
                 modifier = Modifier.size(size)
             )
-        }
-    }
-}
-
-@Preview
-@Composable
-fun Feel() {
-    Box(
-        modifier = Modifier.fillMaxWidth(),
-        contentAlignment = Alignment.Center
-    ) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
-        ) {
-            Spacer(modifier = Modifier.height(10.dp))
-            Text(
-                text = stringResource(R.string.feel),
-                style = TextStyle(
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight.ExtraBold,
-                    // color = Color.Blue
-                )
-            )
-            Spacer(modifier = Modifier.height(10.dp))
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Center,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Spacer(modifier = Modifier.width(10.dp))
-                IconButtonForm(
-                    onClick = { /*TODO*/ },
-                    icon = Icons.Filled.SentimentVeryDissatisfied,
-                    sizeval = 50.dp
-                )
-                Spacer(modifier = Modifier.width(10.dp))
-                IconButtonForm(
-                    onClick = { /*TODO*/ },
-                    icon = Icons.Filled.SentimentDissatisfied,
-                    sizeval = 50.dp
-                )
-                Spacer(modifier = Modifier.width(10.dp))
-                IconButtonForm(
-                    onClick = { /*TODO*/ },
-                    icon = Icons.Filled.SentimentNeutral,
-                    sizeval = 50.dp
-                )
-                Spacer(modifier = Modifier.width(10.dp))
-                IconButtonForm(
-                    onClick = { /*TODO*/ },
-                    icon = Icons.Filled.SentimentSatisfiedAlt,
-                    sizeval = 50.dp
-                )
-                Spacer(modifier = Modifier.width(10.dp))
-                IconButtonForm(
-                    onClick = { /*TODO*/ },
-                    icon = Icons.Filled.SentimentVerySatisfied,
-                    sizeval = 50.dp
-                )
-                Spacer(modifier = Modifier.width(10.dp))
-            }
-            Spacer(modifier = Modifier.height(10.dp))
         }
     }
 }

@@ -8,12 +8,18 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.filled.Save
+import androidx.compose.material.icons.filled.SentimentDissatisfied
+import androidx.compose.material.icons.filled.SentimentNeutral
+import androidx.compose.material.icons.filled.SentimentSatisfiedAlt
+import androidx.compose.material.icons.filled.SentimentVeryDissatisfied
+import androidx.compose.material.icons.filled.SentimentVerySatisfied
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.Divider
@@ -28,6 +34,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -39,7 +46,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.ud.sheltermind.R
-import com.ud.sheltermind.componentes.Feel
 import com.ud.sheltermind.componentes.FieldDateForm
 import com.ud.sheltermind.componentes.FieldFormString
 import com.ud.sheltermind.componentes.FieldHourForm
@@ -162,6 +168,94 @@ fun SyntomCompose(navController: NavController) {
             item {
 
             }
+        }
+    }
+}
+
+@Preview
+@Composable
+fun Feel() {
+    Box(
+        modifier = Modifier.fillMaxWidth(),
+        contentAlignment = Alignment.Center
+    ) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            Spacer(modifier = Modifier.height(10.dp))
+            Text(
+                text = stringResource(R.string.feel),
+                style = TextStyle(
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.ExtraBold,
+                    // color = Color.Blue
+                )
+            )
+            Spacer(modifier = Modifier.height(10.dp))
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Spacer(modifier = Modifier.width(10.dp))
+                //Hungry
+                IconButton(onClick = { } ) {
+                    Icon(
+                        painter = painterResource(R.drawable.hungry),
+                        contentDescription = null,
+                        modifier = Modifier.size(60.dp),
+                        tint = Color(0xFFCD2435)
+
+                    )
+                }
+                Spacer(modifier = Modifier.width(10.dp))
+                //sad
+                IconButton(onClick = { } ) {
+                    Icon(
+                        painter = painterResource(R.drawable.sad),
+                        contentDescription = null,
+                        modifier = Modifier.size(60.dp),
+                        tint = Color(0xFFE94C41)
+
+                    )
+                }
+                Spacer(modifier = Modifier.width(10.dp))
+                //normal
+                IconButton(onClick = { } ) {
+                    Icon(
+                        painter = painterResource(R.drawable.normal),
+                        contentDescription = null,
+                        modifier = Modifier.size(60.dp),
+                        tint = Color(0xFFF08035)
+
+                    )
+                }
+                Spacer(modifier = Modifier.width(10.dp))
+                //Happy
+                IconButton(onClick = { } ) {
+                    Icon(
+                        painter = painterResource(R.drawable.happy),
+                        contentDescription = null,
+                        modifier = Modifier.size(60.dp),
+                        tint = Color(0xFFEFB023)
+
+                    )
+                }
+                Spacer(modifier = Modifier.width(10.dp))
+                //Very Happy
+                IconButton(onClick = { } ) {
+                    Icon(
+                        painter = painterResource(R.drawable.veryhappy),
+                        contentDescription = null,
+                        modifier = Modifier.size(60.dp),
+                        tint = Color(0xFF72B847)
+
+                    )
+                }
+                Spacer(modifier = Modifier.width(10.dp))
+            }
+            Spacer(modifier = Modifier.height(10.dp))
         }
     }
 }

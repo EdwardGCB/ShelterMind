@@ -1,5 +1,7 @@
 package com.ud.sheltermind.views
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -7,11 +9,17 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -36,13 +44,11 @@ import com.ud.sheltermind.componentes.CustomBottomBar
 import com.ud.sheltermind.componentes.FieldFormString
 import com.ud.sheltermind.enums.EnumNavigation
 
-
 @Preview
 @Composable
 fun ViewSearchCompose() {
     val navController = rememberNavController()
-    NavHost(navController = navController, startDestination = EnumNavigation.Search.toString())
-    {
+    NavHost(navController = navController, startDestination = EnumNavigation.Search.toString()) {
         composable(EnumNavigation.Search.toString()) {
             SearchCompose(navController)
         }
@@ -62,25 +68,34 @@ fun SearchCompose(navController: NavController) {
             )
         },
         bottomBar = { CustomBottomBar(navController = navController) }
-    )
-    { innerPadding ->
+    ) { innerPadding ->
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
                 .padding(16.dp)
         ) {
+            item {
+                SectionTitle("Recommended for you")
+            }
             items(2) {
                 UserCard()
             }
+            item {
+                SeeMoreButton()
+            }
+            item {
+                SectionTitle("Best rated")
+            }
             items(2) {
-
                 BestRatedSection()
+            }
+            item {
+                SeeMoreButton()
             }
         }
     }
 }
-
 
 @Composable
 fun SectionTitle(title: String) {
@@ -93,83 +108,102 @@ fun SectionTitle(title: String) {
     )
 }
 
-
 @Composable
 fun SeeMoreButton() {
-    TextButton(onClick = { }) {
-        Text("Mirar Mas", color = Color(0xFF002366))
+    TextButton(onClick = { /* Add navigation or action */ }) {
+        Text("See more", color = Color(0xFF002366))
+    }
+}
+
+@Composable
+fun UserCard() {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 4.dp),
+        elevation = CardDefaults.cardElevation(4.dp)
+    ) {
+        Column(
+            modifier = Modifier.padding(16.dp)
+        ) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                // Placeholder for image
+                Box(
+                    modifier = Modifier
+                        .size(48.dp)
+                        .background(Color.Gray, shape = CircleShape)
+                ) {
+                    Text(
+                        "Image",
+                        color = Color.White,
+                        fontSize = 12.sp,
+                        modifier = Modifier.align(Alignment.Center)
+                    )
+                }
+                Spacer(modifier = Modifier.width(16.dp))
+                Column {
+                    Text("Name", fontWeight = FontWeight.Bold, fontSize = 16.sp)
+                    Text("Description/Condition", fontSize = 14.sp, color = Color.Gray)
+                    Text("Specialization", fontSize = 14.sp, color = Color.Gray)
+                }
+            }
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                "Details",
+                fontSize = 14.sp,
+                color = Color(0xFF002366),
+                modifier = Modifier.align(Alignment.End)
+            )
+        }
     }
 }
 
 @Composable
 fun BestRatedSection() {
     Card(
-        /*elevation = 4.dp,*/
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 4.dp),
+        elevation = CardDefaults.cardElevation(4.dp)
     ) {
         Row(
             modifier = Modifier.padding(16.dp),
             verticalAlignment = Alignment.CenterVertically
-        ) {/*
-                    Image(
-                        )*/
+        ) {
+            // Placeholder for image
+            Box(
+                modifier = Modifier
+                    .size(48.dp)
+                    .background(Color.Gray, shape = CircleShape)
+            ) {
+                Text(
+                    "Image",
+                    color = Color.White,
+                    fontSize = 12.sp,
+                    modifier = Modifier.align(Alignment.Center)
+                )
+            }
             Spacer(modifier = Modifier.width(16.dp))
             Column {
                 Text("Name", fontWeight = FontWeight.Bold, fontSize = 16.sp)
                 Text("Description", fontSize = 14.sp, color = Color.Gray)
-                Row(
-                    verticalAlignment = Alignment.CenterVertically
-                ) {/*
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    // Placeholder for rating
+                    Row {
+                        repeat(5) {
                             Icon(
-
-                            )*/
+                                imageVector = Icons.Default.Star,
+                                contentDescription = "Star",
+                                tint = Color(0xFFFFD700),
+                                modifier = Modifier.size(16.dp)
+                            )
+                        }
+                    }
+                    Spacer(modifier = Modifier.width(4.dp))
                     Text("5.0", fontSize = 14.sp, color = Color.Gray)
                 }
                 Text("Details", fontSize = 14.sp, color = Color(0xFF002366))
             }
         }
     }
-    Spacer(modifier = Modifier.height(8.dp))
 }
-
-
-@Composable
-fun UserCard() {
-
-    Card(
-        /*elevation = 4.dp,*/
-        modifier = Modifier.fillMaxWidth()
-    ) {
-        Column(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Row(
-                modifier = Modifier.padding(16.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {/*
-                    Image(
-
-                    )*/
-                Spacer(modifier = Modifier.width(16.dp))
-                Column {
-                    Text("Name", fontWeight = FontWeight.Bold, fontSize = 16.sp)
-                    Text("Description/Condition", fontSize = 14.sp, color = Color.Gray)
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    Text("Specialization", fontSize = 14.sp, color = Color.Gray)
-                }
-            }
-            Text(
-                "Details",
-                fontSize = 14.sp,
-                textAlign = TextAlign.Center,
-                color = Color(0xFF002366)
-            )
-        }
-    }
-    Spacer(modifier = Modifier.height(8.dp))
-
-
-}
-

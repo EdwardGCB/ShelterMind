@@ -1,5 +1,6 @@
 package com.ud.sheltermind.navigation
 
+import NotificationsCompose
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
@@ -43,7 +44,7 @@ fun AppNavigation(){
         }
         // Notifications
         composable (EnumNavigation.Notifications.toString()) {
-            //NotificationsCompose(navController)
+            NotificationsCompose(navController)
         }
         // Perfil
         composable (EnumNavigation.Perfil.toString()) {

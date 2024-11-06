@@ -14,7 +14,15 @@
     <string name="number" translatable="false">Numero</string>
     <string name="next" translatable="false">Siguiente</string>
     <string name="back" translatable="false">Volver</string>
+    //SearchCompose
     <string name="search" translatable="false">Buscar</string>
+    <string name="recommended_title" translatable="false">Recomendado Para Ti</string>
+    <string name="rated_title" translatable="false">Mejor Calificado</string>
+    //NotificationsCompose
+    <string name="notification_title" translatable="false">Notificaciones</string>
+    <string name="notification" translatable="false">Nombre Notificacion</string>
+    <string name="description_notification" translatable="false">Descripcion</string>
+
 
     <string name="sing_up_button" translatable="false">Crear Cuenta</string>
     <string name="sing_up_footer" translatable="false">Acepto las</string>

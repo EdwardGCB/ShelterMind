@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -50,15 +51,19 @@ android {
 }
 
 dependencies {
+
+    //Firebase
+    implementation(libs.firebase.bom)
+    implementation(libs.firebase.analytics)
+
     implementation(libs.androidx.constraintlayout.compose)
-    val nav_version = "2.8.0"
-    implementation ("androidx.compose.material:material-icons-extended:1.0.5")
-    implementation("androidx.navigation:navigation-compose:$nav_version")
-    implementation ("io.coil-kt:coil-compose:1.3.2")
-    implementation ("com.google.accompanist:accompanist-coil:0.15.0")
-    implementation ("androidx.compose.foundation:foundation:1.3.0")
-    implementation ("androidx.compose.ui:ui:1.3.0")
-    implementation ("androidx.compose.material:material:1.3.0")
+    implementation (libs.androidx.material.icons.extended)
+    implementation(libs.androidx.navigation.compose)
+    implementation (libs.coil.compose)
+    implementation (libs.accompanist.coil)
+    implementation (libs.androidx.foundation)
+    implementation (libs.ui)
+    implementation (libs.androidx.material)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)

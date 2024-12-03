@@ -83,7 +83,7 @@ fun HomeCompose(navController: NavController) {
                             // Modificador de color para el texto
                             color = Color(0xFF002366)
                         )
-                    )
+                    )   
                 },
                 //Botones a la derecha de TopAppBar
                 actions = {

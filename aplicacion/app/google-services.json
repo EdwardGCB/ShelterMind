@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "600830782953",
+    "firebase_url": "https://sheltermind-c6ec2-default-rtdb.firebaseio.com",
+    "project_id": "sheltermind-c6ec2",
+    "storage_bucket": "sheltermind-c6ec2.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:600830782953:android:3ba99cdd0702315b912f78",
+        "android_client_info": {
+          "package_name": "com.ud.sheltermind"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "600830782953-8bqebm5sc39rbkqivbk4qhar627jjeb1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAGK_5VTnZIjXcgnu1ijaUZGr16DuGBB3M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "600830782953-8bqebm5sc39rbkqivbk4qhar627jjeb1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

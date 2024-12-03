@@ -55,9 +55,8 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 
-@Preview
 @Composable
-fun SocialNetwork() {
+fun SocialNetwork(onClick: () -> Unit) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -70,7 +69,7 @@ fun SocialNetwork() {
             )
         )
         Spacer(Modifier.height(4.dp))
-        GoogleButton(onClick = { /*TODO*/ })
+        GoogleButton(onClick = onClick)
     }
 }
 

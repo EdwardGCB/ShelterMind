@@ -55,6 +55,8 @@ dependencies {
     //Firebase
     implementation(libs.firebase.bom)
     implementation(libs.firebase.analytics)
+    implementation(libs.firebase.auth)
+
 
     implementation(libs.androidx.constraintlayout.compose)
     implementation (libs.androidx.material.icons.extended)
@@ -72,6 +74,7 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    implementation(libs.firebase.auth.ktx)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

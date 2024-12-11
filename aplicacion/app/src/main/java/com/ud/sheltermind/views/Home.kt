@@ -71,6 +71,7 @@ fun ViewHome() {
 fun HomeCompose(navController: NavController) {
     //persistencia de datos en la vida util del compose
     val dateNow = remember { mutableStateOf(Operations().obtenerFechaActual()) }
+    val userType by viewModel.userType.collectAsState() // Observa el tipo de usuario
     Scaffold(
         topBar = {
             TopAppBar(
@@ -114,15 +115,17 @@ fun HomeCompose(navController: NavController) {
                 WeekCompose(dateNow.value)
                 Spacer(modifier = Modifier.height(16.dp))
             }
-            //Imagen del logo horizontal
-            item {
-                NotesCard(navController)
+            // Condicional para mostrar tarjetas según el tipo de usuario
+            if (userType == "Cliente") {
+                item {
+                    NotesCard(navController) // Visible solo para Clientes
+                }
+                item {
+                    ActivitiesCard(navController) // Visible solo para Clientes
+                }
             }
             item {
-                ActivitiesCard(navController)
-            }
-            item {
-                ProfesionalsCard(navController)
+                ProfesionalsCard(navController) // Siempre visible
             }
         }
     }

@@ -52,6 +52,7 @@ import androidx.navigation.compose.rememberNavController
 import com.ud.sheltermind.R
 import com.ud.sheltermind.componentes.ButtonForm
 import com.ud.sheltermind.enums.EnumNavigation
+import com.ud.sheltermind.views.viewmodel.ProfileViewModel
 
 @Preview
 @Composable
@@ -64,18 +65,13 @@ fun ViewPerfilUser() {
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PerfilUserCompose(navController: NavController) {
-    val user = remember { mutableStateOf("") }
-    val description = remember { mutableStateOf("") }
-    val email = remember { mutableStateOf("") }
-    val password = remember { mutableStateOf("") }
-    val number = remember { mutableStateOf("") }
-    val notificationsEnabled = remember { mutableStateOf(false) }
-    val userType = remember { mutableStateOf("Cliente") }
+fun PerfilUserCompose(navController: NavController, viewModel: ProfileViewModel = viewModel()) {
+    val userState by viewModel.userData.collectAsState()
+    val context = LocalContext.current
 
-    Scaffold (
+    Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
                 title = {
@@ -103,18 +99,27 @@ fun PerfilUserCompose(navController: NavController) {
                 .padding(innerPadding),
             contentAlignment = Alignment.Center
         ) {
-            LazyColumn (horizontalAlignment = Alignment.CenterHorizontally) {
+            LazyColumn(horizontalAlignment = Alignment.CenterHorizontally) {
                 item {
                     // Profile image with upload button
                     ProfileImage()
                     Spacer(modifier = Modifier.height(16.dp))
 
                     // Settings form
-                    FormSettings(user, description, email, password, number, notificationsEnabled, userType)
+                    FormSettings(
+                        userState = userState,
+                        onUpdateField = { field, value ->
+                            viewModel.updateUserField(field, value)
+                        }
+                    )
                     Spacer(modifier = Modifier.height(16.dp))
 
                     // Update button
-                    ButtonForm(onClick = { /*TODO*/ }, text = "Update")
+                    ButtonForm(onClick = {
+                        viewModel.saveUserData {
+                            Toast.makeText(context, "Datos actualizados correctamente", Toast.LENGTH_LONG).show()
+                        }
+                    }, text = "Actualizar")
                 }
             }
         }
@@ -150,73 +155,71 @@ fun ProfileImage() {
 
 @Composable
 private fun FormSettings(
-    user: MutableState<String>,
-    description: MutableState<String>,
-    email: MutableState<String>,
-    password: MutableState<String>,
-    number: MutableState<String>,
-    notificationsEnabled: MutableState<Boolean>,
-    userType: MutableState<String>
+    userState: User,
+    onUpdateField: (String, Any) -> Unit
 ) {
-    // User Field
-    FieldFormString(user, "User")
+    FieldFormString(userState.username ?: "", "Usuario") {
+        onUpdateField("username", it)
+    }
     Spacer(modifier = Modifier.height(16.dp))
 
-    // Description Field
     OutlinedTextField(
-        value = description.value,
-        onValueChange = { description.value = it },
-        label = { Text("Description") },
+        value = userState.description ?: "",
+        onValueChange = { onUpdateField("description", it) },
+        label = { Text("Descripción") },
         modifier = Modifier.fillMaxWidth(0.8f)
     )
     Spacer(modifier = Modifier.height(16.dp))
 
-    // Email Field
-    FieldFormString(email, "Email")
+    FieldFormString(userState.email ?: "", "Correo electrónico") {
+        onUpdateField("email", it)
+    }
     Spacer(modifier = Modifier.height(16.dp))
 
-    // Password Field
-    PassField(password, "Password")
+    PassField(userState.password ?: "", "Contraseña") {
+        onUpdateField("password", it)
+    }
     Spacer(modifier = Modifier.height(16.dp))
 
-    // Number Field
-    NumberField(number, "Number")
+    NumberField(userState.number ?: "", "Teléfono") {
+        onUpdateField("number", it)
+    }
     Spacer(modifier = Modifier.height(16.dp))
 
-    // Notifications Checkbox
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier.fillMaxWidth(0.8f)
     ) {
         Checkbox(
-            checked = notificationsEnabled.value,
-            onCheckedChange = { notificationsEnabled.value = it }
+            checked = userState.notificationsEnabled ?: false,
+            onCheckedChange = { onUpdateField("notificationsEnabled", it) }
         )
         Spacer(modifier = Modifier.width(8.dp))
-        Text("Enable Notifications")
+        Text("Habilitar notificaciones")
     }
     Spacer(modifier = Modifier.height(16.dp))
 
-    // User Type Dropdown
-    OptionSelectProfile(userType)
+    OptionSelectProfile(userState.userType ?: "Cliente") {
+        onUpdateField("userType", it)
+    }
     Spacer(modifier = Modifier.height(16.dp))
 }
 
 @Composable
-fun FieldFormString(state: MutableState<String>, label: String) {
+fun FieldFormString(value: String, label: String, onValueChange: (String) -> Unit) {
     OutlinedTextField(
-        value = state.value,
-        onValueChange = { state.value = it },
+        value = value,
+        onValueChange = onValueChange,
         label = { Text(label) },
         modifier = Modifier.fillMaxWidth(0.8f)
     )
 }
 
 @Composable
-fun PassField(state: MutableState<String>, label: String) {
+fun PassField(value: String, label: String, onValueChange: (String) -> Unit) {
     OutlinedTextField(
-        value = state.value,
-        onValueChange = { state.value = it },
+        value = value,
+        onValueChange = onValueChange,
         label = { Text(label) },
         visualTransformation = PasswordVisualTransformation(),
         modifier = Modifier.fillMaxWidth(0.8f)
@@ -224,10 +227,10 @@ fun PassField(state: MutableState<String>, label: String) {
 }
 
 @Composable
-fun NumberField(state: MutableState<String>, label: String) {
+fun NumberField(value: String, label: String, onValueChange: (String) -> Unit) {
     OutlinedTextField(
-        value = state.value,
-        onValueChange = { state.value = it },
+        value = value,
+        onValueChange = onValueChange,
         label = { Text(label) },
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
         modifier = Modifier.fillMaxWidth(0.8f)
@@ -236,7 +239,7 @@ fun NumberField(state: MutableState<String>, label: String) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun OptionSelectProfile(userType: MutableState<String>) {
+fun OptionSelectProfile(selectedOption: String, onOptionSelected: (String) -> Unit) {
     val expanded = remember { mutableStateOf(false) }
     val options = arrayOf("Cliente", "Psicologo")
 
@@ -247,9 +250,9 @@ fun OptionSelectProfile(userType: MutableState<String>) {
         }
     ) {
         OutlinedTextField(
-            value = userType.value,
+            value = selectedOption,
             onValueChange = {},
-            label = { Text("User Type") },
+            label = { Text("Tipo de usuario") },
             readOnly = true,
             trailingIcon = {
                 ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded.value)
@@ -264,7 +267,7 @@ fun OptionSelectProfile(userType: MutableState<String>) {
                 DropdownMenuItem(
                     text = { Text(item) },
                     onClick = {
-                        userType.value = item
+                        onOptionSelected(item)
                         expanded.value = false
                     }
                 )

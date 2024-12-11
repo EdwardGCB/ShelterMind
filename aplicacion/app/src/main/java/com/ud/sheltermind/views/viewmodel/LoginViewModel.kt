@@ -22,7 +22,6 @@ class LoginViewModel : ViewModel(){
     val isLoggedIn: StateFlow<Boolean> = _isLoggedIn
 
     private val auth: FirebaseAuth = Firebase.auth
-    val _loading = MutableLiveData(false)
 
     fun singInWithGoogle(credential: AuthCredential, home: () ->Unit) = viewModelScope.launch{
         try {
@@ -43,46 +42,70 @@ class LoginViewModel : ViewModel(){
     }
 
     fun signUpWithEmail(user: User, verifyPassword: String) {
-        if(user.username.isEmpty() || user.email.isEmpty() || user.password.isEmpty() || user.number.isEmpty()) {
-            _errorMessage.value = "Todos los campos son obligatorios"
-        } else {
-            if(user.password == verifyPassword){
-                // Comienza la autenticación con FirebaseAuth
-                FirebaseAuth.getInstance().createUserWithEmailAndPassword(user.email, user.password)
-                    .addOnSuccessListener { authResult ->
-                        // Cuando el evento se ha realizado con normalidad
-                        val firebaseUser = authResult.user
-                        if (firebaseUser != null) {
-                            val userId = firebaseUser.uid
-                            // Guarda la información adicional del usuario en Firestore
-                            val userRef = Firebase.firestore.collection("users").document(userId)
-                            val userData = mapOf(
-                                "userId" to userId,
-                                "username" to user.username,
-                                "userType" to user.userType,
-                                "email" to user.email,
-                                "password" to user.password,
-                                "number" to user.number
-                            )
-                            userRef.set(userData)
-                                .addOnSuccessListener {
-                                    _errorMessage.value = null
-                                    _isLoggedIn.value = true
-                                }
-                                .addOnFailureListener { ex ->
-                                    _errorMessage.value = "Error al guardar información adicional: ${ex.message}"
-                                }
-                        } else {
-                            _errorMessage.value = "Error: usuario no encontrado después de la autenticación."
-                        }
-                    }
-                    .addOnFailureListener { ex ->
-                        _errorMessage.value = ex.message
-                    }
-            }else{
-                _errorMessage.value = "Las contraseñas no coinciden"
-            }
+        if (!validateFields(user)) return
+
+        if (user.password != verifyPassword) {
+            _errorMessage.value = "Las contraseñas no coinciden"
+            return
         }
+
+        // Firebase Auth para crear un nuevo usuario
+        FirebaseAuth.getInstance().createUserWithEmailAndPassword(user.email, user.password)
+            .addOnSuccessListener { authResult ->
+                authResult.user?.let { firebaseUser ->
+                    saveUserDataToFirestore(firebaseUser.uid, user)
+                } ?: run {
+                    _errorMessage.value = "Error: Usuario no encontrado después de la autenticación."
+                }
+            }
+            .addOnFailureListener { ex ->
+                _errorMessage.value = ex.toString()
+            }
+    }
+
+    // Función para validar campos vacíos
+    private fun validateFields(user: User): Boolean {
+        return when {
+            user.name.isEmpty() -> {
+                _errorMessage.value = "El nombre es obligatorio"
+                false
+            }
+            user.email.isEmpty() -> {
+                _errorMessage.value = "El email es obligatorio"
+                false
+            }
+            user.password.isEmpty() -> {
+                _errorMessage.value = "La contraseña es obligatoria"
+                false
+            }
+            user.number.isEmpty() -> {
+                _errorMessage.value = "El número es obligatorio"
+                false
+            }
+            else -> true
+        }
+    }
+
+    // Guardar información adicional en Firestore
+    private fun saveUserDataToFirestore(userId: String, user: User) {
+        val userRef = Firebase.firestore.collection("users").document(userId)
+        val userData = mapOf(
+            "id" to userId,
+            "name" to user.name,
+            "type" to user.type,
+            "email" to user.email,
+            "number" to user.number,
+            "syntomValue" to user.syntomValue,
+            "lastQuestion" to user.lastQuestion
+        )
+        userRef.set(userData)
+            .addOnSuccessListener {
+                _errorMessage.value = null
+                _isLoggedIn.value = true
+            }
+            .addOnFailureListener { ex ->
+                _errorMessage.value = "Error al guardar la información del usuario: ${ex.message}"
+            }
     }
 
     fun loginWithEmail(email: String, password: String) {

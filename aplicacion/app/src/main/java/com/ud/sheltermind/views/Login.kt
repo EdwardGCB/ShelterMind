@@ -14,10 +14,11 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -66,6 +67,7 @@ fun LoginCompose(navController: NavController, viewModel: LoginViewModel = viewM
     val email = remember { mutableStateOf("") }
     val password = remember { mutableStateOf("") }
     val context = LocalContext.current
+    val isLoggedIn by viewModel.isLoggedIn.collectAsState()
     val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.StartActivityForResult()
     ) {
@@ -142,7 +144,7 @@ fun LoginCompose(navController: NavController, viewModel: LoginViewModel = viewM
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
-                Formulario(email, password, navController)
+                Formulario(email, password, navController, viewModel, isLoggedIn)
                 Spacer(modifier = Modifier.height(16.dp))
                 FooterFormulario(navController)
             }
@@ -154,7 +156,9 @@ fun LoginCompose(navController: NavController, viewModel: LoginViewModel = viewM
 private fun Formulario(
     email: MutableState<String>,
     password: MutableState<String>,
-    navController: NavController
+    navController: NavController,
+    viewModel: LoginViewModel,
+    isLoggedIn: Boolean
 ) {
 
     //Email
@@ -163,7 +167,12 @@ private fun Formulario(
     //Contraseña
     PassFlied(password, stringResource(R.string.password))
     Spacer(modifier = Modifier.height(16.dp))
-    ButtonForm(onClick = { navController.navigate(EnumNavigation.Home.toString()) }, stringResource(R.string.login_button))
+    ButtonForm(onClick = {
+        viewModel.loginWithEmail(email.value, password.value)
+        if(isLoggedIn){
+            navController.navigate(EnumNavigation.Home.toString())
+        }
+                         }, stringResource(R.string.login_button))
 }
 
 @Composable

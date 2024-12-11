@@ -1,25 +1,17 @@
 package com.ud.sheltermind.views
 
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContract
-import androidx.activity.result.contract.ActivityResultContracts
+
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBackIosNew
-import androidx.compose.material.icons.filled.Error
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -27,13 +19,12 @@ import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -42,12 +33,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -56,11 +45,6 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions
-import com.google.android.gms.auth.api.signin.internal.GoogleSignInOptionsExtensionParcelable
-import com.google.android.gms.common.api.ApiException
-import com.google.firebase.auth.GoogleAuthProvider
 import com.ud.sheltermind.R
 import com.ud.sheltermind.componentes.ButtonForm
 import com.ud.sheltermind.componentes.FieldFormString
@@ -95,6 +79,14 @@ fun SingUpCompose(navController: NavController, viewModel: LoginViewModel = view
     val checked = remember { mutableStateOf(false) }
     val errorMessage by viewModel.errorMessage.collectAsState()
     val isLoggedIn by viewModel.isLoggedIn.collectAsState()
+
+    // Navegación cuando el estado de login cambia a verdadero
+    LaunchedEffect(isLoggedIn) {
+        if (isLoggedIn) {
+            navController.navigate(EnumNavigation.Questions.toString())
+        }
+    }
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -104,7 +96,6 @@ fun SingUpCompose(navController: NavController, viewModel: LoginViewModel = view
                         style = TextStyle(
                             fontSize = 25.sp,
                             fontWeight = FontWeight.ExtraBold,
-                            //Modificador de color para el texto
                             color = Color(0xFF002366)
                         )
                     )
@@ -129,7 +120,6 @@ fun SingUpCompose(navController: NavController, viewModel: LoginViewModel = view
             contentAlignment = Alignment.Center
         ) {
             LazyColumn(horizontalAlignment = Alignment.CenterHorizontally) {
-                //Imagen del logo horizontal
                 item {
                     Spacer(modifier = Modifier.height(16.dp))
                     Image(
@@ -140,42 +130,46 @@ fun SingUpCompose(navController: NavController, viewModel: LoginViewModel = view
                             .height(200.dp)
                     )
                     Spacer(modifier = Modifier.height(16.dp))
-                    SocialNetwork(onClick = { /* TODO */})
+                    SocialNetwork(onClick = { /* TODO */ })
                     Spacer(modifier = Modifier.height(16.dp))
                     Text(
                         text = stringResource(R.string.login_subtitle),
                         style = TextStyle(
                             fontSize = 15.sp,
-                            fontWeight = FontWeight.Normal,
-                            //color = Color.Blue
+                            fontWeight = FontWeight.Normal
                         )
                     )
                     Spacer(modifier = Modifier.height(16.dp))
+
+                    // Mostrar el mensaje de error si existe
                     errorMessage?.let {
                         Spacer(modifier = Modifier.height(8.dp))
                         Text(
-                            text = errorMessage.toString(),
+                            text = it,
                             style = TextStyle(
                                 fontSize = 18.sp,
                                 fontWeight = FontWeight.ExtraBold,
                                 color = Color.Red
                             )
-                            )
+                        )
                         Spacer(modifier = Modifier.height(8.dp))
                     }
-                    FormSingUp(userName, userType, email, password, passwordverify, number, onClick={
-                        val user = User(
-                            username = userName.value,
-                            userType = userType.value,
-                            email = email.value,
-                            password = password.value,
-                            number = number.value
-                        )
-                        viewModel.signUpWithEmail(user, passwordverify.value)
-                        if(isLoggedIn){
-                            navController.navigate(EnumNavigation.Questions.toString())
+
+                    // Formulario de registro
+                    FormSingUp(
+                        userName, userType, email, password, passwordverify, number,
+                        onClick = {
+                            val user = User(
+                                name = userName.value,
+                                type = userType.value,
+                                email = email.value,
+                                password = password.value,
+                                number = number.value
+                            )
+                            // Llamar a la función de signUp
+                            viewModel.signUpWithEmail(user, passwordverify.value)
                         }
-                    })
+                    )
                     Spacer(modifier = Modifier.height(16.dp))
                     FooterSingUp(checked)
                 }

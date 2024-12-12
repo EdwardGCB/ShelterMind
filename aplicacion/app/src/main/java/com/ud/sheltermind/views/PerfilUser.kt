@@ -1,6 +1,5 @@
 package com.ud.sheltermind.views
 
-import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -30,8 +29,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -39,7 +37,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -48,7 +45,6 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -56,8 +52,7 @@ import androidx.navigation.compose.rememberNavController
 import com.ud.sheltermind.R
 import com.ud.sheltermind.componentes.ButtonForm
 import com.ud.sheltermind.enums.EnumNavigation
-import com.ud.sheltermind.logic.dataclass.User
-import com.ud.sheltermind.views.viewmodel.UserViewModel
+import com.ud.sheltermind.views.viewmodel.ProfileViewModel
 
 @Preview
 @Composable
@@ -72,7 +67,7 @@ fun ViewPerfilUser() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PerfilUserCompose(navController: NavController, viewModel: UserViewModel = viewModel ()) {
+fun PerfilUserCompose(navController: NavController, viewModel: ProfileViewModel = viewModel()) {
     val userState by viewModel.userData.collectAsState()
     val context = LocalContext.current
 
@@ -111,21 +106,19 @@ fun PerfilUserCompose(navController: NavController, viewModel: UserViewModel = v
                     Spacer(modifier = Modifier.height(16.dp))
 
                     // Settings form
-                    userState?.let {
-                        FormSettings(
-                            userState = it,
-                            onUpdateField = {
-                                field,
-                                value -> viewModel.updateUser(field, value.toString()) {
-                                    Toast.makeText(context, "Datos actualizados correctamente", Toast.LENGTH_LONG).show()
-                                }
-                            }
-                        )
-                    }
+                    FormSettings(
+                        userState = userState,
+                        onUpdateField = { field, value ->
+                            viewModel.updateUserField(field, value)
+                        }
+                    )
                     Spacer(modifier = Modifier.height(16.dp))
 
                     // Update button
                     ButtonForm(onClick = {
+                        viewModel.saveUserData {
+                            Toast.makeText(context, "Datos actualizados correctamente", Toast.LENGTH_LONG).show()
+                        }
                     }, text = "Actualizar")
                 }
             }
@@ -165,30 +158,30 @@ private fun FormSettings(
     userState: User,
     onUpdateField: (String, Any) -> Unit
 ) {
-    FieldFormString(userState.name, "Usuario") {
-        onUpdateField("user", it)
+    FieldFormString(userState.username ?: "", "Usuario") {
+        onUpdateField("username", it)
     }
     Spacer(modifier = Modifier.height(16.dp))
 
     OutlinedTextField(
-        value = userState.type,
+        value = userState.description ?: "",
         onValueChange = { onUpdateField("description", it) },
         label = { Text("Descripción") },
         modifier = Modifier.fillMaxWidth(0.8f)
     )
     Spacer(modifier = Modifier.height(16.dp))
 
-    FieldFormString(userState.email, "Correo electrónico") {
+    FieldFormString(userState.email ?: "", "Correo electrónico") {
         onUpdateField("email", it)
     }
     Spacer(modifier = Modifier.height(16.dp))
 
-    PassField(userState.password, "Contraseña") {
+    PassField(userState.password ?: "", "Contraseña") {
         onUpdateField("password", it)
     }
     Spacer(modifier = Modifier.height(16.dp))
 
-    NumberField(userState.number, "Teléfono") {
+    NumberField(userState.number ?: "", "Teléfono") {
         onUpdateField("number", it)
     }
     Spacer(modifier = Modifier.height(16.dp))
@@ -198,16 +191,16 @@ private fun FormSettings(
         modifier = Modifier.fillMaxWidth(0.8f)
     ) {
         Checkbox(
-            checked = userState.notifications,
-            onCheckedChange = { onUpdateField("notifications", it) }
+            checked = userState.notificationsEnabled ?: false,
+            onCheckedChange = { onUpdateField("notificationsEnabled", it) }
         )
         Spacer(modifier = Modifier.width(8.dp))
         Text("Habilitar notificaciones")
     }
     Spacer(modifier = Modifier.height(16.dp))
 
-    OptionSelectProfile(userState.type) {
-        onUpdateField("type", it)
+    OptionSelectProfile(userState.userType ?: "Cliente") {
+        onUpdateField("userType", it)
     }
     Spacer(modifier = Modifier.height(16.dp))
 }

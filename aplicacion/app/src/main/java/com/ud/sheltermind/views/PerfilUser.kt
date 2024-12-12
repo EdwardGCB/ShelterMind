@@ -1,5 +1,6 @@
 package com.ud.sheltermind.views
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -25,11 +26,14 @@ import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -37,6 +41,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -45,6 +50,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -52,6 +58,7 @@ import androidx.navigation.compose.rememberNavController
 import com.ud.sheltermind.R
 import com.ud.sheltermind.componentes.ButtonForm
 import com.ud.sheltermind.enums.EnumNavigation
+import com.ud.sheltermind.logic.dataclass.User
 import com.ud.sheltermind.views.viewmodel.ProfileViewModel
 
 @Preview
@@ -69,7 +76,7 @@ fun ViewPerfilUser() {
 @Composable
 fun PerfilUserCompose(navController: NavController, viewModel: ProfileViewModel = viewModel()) {
     val userState by viewModel.userData.collectAsState()
-    val context = LocalContext.current
+    val errorMessage by viewModel.errorMessage.collectAsState()
 
     Scaffold(
         topBar = {
@@ -85,13 +92,12 @@ fun PerfilUserCompose(navController: NavController, viewModel: ProfileViewModel 
                     )
                 },
                 navigationIcon = {
-                    IconButton(onClick = { navController.navigate(EnumNavigation.Home.toString()) }) {
+                    IconButton(onClick = { navController.navigate("home") }) {
                         Icon(Icons.Filled.ArrowBackIosNew, contentDescription = "Back")
                     }
                 }
             )
-        },
-        bottomBar = {}
+        }
     ) { innerPadding ->
         Box(
             modifier = Modifier
@@ -101,11 +107,20 @@ fun PerfilUserCompose(navController: NavController, viewModel: ProfileViewModel 
         ) {
             LazyColumn(horizontalAlignment = Alignment.CenterHorizontally) {
                 item {
-                    // Profile image with upload button
+                    // Mensaje de error si ocurre
+                    errorMessage?.let {
+                        Text(
+                            text = it,
+                            color = MaterialTheme.colorScheme.error,
+                            modifier = Modifier.padding(8.dp)
+                        )
+                    }
+
+                    // Imagen del perfil
                     ProfileImage()
                     Spacer(modifier = Modifier.height(16.dp))
 
-                    // Settings form
+                    // Formulario de edición
                     FormSettings(
                         userState = userState,
                         onUpdateField = { field, value ->
@@ -114,10 +129,14 @@ fun PerfilUserCompose(navController: NavController, viewModel: ProfileViewModel 
                     )
                     Spacer(modifier = Modifier.height(16.dp))
 
-                    // Update button
+                    // Botón para guardar cambios
                     ButtonForm(onClick = {
                         viewModel.saveUserData {
-                            Toast.makeText(context, "Datos actualizados correctamente", Toast.LENGTH_LONG).show()
+                            Toast.makeText(
+                                LocalContext.current,
+                                "Datos actualizados correctamente",
+                                Toast.LENGTH_LONG
+                            ).show()
                         }
                     }, text = "Actualizar")
                 }
@@ -125,6 +144,7 @@ fun PerfilUserCompose(navController: NavController, viewModel: ProfileViewModel 
         }
     }
 }
+
 
 @Composable
 fun ProfileImage() {
@@ -158,17 +178,12 @@ private fun FormSettings(
     userState: User,
     onUpdateField: (String, Any) -> Unit
 ) {
-    FieldFormString(userState.username ?: "", "Usuario") {
+    FieldFormString(userState.name ?: "", "Usuario") {
         onUpdateField("username", it)
     }
     Spacer(modifier = Modifier.height(16.dp))
 
-    OutlinedTextField(
-        value = userState.description ?: "",
-        onValueChange = { onUpdateField("description", it) },
-        label = { Text("Descripción") },
-        modifier = Modifier.fillMaxWidth(0.8f)
-    )
+
     Spacer(modifier = Modifier.height(16.dp))
 
     FieldFormString(userState.email ?: "", "Correo electrónico") {
@@ -191,7 +206,7 @@ private fun FormSettings(
         modifier = Modifier.fillMaxWidth(0.8f)
     ) {
         Checkbox(
-            checked = userState.notificationsEnabled ?: false,
+            checked = userState.notifications ?: false,
             onCheckedChange = { onUpdateField("notificationsEnabled", it) }
         )
         Spacer(modifier = Modifier.width(8.dp))
@@ -199,7 +214,7 @@ private fun FormSettings(
     }
     Spacer(modifier = Modifier.height(16.dp))
 
-    OptionSelectProfile(userState.userType ?: "Cliente") {
+    OptionSelectProfile(userState.type ?: "Cliente") {
         onUpdateField("userType", it)
     }
     Spacer(modifier = Modifier.height(16.dp))

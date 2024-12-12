@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
@@ -28,6 +29,8 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -39,6 +42,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -52,6 +56,8 @@ import com.ud.sheltermind.componentes.TextButtonForm
 import com.ud.sheltermind.componentes.WeekCompose
 import com.ud.sheltermind.enums.EnumNavigation
 import com.ud.sheltermind.logic.Operations
+import com.ud.sheltermind.logic.dataclass.User
+import com.ud.sheltermind.views.viewmodel.HomeViewModel
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Preview
@@ -68,10 +74,12 @@ fun ViewHome() {
 @RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeCompose(navController: NavController) {
+fun HomeCompose(navController: NavController, homeViewModel: HomeViewModel =  viewModel()) {
     //persistencia de datos en la vida util del compose
     val dateNow = remember { mutableStateOf(Operations().obtenerFechaActual()) }
-    val userType by viewModel.userType.collectAsState() // Observa el tipo de usuario
+    val userType by homeViewModel.userType.collectAsState() // obtener el tipo de usuario de viewmodel
+    val clients by homeViewModel.clients.collectAsState() // obtener la lista de clientes de viewmodel
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -88,14 +96,17 @@ fun HomeCompose(navController: NavController) {
                 },
                 //Botones a la derecha de TopAppBar
                 actions = {
-                    IconButton(onClick = {
-                        navController.navigate(EnumNavigation.Calendar.toString())
-                    }) {
-                        Icon(
-                            imageVector = Icons.Filled.CalendarMonth,
-                            contentDescription = "Calendar Month Icon",
-                            tint = Color(0xFF002366)
-                        )
+                    // Condicional para mostrar tarjetas según el tipo de usuario
+                    if (userType == "Cliente") {//probar que este en el lugar correcto para que oculte el icono(robin)
+                        IconButton(onClick = {
+                            navController.navigate(EnumNavigation.Calendar.toString())
+                        }) {
+                            Icon(
+                                imageVector = Icons.Filled.CalendarMonth,
+                                contentDescription = "Calendar Month Icon",
+                                tint = Color(0xFF002366)
+                            )
+                        }
                     }
                 }
             )
@@ -124,8 +135,10 @@ fun HomeCompose(navController: NavController) {
                     ActivitiesCard(navController) // Visible solo para Clientes
                 }
             }
-            item {
-                ProfesionalsCard(navController) // Siempre visible
+            if (userType == "Psicologo") {
+                item {
+                    ProfesionalsCard(navController, clients) // Pasar la lista de clientes
+                }
             }
         }
     }
@@ -211,7 +224,7 @@ private fun ActivitiesCard(navController: NavController) {
 }
 
 @Composable
-private fun ProfesionalsCard(navController: NavController) {
+private fun ProfesionalsCard(navController: NavController, clients: List<User>) {
     Box(Modifier.padding(20.dp)) {
         Card(
             modifier = Modifier.fillMaxWidth(),
@@ -235,12 +248,12 @@ private fun ProfesionalsCard(navController: NavController) {
                 item {
                     Spacer(modifier = Modifier.width(20.dp))
                 }
-                items(7) {
+                items(clients) { client ->
                     ProfesionalCard(
                         icon = Icons.Filled.AccountCircle,
-                        firstname = "FirstName",
-                        lastname = "LastName",
-                        profession = "Profession",
+                        firstname = client.name, // Muestra el nombre del usuario
+                        lastname = "LastName", //falta decidir que poner en este campo(el modelo no tiene apellido )
+                        profession = client.syntomValue.toString(),//falta decidir que poner en este campo
                         score = 5.0F,
                         navController
                     )

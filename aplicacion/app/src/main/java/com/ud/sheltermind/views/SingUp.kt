@@ -54,7 +54,7 @@ import com.ud.sheltermind.componentes.SocialNetwork
 import com.ud.sheltermind.componentes.TextButtonForm
 import com.ud.sheltermind.enums.EnumNavigation
 import com.ud.sheltermind.logic.dataclass.User
-import com.ud.sheltermind.views.viewmodel.LoginViewModel
+import com.ud.sheltermind.views.viewmodel.UserViewModel
 
 @Preview
 @Composable
@@ -69,7 +69,7 @@ fun ViewSingUp() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SingUpCompose(navController: NavController, viewModel: LoginViewModel = viewModel()) {
+fun SingUpCompose(navController: NavController, viewModel: UserViewModel = viewModel()) {
     val userName = remember { mutableStateOf("") }
     val userType = remember { mutableStateOf("Cliente") }
     val email = remember { mutableStateOf("") }

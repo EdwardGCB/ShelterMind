@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name" translatable="false">ShelterMind</string>
+    <string name="text" translatable="false">%d</string>
+
 
     <string name="login_title" translatable="false">Bienvenido</string>
     <string name="login_subtitle" translatable="false">O con el correo electronico</string>

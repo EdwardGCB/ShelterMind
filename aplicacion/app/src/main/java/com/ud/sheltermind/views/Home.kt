@@ -1,6 +1,7 @@
 package com.ud.sheltermind.views
 
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -19,6 +20,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.Circle
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -28,6 +31,9 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -52,6 +58,8 @@ import com.ud.sheltermind.componentes.TextButtonForm
 import com.ud.sheltermind.componentes.WeekCompose
 import com.ud.sheltermind.enums.EnumNavigation
 import com.ud.sheltermind.logic.Operations
+import com.ud.sheltermind.views.viewmodel.QuestionsViewModel
+import com.ud.sheltermind.views.viewmodel.UserViewModel
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Preview
@@ -69,9 +77,19 @@ fun ViewHome() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeCompose(navController: NavController) {
-    //persistencia de datos en la vida util del compose
+    val viewModelU: UserViewModel = remember { UserViewModel() }
+    val viewModelQ: QuestionsViewModel = remember { QuestionsViewModel() }
     val dateNow = remember { mutableStateOf(Operations().obtenerFechaActual()) }
-    val userType by viewModel.userType.collectAsState() // Observa el tipo de usuario
+
+    LaunchedEffect(viewModelU) {
+        viewModelU.addAuthStateListener()
+    }
+
+    val user by viewModelU.userData.collectAsState()
+    val questionnaireComplete by viewModelQ.questionnaireComplete.collectAsState()
+    LaunchedEffect (user){
+        user?.let { viewModelQ.checkComplete(it) }
+    }
     Scaffold(
         topBar = {
             TopAppBar(
@@ -81,12 +99,10 @@ fun HomeCompose(navController: NavController) {
                         style = TextStyle(
                             fontSize = 25.sp,
                             fontWeight = FontWeight.ExtraBold,
-                            // Modificador de color para el texto
                             color = Color(0xFF002366)
                         )
-                    )   
+                    )
                 },
-                //Botones a la derecha de TopAppBar
                 actions = {
                     IconButton(onClick = {
                         navController.navigate(EnumNavigation.Calendar.toString())
@@ -102,27 +118,40 @@ fun HomeCompose(navController: NavController) {
         },
         bottomBar = { CustomBottomBar(navController = navController) }
     ) { innerPadding ->
-
         LazyColumn(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(innerPadding),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            // Mostrar información del usuario cuando esté disponible
+            if (!questionnaireComplete) {
+                item {
+                    AlertDialog(
+                        onDismissRequest = { /* Acción para cerrar el diálogo */ },
+                        title = { Text("Cuestionario Incompleto") },
+                        text = { Text("Por favor, complete el cuestionario para continuar.") },
+                        confirmButton = {
+                            Button( onClick = { navController.navigate(EnumNavigation.Questions.toString()) } )
+                            { Text("Completar") }
+                        }
+                    )
+                }
+            }
+
             //Calendar
             item {
                 Spacer(modifier = Modifier.height(16.dp))
                 WeekCompose(dateNow.value)
                 Spacer(modifier = Modifier.height(16.dp))
             }
+
             // Condicional para mostrar tarjetas según el tipo de usuario
-            if (userType == "Cliente") {
-                item {
-                    NotesCard(navController) // Visible solo para Clientes
-                }
-                item {
-                    ActivitiesCard(navController) // Visible solo para Clientes
-                }
+            item {
+                NotesCard(navController) // Visible solo para Clientes
+            }
+            item {
+                ActivitiesCard(navController) // Visible solo para Clientes
             }
             item {
                 ProfesionalsCard(navController) // Siempre visible

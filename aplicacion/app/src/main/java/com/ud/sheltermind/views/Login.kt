@@ -1,5 +1,7 @@
 package com.ud.sheltermind.views
 
+import android.util.Log
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
@@ -11,11 +13,13 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -40,6 +44,7 @@ import androidx.navigation.compose.rememberNavController
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import com.ud.sheltermind.R
 import com.ud.sheltermind.componentes.ButtonForm
@@ -48,7 +53,7 @@ import com.ud.sheltermind.componentes.PassFlied
 import com.ud.sheltermind.componentes.SocialNetwork
 import com.ud.sheltermind.componentes.TextButtonForm
 import com.ud.sheltermind.enums.EnumNavigation
-import com.ud.sheltermind.views.viewmodel.LoginViewModel
+import com.ud.sheltermind.views.viewmodel.UserViewModel
 
 @Preview
 @Composable
@@ -63,93 +68,121 @@ fun ViewLogin() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LoginCompose(navController: NavController, viewModel: LoginViewModel = viewModel()) {
+fun LoginCompose(navController: NavController, viewModel: UserViewModel = viewModel()) {
+    // Estados para email y contraseña
     val email = remember { mutableStateOf("") }
     val password = remember { mutableStateOf("") }
+
     val context = LocalContext.current
     val isLoggedIn by viewModel.isLoggedIn.collectAsState()
-    val launcher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.StartActivityForResult()
-    ) {
-        val task = GoogleSignIn.getSignedInAccountFromIntent(it.data)
-        try {
-            val account = task.getResult(ApiException::class.java)!!
-            // Signed in successfully, update UI with the signed-in user's information
-            val credential = GoogleAuthProvider.getCredential(account.id, null)
-            viewModel.singInWithGoogle(credential){
-                navController.navigate(EnumNavigation.Home.toString())
-            }
-        }catch(ex: Exception){
-            //
+    val errorMessage by viewModel.errorMessage.collectAsState()
+    val isLoading = remember { mutableStateOf(true) }
+
+    LaunchedEffect(Unit) {
+        if (isLoggedIn) {
+            navController.navigate(EnumNavigation.Home.toString())
         }
+        isLoading.value = false
     }
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = {
+
+    if (isLoading.value) {
+        CircularProgressIndicator()
+    }else{
+        // Lanzador para Google SignIn
+        val launcher = rememberLauncherForActivityResult(
+            contract = ActivityResultContracts.StartActivityForResult()
+        ) {
+            val task = GoogleSignIn.getSignedInAccountFromIntent(it.data)
+            try {
+                val account = task.getResult(ApiException::class.java)!!
+                val credential = GoogleAuthProvider.getCredential(account.idToken, null)
+                viewModel.signInWithGoogle(credential) {
+                    navController.navigate(EnumNavigation.Home.toString())
+                }
+            } catch (ex: Exception) {
+                Log.d("GoogleSignIn", "Error: $ex")
+                Toast.makeText(context, "Error al iniciar sesión con Google", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        // Diseño principal con Scaffold
+        Scaffold(
+            topBar = {
+                TopAppBar(
+                    title = {
+                        Text(
+                            stringResource(R.string.login_button),
+                            style = TextStyle(
+                                fontSize = 25.sp,
+                                fontWeight = FontWeight.ExtraBold,
+                                color = Color(0xFF002366)
+                            )
+                        )
+                    }
+                )
+            }
+        ) { innerPadding ->
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(innerPadding),
+                contentAlignment = Alignment.Center
+            ) {
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    // Título
                     Text(
-                        stringResource(R.string.login_button),
+                        text = stringResource(R.string.login_title),
                         style = TextStyle(
-                            fontSize = 25.sp,
-                            fontWeight = FontWeight.ExtraBold,
-                            //Modificador de color para el texto
+                            fontSize = 20.sp,
+                            fontWeight = FontWeight.Bold,
                             color = Color(0xFF002366)
                         )
                     )
-                })
-        }
-    ) { innerPadding ->
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding),
-            contentAlignment = Alignment.Center
-        ) {
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                Text(
-                    text = stringResource(R.string.login_title),
-                    style = TextStyle(
-                        fontSize = 20.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = Color(0xFF002366)
-                    )
-                )
-                Spacer(modifier = Modifier.height(16.dp))
-                //Imagen del logo vertical
-                Image(
-                    painter = painterResource(R.drawable.logo1),
-                    contentDescription = "Logo",
-                    modifier = Modifier
-                        .size(250.dp)
-                )
-                Spacer(modifier = Modifier.height(16.dp))
-                SocialNetwork(onClick = {
-                    val options = GoogleSignInOptions.Builder(
-                        GoogleSignInOptions.DEFAULT_SIGN_IN
-                    )
-                        .requestIdToken(R.string.token.toString())
-                        .requestEmail()
-                        .build()
-                    val googleSignInClient = GoogleSignIn.getClient(context, options)
-                    launcher.launch(googleSignInClient.signInIntent)
-                })
-                Spacer(modifier = Modifier.height(16.dp))
-                Text(
-                    text = stringResource(R.string.login_subtitle),
-                    style = TextStyle(
-                        fontSize = 15.sp,
-                        fontWeight = FontWeight.Normal,
-                        //color = Color.Blue
-                    )
-                )
+                    Spacer(modifier = Modifier.height(16.dp))
 
-                Spacer(modifier = Modifier.height(16.dp))
-                Formulario(email, password, navController, viewModel, isLoggedIn)
-                Spacer(modifier = Modifier.height(16.dp))
-                FooterFormulario(navController)
+                    // Logo
+                    Image(
+                        painter = painterResource(R.drawable.logo1),
+                        contentDescription = "Logo",
+                        modifier = Modifier.size(250.dp)
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    // Botón Social Network (Google SignIn)
+                    SocialNetwork(onClick = {
+                        val googleSignInClient = viewModel.getGoogleSignInClient(context)
+                        launcher.launch(googleSignInClient.signInIntent)
+                    })
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    // Subtítulo
+                    Text(
+                        text = stringResource(R.string.login_subtitle),
+                        style = TextStyle(fontSize = 15.sp, fontWeight = FontWeight.Normal)
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    // Formulario de email y contraseña
+                    Formulario(email, password, navController, viewModel, isLoggedIn)
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    // Mostrar error si existe
+                    errorMessage?.let {
+                        Text(
+                            text = it,
+                            color = Color.Red,
+                            style = TextStyle(fontSize = 14.sp, fontWeight = FontWeight.Bold)
+                        )
+                        Spacer(modifier = Modifier.height(8.dp))
+                    }
+
+                    // Footer para registro
+                    FooterFormulario(navController)
+                }
             }
         }
     }
+
 }
 
 @Composable
@@ -157,7 +190,7 @@ private fun Formulario(
     email: MutableState<String>,
     password: MutableState<String>,
     navController: NavController,
-    viewModel: LoginViewModel,
+    viewModel: UserViewModel,
     isLoggedIn: Boolean
 ) {
 
@@ -171,8 +204,7 @@ private fun Formulario(
         viewModel.loginWithEmail(email.value, password.value)
         if(isLoggedIn){
             navController.navigate(EnumNavigation.Home.toString())
-        }
-                         }, stringResource(R.string.login_button))
+        } }, stringResource(R.string.login_button))
 }
 
 @Composable

@@ -1,22 +1,33 @@
 package com.ud.sheltermind.views.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestore
 import com.ud.sheltermind.logic.dataclass.Answer
 import com.ud.sheltermind.logic.dataclass.Question
+import com.ud.sheltermind.logic.dataclass.User
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
 class QuestionsViewModel : ViewModel() {
     private val db = Firebase.firestore
 
+    private val _questionnaireComplete = MutableStateFlow(false)
+    val questionnaireComplete: StateFlow<Boolean> = _questionnaireComplete
+
     private val _questions = MutableStateFlow<List<Question>>(emptyList())
     val questions: StateFlow<List<Question>> = _questions
 
-    private val _errorMessage = MutableStateFlow<String?>(null)
-    val errorMessage: StateFlow<String?> = _errorMessage
+    fun checkComplete(user: User){
+        db.collection("questions").get()
+            .addOnSuccessListener { documents ->
+                val totalQuestions = documents.size()-1
+                _questionnaireComplete.value = user.lastQuestion >= totalQuestions
+            }
+            .addOnFailureListener {
+                _questionnaireComplete.value = false
+            }
+    }
 
     fun consultQuestion() {
         val questionsRef = db.collection("questions")
@@ -36,9 +47,6 @@ class QuestionsViewModel : ViewModel() {
                     Question(id = id, number = number, text = text, options = answers)
                 }
                 _questions.value = questionList
-            }
-            .addOnFailureListener { ex ->
-                _errorMessage.value = ex.message
             }
     }
 

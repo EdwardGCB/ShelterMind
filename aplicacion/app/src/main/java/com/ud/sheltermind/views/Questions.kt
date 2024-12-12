@@ -1,11 +1,10 @@
 package com.ud.sheltermind.views
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -15,10 +14,9 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+//noinspection UsingMaterialAndMaterial3Libraries
 import androidx.compose.material.Card
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material3.Button
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.LinearProgressIndicator
@@ -31,9 +29,9 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableDoubleStateOf
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -44,28 +42,42 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.ud.sheltermind.R
 import com.ud.sheltermind.componentes.ButtonForm
+import com.ud.sheltermind.enums.EnumNavigation
 import com.ud.sheltermind.views.viewmodel.QuestionsViewModel
+import com.ud.sheltermind.views.viewmodel.UserViewModel
 
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class)
 @Composable
-fun QuestionsCompose(navController: NavController, viewModelQ: QuestionsViewModel = viewModel()) {
+fun QuestionsCompose(navController: NavController) {
+    val viewModelQ: QuestionsViewModel = remember { QuestionsViewModel() }
+    val viewModelU: UserViewModel = remember { UserViewModel() }
     // Consultar las preguntas cuando la Composable se lance
     LaunchedEffect(Unit) {
         viewModelQ.consultQuestion()
+        viewModelU.addAuthStateListener()
     }
-
-    // Estados reactivos para las preguntas y progreso
     val questions by viewModelQ.questions.collectAsState()
+    // Estados reactivos para las preguntas y progreso
+
+    remember(questions) { questions.sortedBy { it.number } }
+    questions.forEach { question ->
+        Log.d("questions", question.number.toString())
+    }
+    val user by viewModelU.userData.collectAsState()
     val total = remember { derivedStateOf { questions.size } }
-    val progress = remember { mutableFloatStateOf(0f) }
-    val i = progress.value.toInt()
+    val progress = remember {
+        mutableFloatStateOf(user?.lastQuestion?.toFloat() ?: 1f)
+    }
+    val i = progress.floatValue.toInt()
     val currentQuestion = questions.getOrNull(i)
     val selectedOption = remember { mutableIntStateOf(0) }
+    val answerValue = remember { mutableDoubleStateOf(0.0) }
+    val errorMessage = viewModelU.errorMessage.collectAsState()
+    Log.d("usuario_logeado", user.toString())
 
     // Comienza el Scaffold
     Scaffold(
@@ -87,9 +99,15 @@ fun QuestionsCompose(navController: NavController, viewModelQ: QuestionsViewMode
             ) {
                 ButtonForm(
                     onClick = {
-                        if (i < total.value - 1) {
-                            progress.value += 1
-                            selectedOption.intValue = 0 // Limpiar selección al cambiar de pregunta
+                        if(errorMessage.value.isNullOrEmpty()){
+                            Log.d("limite", progress.floatValue.toString())
+                            if (progress.floatValue < total.value-1) {
+                                user?.let { viewModelU.updateUserAnswer(it, (progress.floatValue+1).toInt(), answerValue.doubleValue/questions.size.toDouble()) }
+                                progress.value += 1
+                                selectedOption.intValue = 0 // Limpiar selección al cambiar de pregunta
+                            }else{
+                                navController.navigate(EnumNavigation.Home.toString())
+                            }
                         }
                     },
                     stringResource(R.string.next)
@@ -141,7 +159,11 @@ fun QuestionsCompose(navController: NavController, viewModelQ: QuestionsViewMode
                                             shape = RoundedCornerShape(16.dp)
                                         ),
                                     shape = RoundedCornerShape(16.dp),
-                                    onClick = { selectedOption.intValue = answer.value as Int }
+                                    onClick = {
+                                        selectedOption.intValue = answer.value as Int
+                                        Log.d("selectedOption", selectedOption.intValue.toString())
+                                        answerValue.doubleValue = selectedOption.intValue.toDouble()/question.options.size.toDouble()
+                                    }
                                 ) {
                                     Box(
                                         modifier = Modifier
@@ -149,8 +171,9 @@ fun QuestionsCompose(navController: NavController, viewModelQ: QuestionsViewMode
                                             .padding(16.dp),
                                         contentAlignment = Alignment.CenterStart
                                     ) {
+
                                         Text(
-                                            text = answer.name,
+                                            text = answer.name+" "+answer.value,
                                             style = TextStyle(
                                                 fontSize = 16.sp,
                                                 color = if (isSelected) Color(0xFF002366) else Color.Black,

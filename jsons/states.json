@@ -1,0 +1,129 @@
+{
+  "state": {
+    "1": {
+      "name": "Enojado",
+      "targets": [
+        {"name": "Frustración", "value": 1},
+        {"name": "Rabia", "value": 2},
+        {"name": "Ira", "value": 3},
+        {"name": "Indignación", "value": 4},
+        {"name": "Molestia", "value": 5},
+        {"name": "Exasperación", "value": 6},
+        {"name": "Irritación", "value": 7},
+        {"name": "Cólera", "value": 8},
+        {"name": "Desesperación", "value": 9},
+        {"name": "Desdén", "value": 10},
+        {"name": "Resentimiento", "value": 11},
+        {"name": "Enfado", "value": 12},
+        {"name": "Enemistad", "value": 13},
+        {"name": "Furia", "value": 14},
+        {"name": "Irrascibilidad", "value": 15},
+        {"name": "Agresión", "value": 16},
+        {"name": "Hostilidad", "value": 17},
+        {"name": "Desprecio", "value": 18},
+        {"name": "Impaciencia", "value": 19},
+        {"name": "Coraje", "value": 20}
+      ]
+    },
+    "2": {
+      "name": "Triste",
+      "targets": [
+        {"name": "Melancolía", "value": 1},
+        {"name": "Depresión", "value": 2},
+        {"name": "Desánimo", "value": 3},
+        {"name": "Soledad", "value": 4},
+        {"name": "Luto", "value": 5},
+        {"name": "Desesperanza", "value": 6},
+        {"name": "Abatimiento", "value": 7},
+        {"name": "Desconsuelo", "value": 8},
+        {"name": "Nostalgia", "value": 9},
+        {"name": "Pena", "value": 10},
+        {"name": "Desgano", "value": 11},
+        {"name": "Lamentación", "value": 12},
+        {"name": "Desilusión", "value": 13},
+        {"name": "Dolor", "value": 14},
+        {"name": "Pesimismo", "value": 15},
+        {"name": "Angustia", "value": 16},
+        {"name": "Desaliento", "value": 17},
+        {"name": "Inquietud", "value": 18},
+        {"name": "Llanto", "value": 19},
+        {"name": "Miseria", "value": 20}
+      ]
+    },
+    "3": {
+      "name": "Normal",
+      "targets": [
+        {"name": "Serenidad", "value": 1},
+        {"name": "Tranquilidad", "value": 2},
+        {"name": "Equilibrio", "value": 3},
+        {"name": "Neutralidad", "value": 4},
+        {"name": "Indiferencia", "value": 5},
+        {"name": "Calma", "value": 6},
+        {"name": "Paz", "value": 7},
+        {"name": "Estabilidad", "value": 8},
+        {"name": "Sobriedad", "value": 9},
+        {"name": "Imparcialidad", "value": 10},
+        {"name": "Desapego", "value": 11},
+        {"name": "Aceptación", "value": 12},
+        {"name": "Claridad", "value": 13},
+        {"name": "Control", "value": 14},
+        {"name": "Imperturbabilidad", "value": 15},
+        {"name": "Modestia", "value": 16},
+        {"name": "Sensatez", "value": 17},
+        {"name": "Apacibilidad", "value": 18},
+        {"name": "Plenitud", "value": 19},
+        {"name": "Mesura", "value": 20}
+      ]
+    },
+    "4": {
+      "name": "Feliz",
+      "targets": [
+        {"name": "Alegría", "value": 1},
+        {"name": "Entusiasmo", "value": 2},
+        {"name": "Satisfacción", "value": 3},
+        {"name": "Optimismo", "value": 4},
+        {"name": "Euforia", "value": 5},
+        {"name": "Gozo", "value": 6},
+        {"name": "Felicidad", "value": 7},
+        {"name": "Exaltación", "value": 8},
+        {"name": "Contento", "value": 9},
+        {"name": "Placer", "value": 10},
+        {"name": "Divertido", "value": 11},
+        {"name": "Dichoso", "value": 12},
+        {"name": "Radiante", "value": 13},
+        {"name": "Gozoso", "value": 14},
+        {"name": "Animado", "value": 15},
+        {"name": "Jubiloso", "value": 16},
+        {"name": "Positividad", "value": 17},
+        {"name": "Sonriente", "value": 18},
+        {"name": "Satisfecho", "value": 19},
+        {"name": "Alegre", "value": 20}
+      ]
+    },
+    "5": {
+      "name": "Muy feliz",
+      "targets": [
+        {"name": "Extático", "value": 1},
+        {"name": "Eufórico", "value": 2},
+        {"name": "Exultante", "value": 3},
+        {"name": "Jubiloso", "value": 4},
+        {"name": "Radiante", "value": 5},
+        {"name": "Triunfante", "value": 6},
+        {"name": "Agradecido", "value": 7},
+        {"name": "Bendecido", "value": 8},
+        {"name": "Encantado", "value": 9},
+        {"name": "Exuberante", "value": 10},
+        {"name": "Gozoso", "value": 11},
+        {"name": "Entusiasmado", "value": 12},
+        {"name": "Regocijado", "value": 13},
+        {"name": "Inmenso", "value": 14},
+        {"name": "Maravillado", "value": 15},
+        {"name": "Exhilarante", "value": 16},
+        {"name": "Deslumbrado", "value": 17},
+        {"name": "Iluminado", "value": 18},
+        {"name": "Extasiado", "value": 19},
+        {"name": "Plenamente feliz", "value": 20}
+      ]
+    }
+  }
+}

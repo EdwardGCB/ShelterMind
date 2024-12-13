@@ -1,0 +1,416 @@
+{
+  "questions": {
+    "30yH9j4eQTNw4YcfRQTN": {
+      "number": 1,
+      "text": "¿Como percibes el panorama en este momento donde estas?",
+      "options": [
+        {
+          "value": 1,
+          "name": "Muy positivo"
+        },
+        {
+          "value": 2,
+          "name": "Algo positivo"
+        },
+        {
+          "name": "Neutro",
+          "value": 3
+        },
+        {
+          "value": 4,
+          "name": "Algo negativo"
+        },
+        {
+          "value": 5,
+          "name": "Muy negativo"
+        }
+      ]
+    },
+    "5J5FhOi73k1hMcXH5WPz": {
+      "number": 6,
+      "text": "¿Podrias describirme en una sola palabra lo que estas pensando?",
+      "options": [
+        {
+          "value": 5,
+          "name": "Preocupado/a"
+        },
+        {
+          "value": 2,
+          "name": "Confundido/a"
+        },
+        {
+          "name": "Nervioso/a",
+          "value": 3
+        },
+        {
+          "value": 4,
+          "name": "Indiferente"
+        },
+        {
+          "value": 1,
+          "name": "Sin ánimos"
+        }
+      ]
+    },
+    "9b7M0rhuoZEUIfIPUXgZ": {
+      "number": 10,
+      "text": "¿Fumas?",
+      "options": [
+        {
+          "name": "Sí, fumo regularmente.",
+          "value": 4
+        },
+        {
+          "name": "Sí, fumo ocasionalmente.",
+          "value": 3
+        },
+        {
+          "name": "No, pero solía fumar.",
+          "value": 2
+        },
+        {
+          "name": "No, nunca he fumado.",
+          "value": 1
+        }
+      ]
+    },
+    "C6p7YVNWK6c2mAxMOI4S": {
+      "number": 16,
+      "text": "¿Crees que tienes algun mecanismo de defensa al afrontar decisiones personales?",
+      "options": [
+        {
+          "name": "Sí, soy consciente de mis mecanismos de defensa.",
+          "value": 1
+        },
+        {
+          "name": "Sí, pero no siempre los reconozco.",
+          "value": 2
+        },
+        {
+          "name": "A veces, dependiendo de la situación.",
+          "value": 3
+        },
+        {
+          "name": "No, no creo tener mecanismos de defensa.",
+          "value": 4
+        },
+        {
+          "name": "No estoy seguro/a.",
+          "value": 5
+        }
+      ]
+    },
+    "DYRcrPkYLe5NBICNURsz": {
+      "number": 15,
+      "text": "¿Tienes relaciones saludables?",
+      "options": [
+        {
+          "name": "Sí, tengo relaciones muy saludables.",
+          "value": 1
+        },
+        {
+          "name": "Sí, tengo relaciones saludables en su mayoría.",
+          "value": 2
+        },
+        {
+          "name": "Algunas de mis relaciones son saludables.",
+          "value": 3
+        },
+        {
+          "name": "No, no tengo relaciones saludables.",
+          "value": 5
+        },
+        {
+          "name": "No estoy seguro/a.",
+          "value": 4
+        }
+      ]
+    },
+    "DhfKqhCEx0urnVJnM4As": {
+      "number": 11,
+      "text": "¿Bebes?",
+      "options": [
+        {
+          "name": "Sí, bebo regularmente.",
+          "value": 4
+        },
+        {
+          "name": "Sí, bebo ocasionalmente.",
+          "value": 3
+        },
+        {
+          "name": "No, pero solía beber.",
+          "value": 2
+        },
+        {
+          "name": "No, nunca he bebido.",
+          "value": 1
+        }
+      ]
+    },
+    "EX9qQpC0oY7T3tENU41J": {
+      "number": 14,
+      "text": "¿Tienes metas?",
+      "options": [
+        {
+          "name": "Sí, tengo metas a corto plazo.",
+          "value": 2
+        },
+        {
+          "value": 3,
+          "name": "Sí, tengo metas a largo plazo."
+        },
+        {
+          "name": "Sí, tengo metas a corto y largo plazo.",
+          "value": 1
+        },
+        {
+          "name": "No, no tengo metas definidas en este momento.",
+          "value": 4
+        },
+        {
+          "name": "No, pero estoy pensando en establecer algunas.",
+          "value": 5
+        }
+      ]
+    },
+    "IisUypy6h9SGnb9DHA7R": {
+      "text": "¿Crees que la gravedad de la situacion te lleve a tomar una decision negativa?",
+      "number": 3,
+      "options": [
+        {
+          "name": "Sí, creo que la gravedad de la situación me lleva a tomar una decisión negativa.",
+          "value": 4
+        },
+        {
+          "name": "No, no creo que la gravedad de la situación me lleve a tomar una decisión negativa.",
+          "value": 1
+        },
+        {
+          "value": 3,
+          "name": "A veces, depende de la situación."
+        },
+        {
+          "name": "No estoy seguro/a.",
+          "value": "2"
+        }
+      ]
+    },
+    "JXYTGu8B4hhCS5GPXFLD": {
+      "options": [
+        {
+          "name": "Saludable",
+          "value": 1
+        },
+        {
+          "name": "Equilibrada",
+          "value": 2
+        },
+        {
+          "name": "Desequilibrada",
+          "value": 3
+        },
+        {
+          "name": "Irregular",
+          "value": 4
+        },
+        {
+          "name": "Basada en comida rápida",
+          "value": 5
+        }
+      ],
+      "text": "¿Como es tu alimentacion?",
+      "number": 12
+    },
+    "NRVrQTWeYKMvXfaETQ5e": {
+      "number": 9,
+      "text": "¿vas al gimnasio?",
+      "options": [
+        {
+          "value": 1,
+          "name": "Sí, voy al gimnasio regularmente."
+        },
+        {
+          "value": 2,
+          "name": "Sí, voy al gimnasio de vez en cuando."
+        },
+        {
+          "value": 3,
+          "name": "No, pero hago ejercicio en casa."
+        },
+        {
+          "name": "No, pero practico otro deporte.",
+          "value": 4
+        },
+        {
+          "name": "No, no hago ejercicio.",
+          "value": 5
+        }
+      ]
+    },
+    "NxHTvQwk0u4dYbpGXpxT": {
+      "number": 4,
+      "text": "¿La situacion que estas comentando te ha generado sueños o pesadillas?",
+      "options": [
+        {
+          "name": "Sí, he tenido sueños.",
+          "value": 3
+        },
+        {
+          "name": "Sí, he tenido pesadillas.",
+          "value": 4
+        },
+        {
+          "name": "Sí, he tenido ambos.",
+          "value": 5
+        },
+        {
+          "name": "No, no he tenido ninguno.",
+          "value": 1
+        },
+        {
+          "name": "No estoy seguro/a.",
+          "value": 2
+        }
+      ]
+    },
+    "T7DAVKmHee7y2XHq3Zim": {
+      "text": "¿Cual es el sintoma que crees que sientes en el momento?",
+      "options": [
+        {
+          "value": 6,
+          "name": "Ansiedad"
+        },
+        {
+          "name": "Tristeza",
+          "value": 5
+        },
+        {
+          "value": 4,
+          "name": "Estrés"
+        },
+        {
+          "value": 2,
+          "name": "Fatiga"
+        },
+        {
+          "name": "Alegría",
+          "value": 1
+        },
+        {
+          "name": "Indiferencia",
+          "value": 3
+        },
+        {
+          "name": "Otro:",
+          "value": ""
+        }
+      ],
+      "number": 8
+    },
+    "lJ5SggkZBJHHq1PEDPj5": {
+      "number": 7,
+      "text": "¿Crees que el dolor te pueda fortalecer?",
+      "options": [
+        {
+          "name": "Sí, creo que el dolor puede fortalecerme.",
+          "value": 4
+        },
+        {
+          "name": "No, no creo que el dolor me fortalezca.",
+          "value": 1
+        },
+        {
+          "name": "No estoy seguro/a.",
+          "value": 2
+        },
+        {
+          "name": "A veces, depende de la situación.",
+          "value": 3
+        }
+      ]
+    },
+    "m9mwXOa7wLhrB8zZ2ZeG": {
+      "text": "¿Has tenido pensamientos de hacerte daño?",
+      "options": [
+        {
+          "name": "si",
+          "value": 1
+        },
+        {
+          "name": "no",
+          "value": 0
+        }
+      ],
+      "number": 5
+    },
+    "u1yJeNf1b7xM0mjHT27T": {
+      "number": 13,
+      "text": "¿Cómo duermes?",
+      "options": [
+        {
+          "name": "Muy bien",
+          "value": 1
+        },
+        {
+          "name": "Bien",
+          "value": 2
+        },
+        {
+          "name": "Aceptable",
+          "value": 3
+        },
+        {
+          "name": "Regular",
+          "value": 4
+        },
+        {
+          "name": "A veces bien, a veces mal",
+          "value": 5
+        },
+        {
+          "name": "Mal",
+          "value": 6
+        },
+        {
+          "name": "Muy mal",
+          "value": 7
+        },
+        {
+          "name": "Con interrupciones frecuentes",
+          "value": 8
+        },
+        {
+          "name": "No duermo lo suficiente",
+          "value": 9
+        },
+        {
+          "name": "Insuficiente",
+          "value": 10
+        }
+      ]
+    },
+    "v5Cq81u0nrsrD9lx1aLp": {
+      "number": 2,
+      "text": "¿El pensamiento que percibes en este momento proviene de tu infancia o alguna situacion que no recuerdes?",
+      "options": [
+        {
+          "name": "Proviene de mi infancia.",
+          "value": 4
+        },
+        {
+          "name": "Proviene de una situación reciente que recuerdo.",
+          "value": 3
+        },
+        {
+          "name": "Proviene de una situación que no recuerdo.",
+          "value": 2
+        },
+        {
+          "name": "No estoy seguro/a del origen.",
+          "value": 1
+        }
+      ]
+    }
+  }
+}

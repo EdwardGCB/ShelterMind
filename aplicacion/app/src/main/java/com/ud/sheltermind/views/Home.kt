@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -24,6 +25,7 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -80,81 +82,93 @@ fun HomeCompose(navController: NavController) {
     val viewModelU: UserViewModel = remember { UserViewModel() }
     val viewModelQ: QuestionsViewModel = remember { QuestionsViewModel() }
     val dateNow = remember { mutableStateOf(Operations().obtenerFechaActual()) }
-
-    LaunchedEffect(viewModelU) {
-        viewModelU.addAuthStateListener()
-    }
-
     val user by viewModelU.userData.collectAsState()
     val questionnaireComplete by viewModelQ.questionnaireComplete.collectAsState()
-    LaunchedEffect (user){
-        user?.let { viewModelQ.checkComplete(it) }
+    val isUserDataFetched by viewModelU.isUserDataFetched.collectAsState()
+
+    LaunchedEffect(Unit) {
+        viewModelU.addAuthStateListener()
     }
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = {
-                    Text(
-                        text = Operations().obtenerMesDiaActual(dateNow.value),
-                        style = TextStyle(
-                            fontSize = 25.sp,
-                            fontWeight = FontWeight.ExtraBold,
-                            color = Color(0xFF002366)
+    if (!isUserDataFetched || user == null) {
+        // Mostrar el indicador de carga hasta que los datos del usuario estén listos
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            CircularProgressIndicator()
+        }
+    }else{
+        LaunchedEffect (user) {
+            user?.let { viewModelQ.checkComplete(it) }
+        }
+        Log.d("user_loged", user.toString())
+        Scaffold(
+            topBar = {
+                TopAppBar(
+                    title = {
+                        Text(
+                            text = Operations().obtenerMesDiaActual(dateNow.value),
+                            style = TextStyle(
+                                fontSize = 25.sp,
+                                fontWeight = FontWeight.ExtraBold,
+                                color = Color(0xFF002366)
+                            )
                         )
-                    )
-                },
-                actions = {
-                    IconButton(onClick = {
-                        navController.navigate(EnumNavigation.Calendar.toString())
-                    }) {
-                        Icon(
-                            imageVector = Icons.Filled.CalendarMonth,
-                            contentDescription = "Calendar Month Icon",
-                            tint = Color(0xFF002366)
+                    },
+                    actions = {
+                        IconButton(onClick = {
+                            navController.navigate(EnumNavigation.Calendar.toString())
+                        }) {
+                            Icon(
+                                imageVector = Icons.Filled.CalendarMonth,
+                                contentDescription = "Calendar Month Icon",
+                                tint = Color(0xFF002366)
+                            )
+                        }
+                    }
+                )
+            },
+            bottomBar = { CustomBottomBar(navController = navController) }
+        ) { innerPadding ->
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(innerPadding),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                // Mostrar información del usuario cuando esté disponible
+                if (!questionnaireComplete) {
+                    item {
+                        AlertDialog(
+                            onDismissRequest = { /* Acción para cerrar el diálogo */ },
+                            title = { Text("Cuestionario Incompleto") },
+                            text = { Text("Por favor, complete el cuestionario para continuar.") },
+                            confirmButton = {
+                                Button( onClick = { navController.navigate(EnumNavigation.Questions.toString()) } )
+                                { Text("Completar") }
+                            }
                         )
                     }
                 }
-            )
-        },
-        bottomBar = { CustomBottomBar(navController = navController) }
-    ) { innerPadding ->
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(innerPadding),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            // Mostrar información del usuario cuando esté disponible
-            if (!questionnaireComplete) {
+
+                //Calendar
                 item {
-                    AlertDialog(
-                        onDismissRequest = { /* Acción para cerrar el diálogo */ },
-                        title = { Text("Cuestionario Incompleto") },
-                        text = { Text("Por favor, complete el cuestionario para continuar.") },
-                        confirmButton = {
-                            Button( onClick = { navController.navigate(EnumNavigation.Questions.toString()) } )
-                            { Text("Completar") }
-                        }
-                    )
+                    Spacer(modifier = Modifier.height(16.dp))
+                    WeekCompose(dateNow.value)
+                    Spacer(modifier = Modifier.height(16.dp))
                 }
-            }
-
-            //Calendar
-            item {
-                Spacer(modifier = Modifier.height(16.dp))
-                WeekCompose(dateNow.value)
-                Spacer(modifier = Modifier.height(16.dp))
-            }
-
-            // Condicional para mostrar tarjetas según el tipo de usuario
-            item {
-                NotesCard(navController) // Visible solo para Clientes
-            }
-            item {
-                ActivitiesCard(navController) // Visible solo para Clientes
-            }
-            item {
-                ProfesionalsCard(navController) // Siempre visible
+                // Condicional para mostrar tarjetas según el tipo de usuario
+                if(user!!.type == "Cliente"){
+                    item {
+                        NotesCard(navController) // Visible solo para Clientes
+                    }
+                    item {
+                        ActivitiesCard(navController) // Visible solo para Clientes
+                    }
+                }
+                item {
+                    ProfesionalsCard(navController) // Siempre visible
+                }
             }
         }
     }

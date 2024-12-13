@@ -80,7 +80,6 @@ fun SingUpCompose(navController: NavController, viewModel: UserViewModel = viewM
     val errorMessage by viewModel.errorMessage.collectAsState()
     val isLoggedIn by viewModel.isLoggedIn.collectAsState()
 
-    // Navegación cuando el estado de login cambia a verdadero
     LaunchedEffect(isLoggedIn) {
         if (isLoggedIn) {
             navController.navigate(EnumNavigation.Questions.toString())

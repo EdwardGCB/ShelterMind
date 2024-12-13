@@ -17,9 +17,12 @@ import com.google.firebase.ktx.Firebase
 import com.ud.sheltermind.R
 import com.ud.sheltermind.logic.dataclass.Syntom
 import com.ud.sheltermind.logic.dataclass.User
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withContext
 
 class UserViewModel : ViewModel() {
     private val auth: FirebaseAuth = Firebase.auth
@@ -33,6 +36,9 @@ class UserViewModel : ViewModel() {
 
     private val _isLoggedIn = MutableStateFlow(false)
     val isLoggedIn: StateFlow<Boolean> = _isLoggedIn
+    private val _isLoading = MutableStateFlow(false)
+    val isLoading: StateFlow<Boolean> get() = _isLoading
+
 
     private val _currentUser = MutableStateFlow<FirebaseUser?>(null)
     val currentUser: StateFlow<FirebaseUser?> = _currentUser
@@ -42,11 +48,22 @@ class UserViewModel : ViewModel() {
 
     // Listener de autenticación
     private val authStateListener = FirebaseAuth.AuthStateListener { firebaseAuth ->
+        Log.d("UserViewModel", "2")
         val user = firebaseAuth.currentUser
-        _currentUser.value = user
-        _isLoggedIn.value = user != null
-        if (user != null && !_isUserDataFetched.value) {
-            fetchUserDataFromFirestore(user.uid)
+        Log.d("UserViewModel", user.toString())
+        if (user != null) {
+            Log.d("UserViewModel", "3")
+            _currentUser.value = user
+            _isLoggedIn.value = true
+            if (!_isUserDataFetched.value) {
+                Log.d("UserViewModel", "4")
+                fetchUserDataFromFirestore(user.uid)
+            }
+        } else {
+            _isLoggedIn.value = false
+            _currentUser.value = null
+            _userData.value = null
+            _isUserDataFetched.value = false
         }
     }
 
@@ -56,7 +73,10 @@ class UserViewModel : ViewModel() {
     }
 
     fun addAuthStateListener() {
-        auth.addAuthStateListener(authStateListener)
+        if (_currentUser.value == null) {
+            auth.addAuthStateListener(authStateListener)
+            Log.d("UserViewModel", "AuthStateListener added")
+        }
     }
 
     fun removeAuthStateListener() {
@@ -65,78 +85,42 @@ class UserViewModel : ViewModel() {
 
     fun updateUser(field: String, value: String, onComplete: () -> Unit) {
         val user = _userData.value ?: return
-        val userRef = db.collection("users").document(user.id)
         val updates = mapOf(field to value)
-        userRef.update(updates)
-            .addOnSuccessListener {
-                _userData.value = _userData.value?.copy(
-                    name = if (field == "name") value else user.name,
-                    type = if (field == "type") value else user.type,
-                    email = if (field == "email") value else user.email,
-                    number = if (field == "number") value else user.number,
-                    syntomValue = if (field == "syntomValue") value.toDouble() else user.syntomValue,
-                    lastQuestion = if (field == "lastQuestion") value.toInt() else user.lastQuestion,
-                    notifications = if (field == "notifications") value.toBoolean() else user.notifications
-                )
-                _errorMessage.value = null
-                onComplete()
-            } .addOnFailureListener { ex ->
-                _errorMessage.value = "Error al actualizar la información del usuario: ${ex.message}"
-            }
+        updateUserDataInFirestore(user.id, updates) {
+            _userData.value = user.copy(
+                name = if (field == "name") value else user.name,
+                type = if (field == "type") value else user.type,
+                email = if (field == "email") value else user.email,
+                number = if (field == "number") value else user.number,
+                syntomValue = if (field == "syntomValue") value.toDouble() else user.syntomValue,
+                lastQuestion = if (field == "lastQuestion") value.toInt() else user.lastQuestion,
+                notifications = if (field == "notifications") value.toBoolean() else user.notifications
+            )
+            onComplete()
+        }
     }
 
-    // Obtener información del usuario desde Firestore
-    private fun fetchUserDataFromFirestore(userId: String) {
-        db.collection("users").document(userId).get()
-            .addOnSuccessListener { document ->
-                if (document.exists()) {
-                    _userData.value = document.toObject(User::class.java)
-                    _isUserDataFetched.value = true
-                } else {
-                    _errorMessage.value = "Datos del usuario no encontrados."
-                }
-            }
-            .addOnFailureListener { ex ->
-                _errorMessage.value = "Error al cargar los datos del usuario: ${ex.message}"
-            }
-    }
-
-    fun updateUserAnswer(user: User, nroQuestion: Int, value: Double){
-        val userRef = db.collection("users").document(user.id)
+    fun updateUserAnswer(user: User, nroQuestion: Int, value: Double) {
         user.syntomValue += value
-        Log.d("userValue", user.syntomValue.toString())
-        Log.d("syntomValue", value.toString())
         val updates = mapOf(
             "lastQuestion" to nroQuestion,
             "syntomValue" to user.syntomValue
         )
-        userRef.update(updates)
+        updateUserDataInFirestore(user.id, updates)
+    }
+
+
+    // Iniciar sesión con Google
+    fun signInWithGoogle(credential: AuthCredential) {
+        auth.signInWithCredential(credential)
+            .addOnSuccessListener {
+                _isLoggedIn.value = true
+            }
             .addOnFailureListener {
-                _errorMessage.value = "Error al actualizar la informacion"
+                _errorMessage.value = it.message
             }
     }
 
-    // Iniciar sesión con Google
-    fun signInWithGoogle(credential: AuthCredential, home: () -> Unit) = viewModelScope.launch {
-        try {
-            auth.signInWithCredential(credential)
-                .addOnCompleteListener { task ->
-                    if (task.isSuccessful) {
-                        val userId = task.result.user?.uid ?: return@addOnCompleteListener
-                        if (!_isUserDataFetched.value) {
-                            fetchUserDataFromFirestore(userId)
-                        }
-                        _isLoggedIn.value = true
-                        home()
-                    }
-                }
-                .addOnFailureListener { ex ->
-                    _errorMessage.value = ex.message
-                }
-        } catch (ex: Exception) {
-            _errorMessage.value = ex.message
-        }
-    }
 
     fun getGoogleSignInClient(context: Context): GoogleSignInClient {
         val options = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -167,29 +151,6 @@ class UserViewModel : ViewModel() {
             }
     }
 
-    // Guardar información en Firestore
-    private fun saveUserDataToFirestore(userId: String, user: User) {
-        val userRef = db.collection("users").document(userId)
-        val userData = mapOf(
-            "id" to userId,
-            "name" to user.name,
-            "type" to user.type,
-            "email" to user.email,
-            "number" to user.number,
-            "syntomValue" to user.syntomValue,
-            "lastQuestion" to user.lastQuestion,
-            "notifications" to user.notifications
-        )
-        userRef.set(userData)
-            .addOnSuccessListener {
-                _isLoggedIn.value = true
-                fetchUserDataFromFirestore(userId)
-            }
-            .addOnFailureListener { ex ->
-                _errorMessage.value = "Error al guardar la información: ${ex.message}"
-            }
-    }
-
     // Iniciar sesión con email y contraseña
     fun loginWithEmail(email: String, password: String) {
         if (email.isEmpty() || password.isEmpty()) {
@@ -197,19 +158,20 @@ class UserViewModel : ViewModel() {
             return
         }
 
+        _isLoading.value = true
         auth.signInWithEmailAndPassword(email, password)
             .addOnSuccessListener {
-                val userId = auth.currentUser?.uid ?: return@addOnSuccessListener
-                if (!_isUserDataFetched.value) {
-                    fetchUserDataFromFirestore(userId)
-                }
                 _isLoggedIn.value = true
                 _errorMessage.value = null
             }
             .addOnFailureListener { ex ->
                 _errorMessage.value = ex.message
             }
+            .addOnCompleteListener {
+                _isLoading.value = false
+            }
     }
+
 
     // Cerrar sesión
     fun signOut() {
@@ -218,6 +180,35 @@ class UserViewModel : ViewModel() {
         _currentUser.value = null
         _userData.value = null
         _isUserDataFetched.value = false
+    }
+
+    // Obtener información del usuario desde Firestore
+    private fun fetchUserDataFromFirestore(userId: String) {
+        db.collection("users").document(userId).get()
+            .addOnSuccessListener { document ->
+                if (document.exists()) {
+                    _userData.value = document.toObject(User::class.java)
+                    _isUserDataFetched.value = true
+                    Log.d("Firestore", "User data fetched successfully: ${_userData.value}")
+                } else {
+                    _errorMessage.value = "Datos del usuario no encontrados."
+                    Log.e("Firestore", "User document does not exist")
+                }
+            }
+            .addOnFailureListener { ex ->
+                _errorMessage.value = "Error al cargar los datos del usuario: ${ex.message}"
+                Log.e("Firestore", "Error fetching user data: ${ex.message}")
+            }
+    }
+
+
+    private fun updateUserDataInFirestore(userId: String, updates: Map<String, Any>, onSuccess: () -> Unit = {}) {
+        db.collection("users").document(userId)
+            .update(updates)
+            .addOnSuccessListener { onSuccess() }
+            .addOnFailureListener { ex ->
+                _errorMessage.value = "Error al actualizar la información: ${ex.message}"
+            }
     }
 
     // Validar campos
@@ -243,8 +234,39 @@ class UserViewModel : ViewModel() {
         }
     }
 
+    // Guardar información en Firestore
+    private fun saveUserDataToFirestore(userId: String, user: User) {
+        val userRef = db.collection("users").document(userId)
+        val userData = mapOf(
+            "id" to userId,
+            "name" to user.name,
+            "type" to user.type,
+            "email" to user.email,
+            "number" to user.number,
+            "syntomValue" to user.syntomValue,
+            "lastQuestion" to user.lastQuestion,
+            "notifications" to user.notifications
+        )
+        userRef.set(userData)
+            .addOnSuccessListener {
+                _isLoggedIn.value = true
+                fetchUserDataFromFirestore(userId)
+            }
+            .addOnFailureListener { ex ->
+                _errorMessage.value = "Error al guardar la información: ${ex.message}"
+            }
+    }
+
+    private fun handleError(message: String, exception: Exception? = null) {
+        Log.e("UserViewModel", message, exception)
+        _errorMessage.value = message
+    }
+
     override fun onCleared() {
         super.onCleared()
-        removeAuthStateListener()
+        if (authStateListener != null) {
+            removeAuthStateListener()
+        }
     }
+
 }

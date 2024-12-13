@@ -18,6 +18,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Scaffold
@@ -61,17 +62,11 @@ fun QuestionsCompose(navController: NavController) {
         viewModelU.addAuthStateListener()
     }
     val questions by viewModelQ.questions.collectAsState()
-    // Estados reactivos para las preguntas y progreso
-
-    remember(questions) { questions.sortedBy { it.number } }
-    questions.forEach { question ->
-        Log.d("questions", question.number.toString())
-    }
     val user by viewModelU.userData.collectAsState()
+    val isUserDataFetched by viewModelU.isUserDataFetched.collectAsState()
+
     val total = remember { derivedStateOf { questions.size } }
-    val progress = remember {
-        mutableFloatStateOf(user?.lastQuestion?.toFloat() ?: 1f)
-    }
+    val progress = remember { mutableFloatStateOf(0f) }
     val i = progress.floatValue.toInt()
     val currentQuestion = questions.getOrNull(i)
     val selectedOption = remember { mutableIntStateOf(0) }
@@ -116,70 +111,80 @@ fun QuestionsCompose(navController: NavController) {
             }
         }
     ) { innerPadding ->
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding),
-            contentAlignment = Alignment.Center
-        ) {
-            currentQuestion?.let { question ->
-                Card(
-                    modifier = Modifier
-                        .width(350.dp)
-                        .padding(16.dp),
-                    shape = RoundedCornerShape(16.dp),
-                ) {
-                    Column(
+        if (!isUserDataFetched || user == null) {
+            // Mostrar el indicador de carga hasta que los datos del usuario estén listos
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator()
+            }
+        }else{
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(innerPadding),
+                contentAlignment = Alignment.Center
+            ) {
+                currentQuestion?.let { question ->
+                    Card(
                         modifier = Modifier
-                            .fillMaxSize()
+                            .width(350.dp)
                             .padding(16.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally
+                        shape = RoundedCornerShape(16.dp),
                     ) {
-                        Text(
-                            text = question.text,
-                            style = TextStyle(
-                                fontSize = 17.sp,
-                                fontWeight = FontWeight.ExtraBold,
-                                color = Color(0xFF002366)
-                            ),
-                            textAlign = TextAlign.Center
-                        )
-                        Spacer(modifier = Modifier.height(16.dp))
+                        Column(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(16.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Text(
+                                text = question.text,
+                                style = TextStyle(
+                                    fontSize = 17.sp,
+                                    fontWeight = FontWeight.ExtraBold,
+                                    color = Color(0xFF002366)
+                                ),
+                                textAlign = TextAlign.Center
+                            )
+                            Spacer(modifier = Modifier.height(16.dp))
 
-                        LazyColumn {
-                            items(question.options) { answer ->
-                                val isSelected = selectedOption.intValue == answer.value
-                                Card(
-                                    modifier = Modifier
-                                        .width(300.dp)
-                                        .padding(bottom = 8.dp)
-                                        .border(
-                                            width = 2.dp,
-                                            color = if (isSelected) Color(0xFF002366) else Color.Transparent,
-                                            shape = RoundedCornerShape(16.dp)
-                                        ),
-                                    shape = RoundedCornerShape(16.dp),
-                                    onClick = {
-                                        selectedOption.intValue = answer.value as Int
-                                        Log.d("selectedOption", selectedOption.intValue.toString())
-                                        answerValue.doubleValue = selectedOption.intValue.toDouble()/question.options.size.toDouble()
-                                    }
-                                ) {
-                                    Box(
+                            LazyColumn {
+                                items(question.options) { answer ->
+                                    val isSelected = selectedOption.intValue == answer.value
+                                    Card(
                                         modifier = Modifier
-                                            .fillMaxWidth()
-                                            .padding(16.dp),
-                                        contentAlignment = Alignment.CenterStart
+                                            .width(300.dp)
+                                            .padding(bottom = 8.dp)
+                                            .border(
+                                                width = 2.dp,
+                                                color = if (isSelected) Color(0xFF002366) else Color.Transparent,
+                                                shape = RoundedCornerShape(16.dp)
+                                            ),
+                                        shape = RoundedCornerShape(16.dp),
+                                        onClick = {
+                                            selectedOption.intValue = answer.value as Int
+                                            Log.d("selectedOption", selectedOption.intValue.toString())
+                                            answerValue.doubleValue = selectedOption.intValue.toDouble()/question.options.size.toDouble()
+                                        }
                                     ) {
+                                        Box(
+                                            modifier = Modifier
+                                                .fillMaxWidth()
+                                                .padding(16.dp),
+                                            contentAlignment = Alignment.CenterStart
+                                        ) {
 
-                                        Text(
-                                            text = answer.name+" "+answer.value,
-                                            style = TextStyle(
-                                                fontSize = 16.sp,
-                                                color = if (isSelected) Color(0xFF002366) else Color.Black,
-                                                fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal
+                                            Text(
+                                                text = answer.name+" "+answer.value,
+                                                style = TextStyle(
+                                                    fontSize = 16.sp,
+                                                    color = if (isSelected) Color(0xFF002366) else Color.Black,
+                                                    fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal
+                                                )
                                             )
-                                        )
+                                        }
                                     }
                                 }
                             }

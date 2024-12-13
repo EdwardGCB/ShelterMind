@@ -42,9 +42,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import com.ud.sheltermind.R
 import com.ud.sheltermind.componentes.ButtonForm
@@ -76,16 +74,17 @@ fun LoginCompose(navController: NavController, viewModel: UserViewModel = viewMo
     val context = LocalContext.current
     val isLoggedIn by viewModel.isLoggedIn.collectAsState()
     val errorMessage by viewModel.errorMessage.collectAsState()
-    val isLoading = remember { mutableStateOf(true) }
+    val isLoading by viewModel.isLoading.collectAsState()
 
-    LaunchedEffect(Unit) {
+    LaunchedEffect(isLoggedIn) {
         if (isLoggedIn) {
-            navController.navigate(EnumNavigation.Home.toString())
+            navController.navigate(EnumNavigation.Home.toString()) {
+                popUpTo(EnumNavigation.Login.toString()) { inclusive = true } // Elimina Login de la pila
+            }
         }
-        isLoading.value = false
     }
 
-    if (isLoading.value) {
+    if (isLoading) {
         CircularProgressIndicator()
     }else{
         // Lanzador para Google SignIn
@@ -96,9 +95,7 @@ fun LoginCompose(navController: NavController, viewModel: UserViewModel = viewMo
             try {
                 val account = task.getResult(ApiException::class.java)!!
                 val credential = GoogleAuthProvider.getCredential(account.idToken, null)
-                viewModel.signInWithGoogle(credential) {
-                    navController.navigate(EnumNavigation.Home.toString())
-                }
+                viewModel.signInWithGoogle(credential)
             } catch (ex: Exception) {
                 Log.d("GoogleSignIn", "Error: $ex")
                 Toast.makeText(context, "Error al iniciar sesión con Google", Toast.LENGTH_SHORT).show()
@@ -163,7 +160,9 @@ fun LoginCompose(navController: NavController, viewModel: UserViewModel = viewMo
                     Spacer(modifier = Modifier.height(16.dp))
 
                     // Formulario de email y contraseña
-                    Formulario(email, password, navController, viewModel, isLoggedIn)
+                    Formulario(email, password){
+                        viewModel.loginWithEmail(email.value, password.value)
+                    }
                     Spacer(modifier = Modifier.height(16.dp))
 
                     // Mostrar error si existe
@@ -189,9 +188,7 @@ fun LoginCompose(navController: NavController, viewModel: UserViewModel = viewMo
 private fun Formulario(
     email: MutableState<String>,
     password: MutableState<String>,
-    navController: NavController,
-    viewModel: UserViewModel,
-    isLoggedIn: Boolean
+    onClick: () -> Unit
 ) {
 
     //Email
@@ -200,11 +197,9 @@ private fun Formulario(
     //Contraseña
     PassFlied(password, stringResource(R.string.password))
     Spacer(modifier = Modifier.height(16.dp))
-    ButtonForm(onClick = {
-        viewModel.loginWithEmail(email.value, password.value)
-        if(isLoggedIn){
-            navController.navigate(EnumNavigation.Home.toString())
-        } }, stringResource(R.string.login_button))
+    ButtonForm(
+        onClick = onClick,
+        stringResource(R.string.login_button))
 }
 
 @Composable

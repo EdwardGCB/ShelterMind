@@ -2,6 +2,7 @@ package com.ud.sheltermind.views.viewmodel
 
 import androidx.lifecycle.ViewModel
 import com.google.firebase.Firebase
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.firestore
 import com.ud.sheltermind.logic.dataclass.Answer
 import com.ud.sheltermind.logic.dataclass.Question
@@ -45,9 +46,10 @@ class QuestionsViewModel : ViewModel() {
                         )
                     }
                     Question(id = id, number = number, text = text, options = answers)
-                }
+                }.sortedBy { it.number }  // Ordena las preguntas por el campo 'number'
                 _questions.value = questionList
             }
     }
+
 
 }

@@ -9,17 +9,9 @@ admin.initializeApp({
 const db = admin.firestore();
 
 const exportData = async () => {
-  // Exportar colección 'state'
-  const stateCollectionRef = db.collection('state');
-  const stateSnapshot = await stateCollectionRef.get();
-  
-  let stateData = {};
-  stateSnapshot.forEach(doc => {
-    stateData[doc.id] = doc.data();
-  });
 
   // Exportar colección 'questions'
-  const questionsCollectionRef = db.collection('questions');
+  const questionsCollectionRef = db.collection('questions'); //Especificar la collecion a imporat
   const questionsSnapshot = await questionsCollectionRef.get();
   
   let questionsData = {};
@@ -27,14 +19,8 @@ const exportData = async () => {
     questionsData[doc.id] = doc.data();
   });
 
-  // Combina ambas colecciones en un solo objeto
-  const data = {
-    state: stateData,
-    questions: questionsData
-  };
-
   // Guarda los datos en un archivo JSON
-  fs.writeFileSync('questions.json', JSON.stringify(data, null, 2));
+  fs.writeFileSync('questions.json', JSON.stringify(data, null, 2)); //Especificar el archivo que va a modificar
   console.log('Data exported successfully.');
 };
 

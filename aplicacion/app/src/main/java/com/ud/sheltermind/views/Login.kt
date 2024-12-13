@@ -85,7 +85,12 @@ fun LoginCompose(navController: NavController, viewModel: UserViewModel = viewMo
     }
 
     if (isLoading) {
-        CircularProgressIndicator()
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            CircularProgressIndicator()
+        }
     }else{
         // Lanzador para Google SignIn
         val launcher = rememberLauncherForActivityResult(

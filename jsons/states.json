@@ -2,6 +2,8 @@
   "state": {
     "1": {
       "name": "Enojado",
+      "icon": "hungry",
+      "color": "0xFFCD2435",
       "targets": [
         {"name": "Frustración", "value": 1},
         {"name": "Rabia", "value": 2},
@@ -27,6 +29,8 @@
     },
     "2": {
       "name": "Triste",
+      "icon": "sad",
+      "color": "0xFFE94C41",
       "targets": [
         {"name": "Melancolía", "value": 1},
         {"name": "Depresión", "value": 2},
@@ -52,6 +56,8 @@
     },
     "3": {
       "name": "Normal",
+      "icon": "normal",
+      "color": "0xFFF08035",
       "targets": [
         {"name": "Serenidad", "value": 1},
         {"name": "Tranquilidad", "value": 2},
@@ -77,6 +83,8 @@
     },
     "4": {
       "name": "Feliz",
+      "icon": "happy",
+      "color": "0xFFEFB023",
       "targets": [
         {"name": "Alegría", "value": 1},
         {"name": "Entusiasmo", "value": 2},
@@ -102,6 +110,8 @@
     },
     "5": {
       "name": "Muy feliz",
+      "icon": "veryhappy",
+      "color": "0xFF72B847",
       "targets": [
         {"name": "Extático", "value": 1},
         {"name": "Eufórico", "value": 2},
@@ -127,3 +137,5 @@
     }
   }
 }
+
+

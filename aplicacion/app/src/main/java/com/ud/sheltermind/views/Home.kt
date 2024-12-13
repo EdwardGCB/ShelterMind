@@ -137,7 +137,7 @@ fun HomeCompose(navController: NavController) {
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 // Mostrar información del usuario cuando esté disponible
-                if (!questionnaireComplete) {
+                if (!questionnaireComplete && user != null) {
                     item {
                         AlertDialog(
                             onDismissRequest = { /* Acción para cerrar el diálogo */ },

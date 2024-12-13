@@ -9,5 +9,5 @@ data class User(
     val number: String ="",
     val syntomValue: Float = 0f,
     val lastQuestion: Int = 0,
-    val notifications: Boolean = true
+    val notifications: Boolean = true//
 )

@@ -73,13 +73,13 @@ fun ViewSearchCompose() {
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
 fun SearchCompose(navController: NavController, discoverViewModel: DiscoverViewModel = viewModel()) {
-    // Obtenemos los datos del ViewModel
+    // Obtenemos los datos del ViewModel.
     val userType by discoverViewModel.userType.collectAsState()
     val clients by discoverViewModel.filteredClients.collectAsState() // Usar resultados filtrados
 
     val searchval = remember { mutableStateOf("") }
 
-    // Actualizar resultados al escribir en la barra de búsqueda
+    // Actualizar resultados al escribir en la barra de búsqueda.
     LaunchedEffect(searchval.value) {
         discoverViewModel.searchClients(searchval.value)
     }
@@ -106,12 +106,12 @@ fun SearchCompose(navController: NavController, discoverViewModel: DiscoverViewM
             item {
                 SectionTitle("Recommended for you")
             }
-            // Iterar sobre la lista de clientes filtrados
+            // Iterar sobre la lista de clientes filtrados.
             items(clients) { client ->
                 UserCard(navController, client)
             }
 
-            // Mostrar una sección adicional solo para usuarios "Cliente"
+            // Mostrar una sección adicional solo para usuarios "Cliente".
             if (userType == "Cliente") {
                 item {
                     SectionTitle("Best rated")

@@ -68,13 +68,10 @@ class HomeViewModel : ViewModel() {
                         lastQuestion = user.lastQuestion  // Usar el valor de lastQuestion del User
                     )
                 }
-                _clients.value = clientList // Asigna la lista de Client
+                _clients.value = clientList // Asigna la lista de Client.
             }
             .addOnFailureListener {
-                _clients.value = emptyList() // En caso de error, asigna una lista vacía
+                _clients.value = emptyList() // En caso de error, asigna una lista vacía.
             }
     }
-
-
-
 }

@@ -8,6 +8,6 @@ data class User(
     val password: String ="",
     val number: String ="",
     val notifications: Boolean = true,
-    var syntomValue: Double = 0.0, // Atributo adicional
-    val lastQuestion: Int = 0      // Atributo adicional
+    var syntomValue: Double = 0.0, // Atributo adicional.
+    val lastQuestion: Int = 0      // Atributo adicional.
 )

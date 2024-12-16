@@ -147,7 +147,7 @@ fun FieldFormString(variable: MutableState<String>, label: String) {
     )
 }
 
-//agregfo una nuevo componente de FieldFormStrings para la vista Discaver( no se si al moficar FieldFormString modifique el de otras vistas)
+//agrego una nuevo componente de FieldFormStrings para la vista Discover( no se si al modificar FieldFormString modifique el de otras vistas)
 @Composable
 fun FieldFormStrings(state: MutableState<String>, placeholder: String) {
     TextField(

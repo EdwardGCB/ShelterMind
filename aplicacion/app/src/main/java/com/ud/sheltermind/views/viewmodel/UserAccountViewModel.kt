@@ -7,6 +7,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.ud.sheltermind.logic.dataclass.Client
 
 class UserAccountViewModel : ViewModel() {
+    // Initialize Firestore instance.
     private val db = FirebaseFirestore.getInstance()
     private val _cliente = MutableLiveData<Client?>()
     val cliente: LiveData<Client?> = _cliente

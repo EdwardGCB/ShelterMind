@@ -50,10 +50,10 @@ class DiscoverViewModel : ViewModel() {
         }
     }
 
-    // Obtener los clientes de la base de datos (solo de tipo Cliente)
+    // Obtener los clientes de la base de datos (solo de tipo Cliente).
     private fun fetchClients() {
         db.collection("users")
-            .whereEqualTo("type", "Cliente") // Filtrar solo clientes
+            .whereEqualTo("type", "Cliente") // Filtrar solo clientes.
             .get()
             .addOnSuccessListener { result ->
                 val clientsList = result.mapNotNull { document ->
@@ -65,7 +65,7 @@ class DiscoverViewModel : ViewModel() {
                     )
                 }
                 _clients.value = clientsList
-                _filteredClients.value = clientsList // Inicializar con la lista completa
+                _filteredClients.value = clientsList // Inicializar con la lista completa.
             }
             .addOnFailureListener {
                 _clients.value = emptyList()

@@ -120,11 +120,11 @@ fun PerfilUserCompose(navController: NavController, viewModel: ProfileViewModel 
                         )
                     }
 
-                    // Imagen del perfil
+                    // Imagen del perfil.
                     ProfileImage()
                     Spacer(modifier = Modifier.height(16.dp))
 
-                    // Formulario de edición
+                    // Formulario de edición.
                     FormSettings(
                         userState = userState,
                         onUpdateField = { field, value ->

@@ -15,11 +15,11 @@ class ProfileViewModel : ViewModel() {
         private val db = FirebaseFirestore.getInstance()
         private val auth = FirebaseAuth.getInstance()
 
-    // Estado del usuario como StateFlow
+    // Estado del usuario como StateFlow.
     private val _userData = MutableStateFlow(User())
     val userData: StateFlow<User> = _userData
 
-    // Mensajes de error como StateFlow
+    // Mensajes de error como StateFlow.
     private val _errorMessage = MutableStateFlow<String?>(null)
     val errorMessage: StateFlow<String?> = _errorMessage
 

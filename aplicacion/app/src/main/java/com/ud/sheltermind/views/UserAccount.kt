@@ -126,6 +126,8 @@ fun PerfilCompose(
                     Text("Nombre: ${it.user.name}", style = MaterialTheme.typography.titleMedium)
                     Text("Email: ${it.user.email}", style = MaterialTheme.typography.bodyMedium)
                     Text("Teléfono: ${it.user.number}", style = MaterialTheme.typography.bodyMedium)
+
+                    //comento en loq que se implementan esos atributos.
                     /*Text("Profesión: ${it.user.profesion ?: "No especificado"}", style = MaterialTheme.typography.bodyMedium)
                     Text("Descripción: ${it.user.descripcion ?: "No especificada"}", style = MaterialTheme.typography.bodyMedium)
                     AsyncImage(

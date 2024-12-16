@@ -57,6 +57,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.ud.sheltermind.R
 import com.ud.sheltermind.componentes.ButtonForm
+import com.ud.sheltermind.componentes.CustomBottomBar
 import com.ud.sheltermind.enums.EnumNavigation
 import com.ud.sheltermind.logic.dataclass.User
 import com.ud.sheltermind.views.viewmodel.ProfileViewModel
@@ -91,13 +92,16 @@ fun PerfilUserCompose(navController: NavController, viewModel: ProfileViewModel 
                         )
                     )
                 },
+
                 navigationIcon = {
                     IconButton(onClick = { navController.navigate("home") }) {
                         Icon(Icons.Filled.ArrowBackIosNew, contentDescription = "Back")
                     }
                 }
             )
-        }
+        },
+        bottomBar = { CustomBottomBar(navController = navController) }
+
     ) { innerPadding ->
         Box(
             modifier = Modifier

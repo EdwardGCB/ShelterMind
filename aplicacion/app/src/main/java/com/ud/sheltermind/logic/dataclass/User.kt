@@ -7,7 +7,7 @@ data class User(
     val email: String ="",
     val password: String ="",
     val number: String ="",
-    val syntomValue: Float = 0f,
-    val lastQuestion: Int = 0,
-    val notifications: Boolean = true//
+    val notifications: Boolean = true,
+    var syntomValue: Double = 0.0, // Atributo adicional
+    val lastQuestion: Int = 0      // Atributo adicional
 )

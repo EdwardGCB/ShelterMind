@@ -44,9 +44,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.ud.sheltermind.R
 import com.ud.sheltermind.componentes.AddCard
 import com.ud.sheltermind.componentes.CustomBottomBar
@@ -56,6 +58,7 @@ import com.ud.sheltermind.componentes.TextButtonForm
 import com.ud.sheltermind.componentes.WeekCompose
 import com.ud.sheltermind.enums.EnumNavigation
 import com.ud.sheltermind.logic.Operations
+import com.ud.sheltermind.logic.dataclass.Client
 import com.ud.sheltermind.logic.dataclass.User
 import com.ud.sheltermind.views.viewmodel.HomeViewModel
 
@@ -63,13 +66,33 @@ import com.ud.sheltermind.views.viewmodel.HomeViewModel
 @Preview
 @Composable
 fun ViewHome() {
+
     val navController = rememberNavController()
     NavHost(navController = navController, startDestination = EnumNavigation.Home.toString()) {
         composable(EnumNavigation.Home.toString()) {
             HomeCompose(navController)
         }
+        composable(
+            route = "${EnumNavigation.UserAccount}/{idCliente}",
+            arguments = listOf(navArgument("idCliente") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val idCliente = backStackEntry.arguments?.getString("idCliente") ?: ""
+            PerfilCompose(navController, idCliente)
+        }
     }
+
+
+
+    /*
+    val navController = rememberNavController()
+    NavHost(navController = navController, startDestination = EnumNavigation.Home.toString()) {
+        composable(EnumNavigation.Home.toString()) {
+            HomeCompose(navController)
+        }
+    }*/
 }
+
+
 
 @RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
@@ -92,7 +115,7 @@ fun HomeCompose(navController: NavController, homeViewModel: HomeViewModel =  vi
                             // Modificador de color para el texto
                             color = Color(0xFF002366)
                         )
-                    )   
+                    )
                 },
                 //Botones a la derecha de TopAppBar
                 actions = {
@@ -135,11 +158,11 @@ fun HomeCompose(navController: NavController, homeViewModel: HomeViewModel =  vi
                     ActivitiesCard(navController) // Visible solo para Clientes
                 }
             }
-            if (userType == "Psicologo") {
+            //if (userType == "Psicologo") {
                 item {
                     ProfesionalsCard(navController, clients) // Pasar la lista de clientes
                 }
-            }
+            //}
         }
     }
 }
@@ -213,7 +236,10 @@ private fun ActivitiesCard(navController: NavController) {
                     Spacer(modifier = Modifier.width(20.dp))
                 }
                 items(7) {
-                    ActivityCard(onClick = { /*TODO*/ }, "Actividad", "Descripcion")
+                    ActivityCard(
+                        onClick = { /*TODO*/ }, "Actividad", "Descripcion",
+                        clientId = TODO()
+                    )
                     Spacer(modifier = Modifier.width(20.dp))
                 }
             }
@@ -224,7 +250,7 @@ private fun ActivitiesCard(navController: NavController) {
 }
 
 @Composable
-private fun ProfesionalsCard(navController: NavController, clients: List<User>) {
+private fun ProfesionalsCard(navController: NavController, clients: List<Client>) {
     Box(Modifier.padding(20.dp)) {
         Card(
             modifier = Modifier.fillMaxWidth(),
@@ -251,9 +277,9 @@ private fun ProfesionalsCard(navController: NavController, clients: List<User>) 
                 items(clients) { client ->
                     ProfesionalCard(
                         icon = Icons.Filled.AccountCircle,
-                        firstname = client.name, // Muestra el nombre del usuario
-                        lastname = "LastName", //falta decidir que poner en este campo(el modelo no tiene apellido )
-                        profession = client.syntomValue.toString(),//falta decidir que poner en este campo
+                        firstname = client.user.name, // Accede al nombre desde User
+                        lastname = "LastName", // Decide qué mostrar en este campo
+                        profession = client.user.syntomValue.toString(), // Usa syntomValue de Client
                         score = 5.0F,
                         navController
                     )
@@ -266,8 +292,14 @@ private fun ProfesionalsCard(navController: NavController, clients: List<User>) 
     Spacer(modifier = Modifier.height(16.dp))
 }
 
+
 @Composable
-private fun ActivityCard(onClick: () -> Unit, title: String, target: String) {
+private fun ActivityCard(
+    onClick: (String) -> Unit,
+    title: String,
+    target: String,
+    clientId: String
+) {
     Card(
         modifier = Modifier
             .height(125.dp)
@@ -290,7 +322,6 @@ private fun ActivityCard(onClick: () -> Unit, title: String, target: String) {
                     style = TextStyle(
                         fontSize = 14.sp,
                         fontWeight = FontWeight.ExtraBold,
-
                     )
                 )
                 Spacer(Modifier.height(7.dp))
@@ -302,9 +333,10 @@ private fun ActivityCard(onClick: () -> Unit, title: String, target: String) {
                     )
                 )
                 Spacer(Modifier.height(7.dp))
-                TextButtonForm(onClick, stringResource(R.string.see_more))
+                TextButtonForm(onClick = { onClick(clientId) }, stringResource(R.string.see_more))
             }
             Spacer(Modifier.width(10.dp))
         }
     }
 }
+

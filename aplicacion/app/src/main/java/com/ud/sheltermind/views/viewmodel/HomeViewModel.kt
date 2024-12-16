@@ -5,6 +5,7 @@ import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.firestore
+import com.ud.sheltermind.logic.dataclass.Client
 import com.ud.sheltermind.logic.dataclass.User
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -45,8 +46,9 @@ class HomeViewModel : ViewModel() {
 
 
     //listar los usuarios de tipo clientes:
-    private val _clients = MutableStateFlow<List<User>>(emptyList())
-    val clients: StateFlow<List<User>> = _clients
+    private val _clients = MutableStateFlow<List<Client>>(emptyList())
+    val clients: StateFlow<List<Client>> get() = _clients
+
 
     init {
         fetchClients()
@@ -58,13 +60,21 @@ class HomeViewModel : ViewModel() {
             .get()
             .addOnSuccessListener { documents ->
                 val clientList = documents.mapNotNull { document ->
-                    document.toObject(User::class.java)
+                    val user = document.toObject(User::class.java)
+                    // Convierte el User a Client usando los valores del User
+                    Client(
+                        user = user,
+                        syntomValue = user.syntomValue, // Usar el valor de syntomValue del User
+                        lastQuestion = user.lastQuestion  // Usar el valor de lastQuestion del User
+                    )
                 }
-                _clients.value = clientList
+                _clients.value = clientList // Asigna la lista de Client
             }
             .addOnFailureListener {
-                _clients.value = emptyList() // En caso de error, lista vacía
+                _clients.value = emptyList() // En caso de error, asigna una lista vacía
             }
     }
+
+
 
 }

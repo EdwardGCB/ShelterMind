@@ -29,6 +29,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
@@ -143,6 +144,18 @@ fun FieldFormString(variable: MutableState<String>, label: String) {
         value = variable.value,
         onValueChange = { variable.value = it },
         label = { Text(label) }
+    )
+}
+
+//agregfo una nuevo componente de FieldFormStrings para la vista Discaver( no se si al moficar FieldFormString modifique el de otras vistas)
+@Composable
+fun FieldFormStrings(state: MutableState<String>, placeholder: String) {
+    TextField(
+        value = state.value,
+        onValueChange = { newValue -> state.value = newValue },
+        placeholder = { Text(placeholder) },
+        modifier = Modifier.fillMaxWidth(),
+        singleLine = true
     )
 }
 

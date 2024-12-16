@@ -2,6 +2,7 @@ package com.ud.sheltermind.views.viewmodel
 
 import androidx.compose.runtime.Composable
 import androidx.lifecycle.ViewModel
+import androidx.room.util.copy
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore

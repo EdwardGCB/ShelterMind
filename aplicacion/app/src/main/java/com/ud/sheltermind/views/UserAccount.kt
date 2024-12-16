@@ -20,6 +20,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.StarBorder
@@ -33,10 +34,14 @@ import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -53,10 +58,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.DialogProperties
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import coil.compose.AsyncImage
 import coil.compose.rememberImagePainter
 import com.ud.sheltermind.R
 import com.ud.sheltermind.componentes.FieldFormString
@@ -64,6 +71,7 @@ import com.ud.sheltermind.componentes.PerfilImage
 import com.ud.sheltermind.componentes.StarScore
 import com.ud.sheltermind.componentes.TextButtonForm
 import com.ud.sheltermind.enums.EnumNavigation
+import com.ud.sheltermind.views.viewmodel.UserAccountViewModel
 
 @Preview
 @Composable
@@ -71,27 +79,30 @@ fun ViewPerfilComposable() {
     val navController = rememberNavController()
     NavHost(navController = navController, startDestination = EnumNavigation.Perfil.toString()) {
         composable(EnumNavigation.Perfil.toString()) {
-            PerfilCompose(navController)
+            PerfilCompose(
+                navController,
+                idCliente = TODO(),
+                viewModel = TODO()
+            )
         }
     }
 }
 
 
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PerfilCompose(navController: NavHostController) {
-    val showDialog = remember { mutableStateOf(false) }
-    val seeMore = remember { mutableStateOf(false) }
-    var n = 2
-    if (seeMore.value) {
-        n = 9
+fun PerfilCompose(
+    navController: NavHostController,
+    idCliente: String,
+    viewModel: UserAccountViewModel = viewModel()
+) {
+    val cliente by viewModel.cliente.observeAsState()
+
+    LaunchedEffect(idCliente) {
+        viewModel.cargarCliente(idCliente)
     }
 
-    if (showDialog.value) {
-        FormAlertDialog(
-            onDismiss = { showDialog.value = !showDialog.value }
-        )
-    }
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
@@ -107,124 +118,42 @@ fun PerfilCompose(navController: NavHostController) {
                     )
                 },
                 navigationIcon = {
-                    IconButton(onClick = {
-                        navController.navigate(EnumNavigation.Search.toString())
-                    }) {
-                        Icon(
-                            imageVector = Icons.Filled.ArrowBackIosNew,
-                            contentDescription = "Arrow Back Icon"
-                        )
+                    IconButton(onClick = { navController.navigateUp() }) {
+                        Icon(Icons.Filled.ArrowBack, contentDescription = "Back")
                     }
                 }
             )
         }
     ) { innerPadding ->
-        LazyColumn(
-            modifier = Modifier
-                .padding(innerPadding)
-                .fillMaxWidth(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
-        ) {
-            item {
-                PerfilImage(name = "Full NAME", imageUrl = "https://via.placeholder.com/150")
-            }
-            item {
-                Spacer(modifier = Modifier.height(16.dp))
-                StarScore(4.0f, 40.dp)
-                Text(
-                    text = 4.0f.toString(),
-                    style = TextStyle(
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.ExtraBold,
-                        // Modificador de color para el texto
-                        // color = Color.Blue
-                    )
-                )
-                Spacer(modifier = Modifier.height(16.dp))
-            }
-            item {
-                Divider(
-                    color = Color.Gray,
-                    thickness = 1.dp,
-                    modifier = Modifier.width(350.dp)
-                )
-            }
-            item {
-                Spacer(modifier = Modifier.height(16.dp))
-                CardDescription(
-                    title = stringResource(R.string.perfil_subtitle),
-                    profesion = "Psychologist",
-                    description = " "
-                )
-                Spacer(modifier = Modifier.height(16.dp))
-            }
-            item {
-                Card(Modifier.width(350.dp)) {
-                    Column(
-                        Modifier
-                            .padding(16.dp)
-                            .fillMaxWidth(),
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Row(
-                            Modifier.fillMaxWidth(),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Text(
-                                text = stringResource(R.string.quantifier),
-                                style = TextStyle(
-                                    fontSize = 16.sp,
-                                    fontWeight = FontWeight.ExtraBold,
-                                    // Modificador de color para el texto
-                                    color = Color(0xFF002366)
-                                )
-                            )
-                            Spacer(modifier = Modifier.width(173.dp))
-                            Box(
-                                modifier = Modifier
-                                    .size(40.dp) // Tamaño del Box
-                                    .background(
-                                        color = Color(0xFF002366),
-                                        shape = CircleShape
-                                    ), // Fondo gris y forma circular
-                                contentAlignment = Alignment.Center // Centrar el contenido dentro del Box
-                            ) {
-                                IconButton(
-                                    onClick = { showDialog.value = !showDialog.value },
-                                    modifier = Modifier.size(40.dp) // Tamaño del IconButton
-                                ) {
-                                    Icon(
-                                        Icons.Filled.Add,
-                                        contentDescription = "Agregar",
-                                        tint = Color.White // Color del ícono
-                                    )
-                                }
-                            }
-                        }
-                        for (i in 0 until n) {
-                            CardQualification(
-                                "https://via.placeholder.com/150",
-                                name = "Juan",
-                                description = "",
-                                4.0f
-                            )
-                        }
-                        Spacer(modifier = Modifier.height(16.dp))
-                        TextButtonForm(
-                            onClick = { seeMore.value = !seeMore.value },
-                            text = if (!seeMore.value) stringResource(R.string.see_more) else stringResource(
-                                R.string.see_less
-                            )
-                        )
-                        Spacer(modifier = Modifier.height(16.dp))
-                    }
+        cliente?.let {
+            LazyColumn(
+                Modifier
+                    .padding(innerPadding)
+                    .fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                item {
+                    Text("Nombre: ${it.user.name}", style = MaterialTheme.typography.titleMedium)
+                    Text("Email: ${it.user.email}", style = MaterialTheme.typography.bodyMedium)
+                    Text("Teléfono: ${it.user.number}", style = MaterialTheme.typography.bodyMedium)
+
+                    //comento en loq que se implementan esos atributos.
+                    /*Text("Profesión: ${it.user.profesion ?: "No especificado"}", style = MaterialTheme.typography.bodyMedium)
+                    Text("Descripción: ${it.user.descripcion ?: "No especificada"}", style = MaterialTheme.typography.bodyMedium)
+                    AsyncImage(
+                        model = it.user.imagenUrl,
+                        contentDescription = "Foto del cliente",
+                        modifier = Modifier
+                            .size(150.dp)
+                            .clip(CircleShape)
+                    )*/
                 }
-                Spacer(modifier = Modifier.height(16.dp))
             }
-        }
+        } ?: Text("Cargando información del cliente...", Modifier.padding(innerPadding))
+
     }
 }
+
 
 @Composable
 private fun CardDescription(title: String, profesion: String, description: String) {

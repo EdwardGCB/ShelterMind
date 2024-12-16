@@ -49,7 +49,11 @@ fun AppNavigation(){
         }
         // Perfil
         composable (EnumNavigation.Perfil.toString()) {
-            PerfilCompose(navController)
+            PerfilCompose(
+                navController,
+                idCliente = TODO(),
+                viewModel = TODO()
+            )
         }
         // Calendar
         composable (EnumNavigation.Calendar.toString()) {

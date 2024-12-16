@@ -26,10 +26,12 @@ import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -55,9 +57,10 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.ud.sheltermind.R
 import com.ud.sheltermind.componentes.ButtonForm
+import com.ud.sheltermind.componentes.CustomBottomBar
 import com.ud.sheltermind.enums.EnumNavigation
 import com.ud.sheltermind.logic.dataclass.User
-import com.ud.sheltermind.views.viewmodel.UserViewModel
+import com.ud.sheltermind.views.viewmodel.ProfileViewModel
 
 @Preview
 @Composable
@@ -72,9 +75,9 @@ fun ViewPerfilUser() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PerfilUserCompose(navController: NavController, viewModel: UserViewModel = viewModel ()) {
+fun PerfilUserCompose(navController: NavController, viewModel: ProfileViewModel = viewModel()) {
     val userState by viewModel.userData.collectAsState()
-    val context = LocalContext.current
+    val errorMessage by viewModel.errorMessage.collectAsState()
 
     Scaffold(
         topBar = {
@@ -89,14 +92,16 @@ fun PerfilUserCompose(navController: NavController, viewModel: UserViewModel = v
                         )
                     )
                 },
+
                 navigationIcon = {
-                    IconButton(onClick = { navController.navigate(EnumNavigation.Home.toString()) }) {
+                    IconButton(onClick = { navController.navigate("home") }) {
                         Icon(Icons.Filled.ArrowBackIosNew, contentDescription = "Back")
                     }
                 }
             )
         },
-        bottomBar = {}
+        bottomBar = { CustomBottomBar(navController = navController) }
+
     ) { innerPadding ->
         Box(
             modifier = Modifier
@@ -106,32 +111,44 @@ fun PerfilUserCompose(navController: NavController, viewModel: UserViewModel = v
         ) {
             LazyColumn(horizontalAlignment = Alignment.CenterHorizontally) {
                 item {
-                    // Profile image with upload button
+                    // Mensaje de error si ocurre
+                    errorMessage?.let {
+                        Text(
+                            text = it,
+                            color = MaterialTheme.colorScheme.error,
+                            modifier = Modifier.padding(8.dp)
+                        )
+                    }
+
+                    // Imagen del perfil.
                     ProfileImage()
                     Spacer(modifier = Modifier.height(16.dp))
 
-                    // Settings form
-                    userState?.let {
-                        FormSettings(
-                            userState = it,
-                            onUpdateField = {
-                                field,
-                                value -> viewModel.updateUser(field, value.toString()) {
-                                    Toast.makeText(context, "Datos actualizados correctamente", Toast.LENGTH_LONG).show()
-                                }
-                            }
-                        )
-                    }
+                    // Formulario de edición.
+                    FormSettings(
+                        userState = userState,
+                        onUpdateField = { field, value ->
+                            viewModel.updateUserField(field, value)
+                        }
+                    )
                     Spacer(modifier = Modifier.height(16.dp))
 
-                    // Update button
+                    // Botón para guardar cambios
                     ButtonForm(onClick = {
+                        viewModel.saveUserData {
+                            Toast.makeText(
+                                LocalContext.current,
+                                "Datos actualizados correctamente",
+                                Toast.LENGTH_LONG
+                            ).show()
+                        }
                     }, text = "Actualizar")
                 }
             }
         }
     }
 }
+
 
 @Composable
 fun ProfileImage() {
@@ -165,30 +182,25 @@ private fun FormSettings(
     userState: User,
     onUpdateField: (String, Any) -> Unit
 ) {
-    FieldFormString(userState.name, "Usuario") {
-        onUpdateField("user", it)
+    FieldFormString(userState.name ?: "", "Usuario") {
+        onUpdateField("username", it)
     }
     Spacer(modifier = Modifier.height(16.dp))
 
-    OutlinedTextField(
-        value = userState.type,
-        onValueChange = { onUpdateField("description", it) },
-        label = { Text("Descripción") },
-        modifier = Modifier.fillMaxWidth(0.8f)
-    )
+
     Spacer(modifier = Modifier.height(16.dp))
 
-    FieldFormString(userState.email, "Correo electrónico") {
+    FieldFormString(userState.email ?: "", "Correo electrónico") {
         onUpdateField("email", it)
     }
     Spacer(modifier = Modifier.height(16.dp))
 
-    PassField(userState.password, "Contraseña") {
+    PassField(userState.password ?: "", "Contraseña") {
         onUpdateField("password", it)
     }
     Spacer(modifier = Modifier.height(16.dp))
 
-    NumberField(userState.number, "Teléfono") {
+    NumberField(userState.number ?: "", "Teléfono") {
         onUpdateField("number", it)
     }
     Spacer(modifier = Modifier.height(16.dp))
@@ -198,16 +210,16 @@ private fun FormSettings(
         modifier = Modifier.fillMaxWidth(0.8f)
     ) {
         Checkbox(
-            checked = userState.notifications,
-            onCheckedChange = { onUpdateField("notifications", it) }
+            checked = userState.notifications ?: false,
+            onCheckedChange = { onUpdateField("notificationsEnabled", it) }
         )
         Spacer(modifier = Modifier.width(8.dp))
         Text("Habilitar notificaciones")
     }
     Spacer(modifier = Modifier.height(16.dp))
 
-    OptionSelectProfile(userState.type) {
-        onUpdateField("type", it)
+    OptionSelectProfile(userState.type ?: "Cliente") {
+        onUpdateField("userType", it)
     }
     Spacer(modifier = Modifier.height(16.dp))
 }

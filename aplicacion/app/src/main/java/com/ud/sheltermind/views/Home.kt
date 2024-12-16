@@ -1,7 +1,6 @@
 package com.ud.sheltermind.views
 
 import android.os.Build
-import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -9,23 +8,20 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.Circle
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -33,7 +29,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -47,10 +42,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.ud.sheltermind.R
 import com.ud.sheltermind.componentes.AddCard
 import com.ud.sheltermind.componentes.CustomBottomBar
@@ -60,62 +58,69 @@ import com.ud.sheltermind.componentes.TextButtonForm
 import com.ud.sheltermind.componentes.WeekCompose
 import com.ud.sheltermind.enums.EnumNavigation
 import com.ud.sheltermind.logic.Operations
-import com.ud.sheltermind.views.viewmodel.QuestionsViewModel
-import com.ud.sheltermind.views.viewmodel.UserViewModel
+import com.ud.sheltermind.logic.dataclass.Client
+import com.ud.sheltermind.logic.dataclass.User
+import com.ud.sheltermind.views.viewmodel.HomeViewModel
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Preview
 @Composable
 fun ViewHome() {
+
     val navController = rememberNavController()
     NavHost(navController = navController, startDestination = EnumNavigation.Home.toString()) {
         composable(EnumNavigation.Home.toString()) {
             HomeCompose(navController)
         }
+        composable(
+            route = "${EnumNavigation.UserAccount}/{idCliente}",
+            arguments = listOf(navArgument("idCliente") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val idCliente = backStackEntry.arguments?.getString("idCliente") ?: ""
+            PerfilCompose(navController, idCliente)
+        }
     }
+
+
+
+    /*
+    val navController = rememberNavController()
+    NavHost(navController = navController, startDestination = EnumNavigation.Home.toString()) {
+        composable(EnumNavigation.Home.toString()) {
+            HomeCompose(navController)
+        }
+    }*/
 }
+
+
 
 @RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeCompose(navController: NavController) {
-    val viewModelU: UserViewModel = remember { UserViewModel() }
-    val viewModelQ: QuestionsViewModel = remember { QuestionsViewModel() }
+fun HomeCompose(navController: NavController, homeViewModel: HomeViewModel =  viewModel()) {
+    //persistencia de datos en la vida util del compose
     val dateNow = remember { mutableStateOf(Operations().obtenerFechaActual()) }
-    val user by viewModelU.userData.collectAsState()
-    val questionnaireComplete by viewModelQ.questionnaireComplete.collectAsState()
-    val isUserDataFetched by viewModelU.isUserDataFetched.collectAsState()
+    val userType by homeViewModel.userType.collectAsState() // obtener el tipo de usuario de viewmodel
+    val clients by homeViewModel.clients.collectAsState() // obtener la lista de clientes de viewmodel
 
-    LaunchedEffect(Unit) {
-        viewModelU.addAuthStateListener()
-    }
-    if (!isUserDataFetched || user == null) {
-        // Mostrar el indicador de carga hasta que los datos del usuario estén listos
-        Box(
-            modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center
-        ) {
-            CircularProgressIndicator()
-        }
-    }else{
-        LaunchedEffect (user) {
-            user?.let { viewModelQ.checkComplete(it) }
-        }
-        Log.d("user_loged", user.toString())
-        Scaffold(
-            topBar = {
-                TopAppBar(
-                    title = {
-                        Text(
-                            text = Operations().obtenerMesDiaActual(dateNow.value),
-                            style = TextStyle(
-                                fontSize = 25.sp,
-                                fontWeight = FontWeight.ExtraBold,
-                                color = Color(0xFF002366)
-                            )
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = {
+                    Text(
+                        text = Operations().obtenerMesDiaActual(dateNow.value),
+                        style = TextStyle(
+                            fontSize = 25.sp,
+                            fontWeight = FontWeight.ExtraBold,
+                            // Modificador de color para el texto
+                            color = Color(0xFF002366)
                         )
-                    },
-                    actions = {
+                    )
+                },
+                //Botones a la derecha de TopAppBar
+                actions = {
+                    // Condicional para mostrar tarjetas según el tipo de usuario
+                    if (userType == "Cliente") {//probar que este en el lugar correcto para que oculte el icono(robin)
                         IconButton(onClick = {
                             navController.navigate(EnumNavigation.Calendar.toString())
                         }) {
@@ -126,50 +131,38 @@ fun HomeCompose(navController: NavController) {
                             )
                         }
                     }
-                )
-            },
-            bottomBar = { CustomBottomBar(navController = navController) }
-        ) { innerPadding ->
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(innerPadding),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                // Mostrar información del usuario cuando esté disponible
-                if (!questionnaireComplete && user != null) {
-                    item {
-                        AlertDialog(
-                            onDismissRequest = { /* Acción para cerrar el diálogo */ },
-                            title = { Text("Cuestionario Incompleto") },
-                            text = { Text("Por favor, complete el cuestionario para continuar.") },
-                            confirmButton = {
-                                Button( onClick = { navController.navigate(EnumNavigation.Questions.toString()) } )
-                                { Text("Completar") }
-                            }
-                        )
-                    }
                 }
+            )
+        },
+        bottomBar = { CustomBottomBar(navController = navController) }
+    ) { innerPadding ->
 
-                //Calendar
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(innerPadding),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            //Calendar
+            item {
+                Spacer(modifier = Modifier.height(16.dp))
+                WeekCompose(dateNow.value)
+                Spacer(modifier = Modifier.height(16.dp))
+            }
+            // Condicional para mostrar tarjetas según el tipo de usuario
+            if (userType == "Cliente") {
                 item {
-                    Spacer(modifier = Modifier.height(16.dp))
-                    WeekCompose(dateNow.value)
-                    Spacer(modifier = Modifier.height(16.dp))
-                }
-                // Condicional para mostrar tarjetas según el tipo de usuario
-                if(user!!.type == "Cliente"){
-                    item {
-                        NotesCard(navController) // Visible solo para Clientes
-                    }
-                    item {
-                        ActivitiesCard(navController) // Visible solo para Clientes
-                    }
+                    NotesCard(navController) // Visible solo para Clientes
                 }
                 item {
-                    ProfesionalsCard(navController) // Siempre visible
+                    ActivitiesCard(navController) // Visible solo para Clientes
                 }
             }
+            //if (userType == "Psicologo") {
+                item {
+                    ProfesionalsCard(navController, clients) // Pasar la lista de clientes
+                }
+            //}
         }
     }
 }
@@ -243,7 +236,10 @@ private fun ActivitiesCard(navController: NavController) {
                     Spacer(modifier = Modifier.width(20.dp))
                 }
                 items(7) {
-                    ActivityCard(onClick = { /*TODO*/ }, "Actividad", "Descripcion")
+                    ActivityCard(
+                        onClick = { /*TODO*/ }, "Actividad", "Descripcion",
+                        clientId = TODO()
+                    )
                     Spacer(modifier = Modifier.width(20.dp))
                 }
             }
@@ -254,7 +250,7 @@ private fun ActivitiesCard(navController: NavController) {
 }
 
 @Composable
-private fun ProfesionalsCard(navController: NavController) {
+private fun ProfesionalsCard(navController: NavController, clients: List<Client>) {
     Box(Modifier.padding(20.dp)) {
         Card(
             modifier = Modifier.fillMaxWidth(),
@@ -278,12 +274,12 @@ private fun ProfesionalsCard(navController: NavController) {
                 item {
                     Spacer(modifier = Modifier.width(20.dp))
                 }
-                items(7) {
+                items(clients) { client ->
                     ProfesionalCard(
                         icon = Icons.Filled.AccountCircle,
-                        firstname = "FirstName",
-                        lastname = "LastName",
-                        profession = "Profession",
+                        firstname = client.user.name, // Accede al nombre desde User
+                        lastname = "LastName", // Decide qué mostrar en este campo
+                        profession = client.user.syntomValue.toString(), // Usa syntomValue de Client
                         score = 5.0F,
                         navController
                     )
@@ -296,8 +292,14 @@ private fun ProfesionalsCard(navController: NavController) {
     Spacer(modifier = Modifier.height(16.dp))
 }
 
+
 @Composable
-private fun ActivityCard(onClick: () -> Unit, title: String, target: String) {
+private fun ActivityCard(
+    onClick: (String) -> Unit,
+    title: String,
+    target: String,
+    clientId: String
+) {
     Card(
         modifier = Modifier
             .height(125.dp)
@@ -320,7 +322,6 @@ private fun ActivityCard(onClick: () -> Unit, title: String, target: String) {
                     style = TextStyle(
                         fontSize = 14.sp,
                         fontWeight = FontWeight.ExtraBold,
-
                     )
                 )
                 Spacer(Modifier.height(7.dp))
@@ -332,9 +333,10 @@ private fun ActivityCard(onClick: () -> Unit, title: String, target: String) {
                     )
                 )
                 Spacer(Modifier.height(7.dp))
-                TextButtonForm(onClick, stringResource(R.string.see_more))
+                TextButtonForm(onClick = { onClick(clientId) }, stringResource(R.string.see_more))
             }
             Spacer(Modifier.width(10.dp))
         }
     }
 }
+

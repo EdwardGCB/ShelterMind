@@ -116,14 +116,16 @@ fun HomeCompose(navController: NavController) {
                         )
                     },
                     actions = {
-                        IconButton(onClick = {
-                            navController.navigate(EnumNavigation.Calendar.toString())
-                        }) {
-                            Icon(
-                                imageVector = Icons.Filled.CalendarMonth,
-                                contentDescription = "Calendar Month Icon",
-                                tint = Color(0xFF002366)
-                            )
+                        if(user!!.type == "Cliente"){
+                            IconButton(onClick = {
+                                navController.navigate(EnumNavigation.Calendar.toString())
+                            }) {
+                                Icon(
+                                    imageVector = Icons.Filled.CalendarMonth,
+                                    contentDescription = "Calendar Month Icon",
+                                    tint = Color(0xFF002366)
+                                )
+                            }
                         }
                     }
                 )
@@ -137,7 +139,7 @@ fun HomeCompose(navController: NavController) {
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 // Mostrar información del usuario cuando esté disponible
-                if (!questionnaireComplete && user != null) {
+                if (!questionnaireComplete && user!!.type == "Cliente") {
                     item {
                         AlertDialog(
                             onDismissRequest = { /* Acción para cerrar el diálogo */ },
@@ -166,8 +168,14 @@ fun HomeCompose(navController: NavController) {
                         ActivitiesCard(navController) // Visible solo para Clientes
                     }
                 }
-                item {
-                    ProfesionalsCard(navController) // Siempre visible
+                if(clients){
+                    item {
+                        ProfesionalsCard(navController, profesionals) // Siempre visible
+                    }
+                }else{
+                    item {
+                        ProfesionalsCard(navController, clients) // Siempre visible
+                    }
                 }
             }
         }

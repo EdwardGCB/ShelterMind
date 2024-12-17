@@ -1,6 +1,7 @@
 package com.ud.sheltermind.views
 
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -8,6 +9,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -20,8 +22,11 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.Circle
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -29,6 +34,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -42,13 +48,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
 import com.ud.sheltermind.R
 import com.ud.sheltermind.componentes.AddCard
 import com.ud.sheltermind.componentes.CustomBottomBar
@@ -59,110 +62,136 @@ import com.ud.sheltermind.componentes.WeekCompose
 import com.ud.sheltermind.enums.EnumNavigation
 import com.ud.sheltermind.logic.Operations
 import com.ud.sheltermind.logic.dataclass.Client
-import com.ud.sheltermind.logic.dataclass.User
-import com.ud.sheltermind.views.viewmodel.HomeViewModel
+import com.ud.sheltermind.logic.dataclass.Psychologist
+import com.ud.sheltermind.views.viewmodel.DiscoverViewModel
+import com.ud.sheltermind.views.viewmodel.QuestionsViewModel
+import com.ud.sheltermind.views.viewmodel.UserViewModel
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Preview
 @Composable
 fun ViewHome() {
-/*
     val navController = rememberNavController()
     NavHost(navController = navController, startDestination = EnumNavigation.Home.toString()) {
         composable(EnumNavigation.Home.toString()) {
             HomeCompose(navController)
-        }
-        composable(
-            route = "${EnumNavigation.UserAccount}/{idCliente}",
-            arguments = listOf(navArgument("idCliente") { type = NavType.StringType })
-        ) { backStackEntry ->
-            val idCliente = backStackEntry.arguments?.getString("idCliente") ?: ""
-            PerfilCompose(navController, idCliente)
         }
     }
-*/
-
-
-    /*
-    val navController = rememberNavController()
-    NavHost(navController = navController, startDestination = EnumNavigation.Home.toString()) {
-        composable(EnumNavigation.Home.toString()) {
-            HomeCompose(navController)
-        }
-    }*/
 }
-
-
 
 @RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeCompose(navController: NavController, homeViewModel: HomeViewModel =  viewModel()) {
-    //persistencia de datos en la vida util del compose
+fun HomeCompose(navController: NavController) {
+    val viewModelU: UserViewModel = remember { UserViewModel() }
+    val viewModelQ: QuestionsViewModel = remember { QuestionsViewModel() }
+    val viewModelS: DiscoverViewModel = remember { DiscoverViewModel() }
     val dateNow = remember { mutableStateOf(Operations().obtenerFechaActual()) }
-    val userType by homeViewModel.userType.collectAsState() // obtener el tipo de usuario de viewmodel
-    //val clients by homeViewModel.clients.collectAsState() // obtener la lista de clientes de viewmodel
+    val user by viewModelU.userData.collectAsState()
+    val client by viewModelU.clientData.collectAsState()
+    val psychologist by viewModelU.psychologistData.collectAsState()
+    val questionnaireComplete by viewModelQ.questionnaireComplete.collectAsState()
+    val isUserDataFetched by viewModelU.isUserDataFetched.collectAsState()
+    val psychologists by viewModelS.psychologistList.collectAsState()
+    val clients by viewModelS.clientsList.collectAsState()
 
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = {
-                    Text(
-                        text = Operations().obtenerMesDiaActual(dateNow.value),
-                        style = TextStyle(
-                            fontSize = 25.sp,
-                            fontWeight = FontWeight.ExtraBold,
-                            // Modificador de color para el texto
-                            color = Color(0xFF002366)
-                        )
-                    )
-                },
-                //Botones a la derecha de TopAppBar
-                actions = {
-                    // Condicional para mostrar tarjetas según el tipo de usuario
-                    //if (userType == "Cliente") {//probar que este en el lugar correcto para que oculte el icono(robin)
-                        IconButton(onClick = {
-                            navController.navigate(EnumNavigation.Calendar.toString())
-                        }) {
-                            Icon(
-                                imageVector = Icons.Filled.CalendarMonth,
-                                contentDescription = "Calendar Month Icon",
-                                tint = Color(0xFF002366)
-                            )
-                        }
-                    //}
-                }
-            )
-        },
-        bottomBar = { CustomBottomBar(navController = navController) }
-    ) { innerPadding ->
-
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(innerPadding),
-            horizontalAlignment = Alignment.CenterHorizontally
+    LaunchedEffect(Unit) {
+        viewModelU.addAuthStateListener()
+    }
+    if (!isUserDataFetched || user == null) {
+        // Mostrar el indicador de carga hasta que los datos del usuario estén listos
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
         ) {
-            //Calendar
-            item {
-                Spacer(modifier = Modifier.height(16.dp))
-                WeekCompose(dateNow.value)
-                Spacer(modifier = Modifier.height(16.dp))
+            CircularProgressIndicator()
+        }
+    }else{
+        LaunchedEffect (user) {
+            if(user!!.type == "Cliente"){
+                Log.d("user_loged", client.toString())
+                client?.let { viewModelQ.checkComplete(it) }
+                viewModelS.fetchPsychologistsFromFirestore()
             }
-            // Condicional para mostrar tarjetas según el tipo de usuario
-            //if (userType == "Cliente") {
-                item {
-                    NotesCard(navController) // Visible solo para Clientes
+        }
+        Log.d("user_loged", user.toString())
+        Scaffold(
+            topBar = {
+                TopAppBar(
+                    title = {
+                        Text(
+                            text = Operations().obtenerMesDiaActual(dateNow.value),
+                            style = TextStyle(
+                                fontSize = 25.sp,
+                                fontWeight = FontWeight.ExtraBold,
+                                color = Color(0xFF002366)
+                            )
+                        )
+                    },
+                    actions = {
+                        if(user!!.type == "Cliente"){
+                            IconButton(onClick = {
+                                navController.navigate(EnumNavigation.Calendar.toString())
+                            }) {
+                                Icon(
+                                    imageVector = Icons.Filled.CalendarMonth,
+                                    contentDescription = "Calendar Month Icon",
+                                    tint = Color(0xFF002366)
+                                )
+                            }
+                        }
+                    }
+                )
+            },
+            bottomBar = { CustomBottomBar(navController = navController) }
+        ) { innerPadding ->
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(innerPadding),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                // Mostrar información del usuario cuando esté disponible
+                if (!questionnaireComplete && user!!.type == "Cliente") {
+                    item {
+                        AlertDialog(
+                            onDismissRequest = { /* Acción para cerrar el diálogo */ },
+                            title = { Text("Cuestionario Incompleto") },
+                            text = { Text("Por favor, complete el cuestionario para continuar.") },
+                            confirmButton = {
+                                Button( onClick = { navController.navigate(EnumNavigation.Questions.toString()) } )
+                                { Text("Completar") }
+                            }
+                        )
+                    }
                 }
+
+                //Calendar
                 item {
-                    ActivitiesCard(navController) // Visible solo para Clientes
+                    Spacer(modifier = Modifier.height(16.dp))
+                    WeekCompose(dateNow.value)
+                    Spacer(modifier = Modifier.height(16.dp))
                 }
-            //}
-            //if (userType == "Psicologo") {
-                item {
-                    //ProfesionalsCard(navController, clients) // Pasar la lista de clientes
+                // Condicional para mostrar tarjetas según el tipo de usuario
+                if(user!!.type == "Cliente"){
+                    item {
+                        NotesCard(navController) // Visible solo para Clientes
+                    }
+                    item {
+                        ActivitiesCard(navController) // Visible solo para Clientes
+                    }
                 }
-            //}
+
+                if(user!!.type == "Cliente"){
+                    item {
+                        ProfesionalsCard(navController, psychologists)
+                    }
+                }else{
+                    item {
+                        ClientsCard (navController, clients)
+                    }
+                }
+            }
         }
     }
 }
@@ -236,9 +265,48 @@ private fun ActivitiesCard(navController: NavController) {
                     Spacer(modifier = Modifier.width(20.dp))
                 }
                 items(7) {
-                    ActivityCard(
-                        onClick = { /*TODO*/ }, "Actividad", "Descripcion",
-                        clientId = TODO()
+                    ActivityCard(onClick = { /*TODO*/ }, "Actividad", "Descripcion")
+                    Spacer(modifier = Modifier.width(20.dp))
+                }
+            }
+            Spacer(modifier = Modifier.height(20.dp))
+        }
+    }
+    Spacer(modifier = Modifier.height(16.dp))
+}
+
+@Composable
+private fun ProfesionalsCard(navController: NavController, psychologists: List<Psychologist>) {
+    Box(Modifier.padding(20.dp)) {
+        Card(
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(16.dp),
+            elevation = CardDefaults.cardElevation(8.dp)
+        ) {
+            Spacer(modifier = Modifier.height(20.dp))
+            Row {
+                Spacer(modifier = Modifier.width(20.dp))
+                Text(
+                    stringResource(R.string.card3),
+                    style = TextStyle(
+                        fontSize = 15.sp,
+                        fontWeight = FontWeight.ExtraBold,
+                        color = Color(0xFF002366)
+                    )
+                )
+            }
+            Spacer(modifier = Modifier.height(10.dp))
+            LazyRow {
+                item {
+                    Spacer(modifier = Modifier.width(20.dp))
+                }
+                items(psychologists) { psychologist ->
+                    ProfesionalCard(
+                        icon = Icons.Filled.AccountCircle,
+                        firstname = psychologist.user!!.name,
+                        profession = psychologist.specialists.toString(),
+                        score = psychologist.qualification,
+                        navController
                     )
                     Spacer(modifier = Modifier.width(20.dp))
                 }
@@ -250,7 +318,7 @@ private fun ActivitiesCard(navController: NavController) {
 }
 
 @Composable
-private fun ProfesionalsCard(navController: NavController, clients: List<Client>) {
+private fun ClientsCard(navController: NavController, clients: List<Client>) {
     Box(Modifier.padding(20.dp)) {
         Card(
             modifier = Modifier.fillMaxWidth(),
@@ -277,10 +345,9 @@ private fun ProfesionalsCard(navController: NavController, clients: List<Client>
                 items(clients) { client ->
                     ProfesionalCard(
                         icon = Icons.Filled.AccountCircle,
-                        firstname = client.user!!.name, // Accede al nombre desde User
-                        lastname = "LastName", // Decide qué mostrar en este campo
-                        profession = client.user.syntomValue.toString(), // Usa syntomValue de Client
-                        score = 5.0F,
+                        firstname = client.user!!.name,
+                        profession = client.syntomValue.toString(),
+                        score = 0.0f,
                         navController
                     )
                     Spacer(modifier = Modifier.width(20.dp))
@@ -292,14 +359,8 @@ private fun ProfesionalsCard(navController: NavController, clients: List<Client>
     Spacer(modifier = Modifier.height(16.dp))
 }
 
-
 @Composable
-private fun ActivityCard(
-    onClick: (String) -> Unit,
-    title: String,
-    target: String,
-    clientId: String
-) {
+private fun ActivityCard(onClick: () -> Unit, title: String, target: String) {
     Card(
         modifier = Modifier
             .height(125.dp)
@@ -322,7 +383,8 @@ private fun ActivityCard(
                     style = TextStyle(
                         fontSize = 14.sp,
                         fontWeight = FontWeight.ExtraBold,
-                    )
+
+                        )
                 )
                 Spacer(Modifier.height(7.dp))
                 Text(
@@ -333,10 +395,9 @@ private fun ActivityCard(
                     )
                 )
                 Spacer(Modifier.height(7.dp))
-                TextButtonForm(onClick = { onClick(clientId) }, stringResource(R.string.see_more))
+                TextButtonForm(onClick, stringResource(R.string.see_more))
             }
             Spacer(Modifier.width(10.dp))
         }
     }
 }
-

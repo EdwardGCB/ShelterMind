@@ -5,6 +5,7 @@ import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.firestore
 import com.ud.sheltermind.logic.dataclass.Answer
+import com.ud.sheltermind.logic.dataclass.Client
 import com.ud.sheltermind.logic.dataclass.Question
 import com.ud.sheltermind.logic.dataclass.User
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -19,7 +20,7 @@ class QuestionsViewModel : ViewModel() {
     private val _questions = MutableStateFlow<List<Question>>(emptyList())
     val questions: StateFlow<List<Question>> = _questions
 
-    fun checkComplete(user: User){
+    fun checkComplete(user: Client){
         db.collection("questions").get()
             .addOnSuccessListener { documents ->
                 val totalQuestions = documents.size()-1

@@ -96,8 +96,6 @@ class LoginViewModel : ViewModel(){
             "email" to user.email,
             "password" to user.password,
             "number" to user.number,
-            "syntomValue" to user.syntomValue,
-            "lastQuestion" to user.lastQuestion,
             "notifications" to user.notifications
         )
         userRef.set(userData)

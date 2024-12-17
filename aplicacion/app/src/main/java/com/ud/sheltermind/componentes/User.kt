@@ -90,7 +90,6 @@ fun ViewProfesionalCard() {
             ProfesionalCard(
                 Icons.Filled.AccountCircle,
                 firstname,
-                lastname,
                 profession,
                 score,
                 navController
@@ -196,7 +195,6 @@ fun SyntomCard(title: String, target: String, icon: ImageVector, hour: String) {
 fun ProfesionalCard(
     icon: ImageVector,
     firstname: String,
-    lastname: String,
     profession: String,
     score: Float,
     navController: NavController
@@ -228,15 +226,6 @@ fun ProfesionalCard(
                     )
                 )
                 Spacer(modifier = Modifier.height(3.dp))
-                Text(
-                    text = lastname,
-                    style = TextStyle(
-                        fontSize = 9.sp,
-                        fontWeight = FontWeight.Normal,
-                        //color = Color.Blue
-                    )
-                )
-                Spacer(modifier = Modifier.height(4.dp))
                 Text(
                     text = profession,
                     style = TextStyle(

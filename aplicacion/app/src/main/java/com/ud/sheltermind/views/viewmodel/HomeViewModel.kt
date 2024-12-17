@@ -64,8 +64,6 @@ class HomeViewModel : ViewModel() {
                     // Convierte el User a Client usando los valores del User
                     Client(
                         user = user,
-                        syntomValue = user.syntomValue, // Usar el valor de syntomValue del User
-                        lastQuestion = user.lastQuestion  // Usar el valor de lastQuestion del User
                     )
                 }
                 _clients.value = clientList // Asigna la lista de Client.

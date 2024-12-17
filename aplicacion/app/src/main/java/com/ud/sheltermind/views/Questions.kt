@@ -62,7 +62,7 @@ fun QuestionsCompose(navController: NavController) {
         viewModelU.addAuthStateListener()
     }
     val questions by viewModelQ.questions.collectAsState()
-    val user by viewModelU.userData.collectAsState()
+    val client by viewModelU.clientData.collectAsState()
     val isUserDataFetched by viewModelU.isUserDataFetched.collectAsState()
 
     val total = remember { derivedStateOf { questions.size } }
@@ -72,7 +72,7 @@ fun QuestionsCompose(navController: NavController) {
     val selectedOption = remember { mutableIntStateOf(0) }
     val answerValue = remember { mutableDoubleStateOf(0.0) }
     val errorMessage = viewModelU.errorMessage.collectAsState()
-    Log.d("usuario_logeado", user.toString())
+    Log.d("usuario_logeado", client.toString())
 
     // Comienza el Scaffold
     Scaffold(
@@ -97,7 +97,7 @@ fun QuestionsCompose(navController: NavController) {
                         if(errorMessage.value.isNullOrEmpty()){
                             Log.d("limite", progress.floatValue.toString())
                             if (progress.floatValue < total.value-1) {
-                                user?.let { viewModelU.updateUserAnswer(it, (progress.floatValue+1).toInt(), answerValue.doubleValue/questions.size.toDouble()) }
+                                client?.let { viewModelU.updateUserAnswer(it, (progress.floatValue+1).toInt(), answerValue.doubleValue/questions.size.toDouble()) }
                                 progress.value += 1
                                 selectedOption.intValue = 0 // Limpiar selección al cambiar de pregunta
                             }else{
@@ -111,7 +111,7 @@ fun QuestionsCompose(navController: NavController) {
             }
         }
     ) { innerPadding ->
-        if (!isUserDataFetched || user == null) {
+        if (!isUserDataFetched || client == null) {
             // Mostrar el indicador de carga hasta que los datos del usuario estén listos
             Box(
                 modifier = Modifier.fillMaxSize(),

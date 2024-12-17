@@ -7,7 +7,5 @@ data class User(
     val email: String ="",
     val password: String ="",
     val number: String ="",
-    var syntomValue: Double = 0.0,
-    val lastQuestion: Int = 0,
     val notifications: Boolean = true
 )

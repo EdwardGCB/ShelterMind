@@ -94,10 +94,11 @@ class LoginViewModel : ViewModel(){
             "name" to user.name,
             "type" to user.type,
             "email" to user.email,
+            "password" to user.password,
             "number" to user.number,
             "syntomValue" to user.syntomValue,
             "lastQuestion" to user.lastQuestion,
-             "notifications" to user.notifications
+            "notifications" to user.notifications
         )
         userRef.set(userData)
             .addOnSuccessListener {

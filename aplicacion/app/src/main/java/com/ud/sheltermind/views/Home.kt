@@ -66,7 +66,7 @@ import com.ud.sheltermind.views.viewmodel.HomeViewModel
 @Preview
 @Composable
 fun ViewHome() {
-
+/*
     val navController = rememberNavController()
     NavHost(navController = navController, startDestination = EnumNavigation.Home.toString()) {
         composable(EnumNavigation.Home.toString()) {
@@ -80,7 +80,7 @@ fun ViewHome() {
             PerfilCompose(navController, idCliente)
         }
     }
-
+*/
 
 
     /*
@@ -101,7 +101,7 @@ fun HomeCompose(navController: NavController, homeViewModel: HomeViewModel =  vi
     //persistencia de datos en la vida util del compose
     val dateNow = remember { mutableStateOf(Operations().obtenerFechaActual()) }
     val userType by homeViewModel.userType.collectAsState() // obtener el tipo de usuario de viewmodel
-    val clients by homeViewModel.clients.collectAsState() // obtener la lista de clientes de viewmodel
+    //val clients by homeViewModel.clients.collectAsState() // obtener la lista de clientes de viewmodel
 
     Scaffold(
         topBar = {
@@ -120,7 +120,7 @@ fun HomeCompose(navController: NavController, homeViewModel: HomeViewModel =  vi
                 //Botones a la derecha de TopAppBar
                 actions = {
                     // Condicional para mostrar tarjetas según el tipo de usuario
-                    if (userType == "Cliente") {//probar que este en el lugar correcto para que oculte el icono(robin)
+                    //if (userType == "Cliente") {//probar que este en el lugar correcto para que oculte el icono(robin)
                         IconButton(onClick = {
                             navController.navigate(EnumNavigation.Calendar.toString())
                         }) {
@@ -130,7 +130,7 @@ fun HomeCompose(navController: NavController, homeViewModel: HomeViewModel =  vi
                                 tint = Color(0xFF002366)
                             )
                         }
-                    }
+                    //}
                 }
             )
         },
@@ -150,17 +150,17 @@ fun HomeCompose(navController: NavController, homeViewModel: HomeViewModel =  vi
                 Spacer(modifier = Modifier.height(16.dp))
             }
             // Condicional para mostrar tarjetas según el tipo de usuario
-            if (userType == "Cliente") {
+            //if (userType == "Cliente") {
                 item {
                     NotesCard(navController) // Visible solo para Clientes
                 }
                 item {
                     ActivitiesCard(navController) // Visible solo para Clientes
                 }
-            }
+            //}
             //if (userType == "Psicologo") {
                 item {
-                    ProfesionalsCard(navController, clients) // Pasar la lista de clientes
+                    //ProfesionalsCard(navController, clients) // Pasar la lista de clientes
                 }
             //}
         }
@@ -277,7 +277,7 @@ private fun ProfesionalsCard(navController: NavController, clients: List<Client>
                 items(clients) { client ->
                     ProfesionalCard(
                         icon = Icons.Filled.AccountCircle,
-                        firstname = client.user.name, // Accede al nombre desde User
+                        firstname = client.user!!.name, // Accede al nombre desde User
                         lastname = "LastName", // Decide qué mostrar en este campo
                         profession = client.user.syntomValue.toString(), // Usa syntomValue de Client
                         score = 5.0F,

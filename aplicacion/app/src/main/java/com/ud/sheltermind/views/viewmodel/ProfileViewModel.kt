@@ -2,11 +2,8 @@ package com.ud.sheltermind.views.viewmodel
 
 import androidx.compose.runtime.Composable
 import androidx.lifecycle.ViewModel
-import androidx.room.util.copy
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
 import com.ud.sheltermind.logic.dataclass.User
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

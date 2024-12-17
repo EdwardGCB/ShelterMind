@@ -77,7 +77,7 @@ class DiscoverViewModel : ViewModel() {
     fun searchClients(query: String) {
         val currentClients = _clients.value
         val filtered = currentClients.filter { client ->
-            client.user.name.contains(query, ignoreCase = true) ||
+            client.user!!.name.contains(query, ignoreCase = true) ||
                     client.syntomValue.toString().contains(query)
         }
         _filteredClients.value = filtered

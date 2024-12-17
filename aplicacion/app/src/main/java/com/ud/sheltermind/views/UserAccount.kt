@@ -1,11 +1,9 @@
 package com.ud.sheltermind.views
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -19,18 +17,13 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.ArrowBackIosNew
-import androidx.compose.material.icons.filled.Star
-import androidx.compose.material.icons.filled.StarBorder
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
-import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -63,13 +56,10 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import coil.compose.AsyncImage
 import coil.compose.rememberImagePainter
 import com.ud.sheltermind.R
 import com.ud.sheltermind.componentes.FieldFormString
-import com.ud.sheltermind.componentes.PerfilImage
 import com.ud.sheltermind.componentes.StarScore
-import com.ud.sheltermind.componentes.TextButtonForm
 import com.ud.sheltermind.enums.EnumNavigation
 import com.ud.sheltermind.views.viewmodel.UserAccountViewModel
 
@@ -133,7 +123,7 @@ fun PerfilCompose(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 item {
-                    Text("Nombre: ${it.user.name}", style = MaterialTheme.typography.titleMedium)
+                    Text("Nombre: ${it.user!!.name}", style = MaterialTheme.typography.titleMedium)
                     Text("Email: ${it.user.email}", style = MaterialTheme.typography.bodyMedium)
                     Text("Teléfono: ${it.user.number}", style = MaterialTheme.typography.bodyMedium)
 

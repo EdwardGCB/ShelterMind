@@ -164,7 +164,7 @@ fun UserCard(navController: NavController, client: Client) {
                 }
                 Spacer(modifier = Modifier.width(16.dp))
                 Column {
-                    Text(client.user.name, fontWeight = FontWeight.Bold, fontSize = 16.sp)
+                    Text(client.user!!.name, fontWeight = FontWeight.Bold, fontSize = 16.sp)
                     Text("Syntom Value: ${client.syntomValue}", fontSize = 14.sp, color = Color.Gray)
                     //Text("Description: ${client.description}", fontSize = 14.sp, color = Color.Gray)
                     Spacer(modifier = Modifier.height(8.dp))
